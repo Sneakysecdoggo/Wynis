@@ -55,7 +55,7 @@ The directory output will contain the files belows:
 
 -Share-%COMPUTERNAME% : list all share
 
-![W10](../master/Exemples/W9-ListService.jpg)
+![W10](../master/Exemples/W10-ListService.jpg)
 
 -StartUp-%COMPUTERNAME% : check registry to identify start-up executable
 
