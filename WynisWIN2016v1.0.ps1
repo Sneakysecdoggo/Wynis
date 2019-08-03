@@ -338,7 +338,7 @@ Get-WindowsOptionalFeature -Online | where-object {$_.State -eq "Enabled"} |Form
 Write-Host "#########>Take  Software Information<#########" -ForegroundColor DarkGreen
 $nomfichierInstall = "./Installed-software- " + "$OSName" + ".csv"
 
-$installedsoftware = Get-WmiObject win32_product | Select-Object Name, Caption, Description, InstallLocation, InstallSource, InstallDate, PackageName
+$installedsoftware = Get-WmiObject win32_product | Select-Object Name, Caption, Description, InstallLocation, InstallSource, InstallDate, PackageName, Version
 
 $installedsoftware | ConvertTo-CSV -NoTypeInformation -Delimiter ";" | Set-Content  $nomfichierInstall
 #Get system Info 
