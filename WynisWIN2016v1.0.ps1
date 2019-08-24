@@ -342,11 +342,13 @@ $installedsoftware = Get-WmiObject win32_product | Select-Object Name, Caption, 
 
 $installedsoftware | ConvertTo-CSV -NoTypeInformation -Delimiter ";" | Set-Content  $nomfichierInstall
 #Get system Info 
+Write-Host "#########>Take  System Information<#########" -ForegroundColor DarkGreen
 $NomfichierSystem = "./systeminfo- " + "$OSName" + ".txt"
 systeminfo > $NomfichierSystem 
 
 
 #Microsoft Update Liste 
+Write-Host "#########>Take  Update Information<#########" -ForegroundColor DarkGreen
 $nomfichierUpdate = "./systemUpdate- " + "$OSName" + ".html"
 wmic qfe list brief /format:htable > $nomfichierUpdate
 
@@ -379,7 +381,7 @@ foreach ($tache in $tabletache) {
 }
 
 #check net accounts intel
-
+Write-Host "#########>Take  Service Information<#########" -ForegroundColor DarkGreen
 $nomfichierNetAccount = "./AccountsPolicy- " + "$OSName" + ".txt"
 net accounts > $nomfichierNetAccount
 
