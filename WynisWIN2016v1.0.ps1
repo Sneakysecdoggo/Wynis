@@ -378,6 +378,10 @@ foreach ($tache in $tabletache) {
     "##############################################`r" >> $nomfichierttache 
 }
 
+#check net accounts intel
+
+$nomfichierNetAccount = "./AccountsPolicy- " + "$OSName" + ".txt"
+net accounts > $nomfichierNetAccount
 
 
 #Check listen port 
@@ -450,8 +454,9 @@ Write-Host "#########>Begin password policy audit<#########" -ForegroundColor Da
 
 
 #Check Enforce password history
-
-$chaine = "$indextest" + ";" + "Ensure 'Enforce password history' is set to '24 or more password(s)" + ";"
+$indextest += 1
+$id = "PP" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Enforce password history' is set to '24 or more password(s)" + ";"
 $traitement = Get-Content $seceditfile |Select-String "PasswordHistorySize"
 
 $chaine += $traitement
@@ -459,10 +464,11 @@ $chaine += $traitement
 $chaine>> $nomfichier
 #Check Maximum password age 
 $indextest += 1
+$id = "PP" +  "$indextest"
 $chaine = $null
 $traitement = $null
 
-$chaine = "$indextest" + ";" + "Maximum password age is set to 60 or fewer days, but not 0" + ";"
+$chaine = "$id" + ";" + "Maximum password age is set to 60 or fewer days, but not 0" + ";"
 $traitement = Get-Content $seceditfile |Select-String "MaximumPasswordAge" |select-object -First 1
 
 $chaine += $traitement
@@ -470,10 +476,11 @@ $chaine>> $nomfichier
 
 #Check Minimum password age
 $indextest += 1
+$id = "PP" +  "$indextest"
 $chaine = $null
 $traitement = $null
 
-$chaine = "$indextest" + ";" + "Minimum password age is set to 1 or more day(s)" + ";"
+$chaine = "$id" + ";" + "Minimum password age is set to 1 or more day(s)" + ";"
 $traitement = Get-Content $seceditfile |Select-String "MinimumPasswordAge"
 
 $chaine += $traitement
@@ -481,10 +488,11 @@ $chaine>> $nomfichier
 
 # Check Minimum password length
 $indextest += 1
+$id = "PP" +  "$indextest"
 $chaine = $null
 $traitement = $null
 
-$chaine = "$indextest" + ";" + "Minimum password length is set to 14 or more character(s)" + ";"
+$chaine = "$id" + ";" + "Minimum password length is set to 14 or more character(s)" + ";"
 $traitement = Get-Content $seceditfile |Select-String "MinimumPasswordLength"
 
 $chaine += $traitement
@@ -492,10 +500,11 @@ $chaine>> $nomfichier
 
 #Check Password must meet complexity requirements
 $indextest += 1
+$id = "PP" +  "$indextest"
 $chaine = $null
 $traitement = $null
 
-$chaine = "$indextest" + ";" + "Password must meet complexity requirements is set to Enabled, value must be 1" + ";"
+$chaine = "$id" + ";" + "Password must meet complexity requirements is set to Enabled, value must be 1" + ";"
 $traitement = Get-Content $seceditfile |Select-String "PasswordComplexity"
 
 $chaine += $traitement
@@ -503,10 +512,11 @@ $chaine>> $nomfichier
 
 #Check Store passwords using reversible encryption
 $indextest += 1
+$id = "PP" +  "$indextest"
 $chaine = $null
 $traitement = $null
 
-$chaine = "$indextest" + ";" + "Store passwords using reversible encryption, value must be 0" + ";"
+$chaine = "$id" + ";" + "Store passwords using reversible encryption, value must be 0" + ";"
 $traitement = Get-Content $seceditfile |Select-String "ClearTextPassword"
 
 $chaine += $traitement
@@ -519,10 +529,10 @@ Write-Host "#########>Begin account lockout policy audit<#########" -ForegroundC
 $indextest += 1
 $chaine = $null
 $traitement = $null
+$id = "ALP" +  "$indextest"
 
-
-$chaine = "$indextest" + ";" + "Account lockout duration is set to 15 or more minute(s)" + ";"
-$traitement = "Check $gpofile OR ask to see the AD configuration"
+$chaine = "$id" + ";" + "Account lockout duration is set to 15 or more minute(s)" + ";"
+$traitement = Get-Content $nomfichierNetAccount |Select-String -pattern '(Durée du verrouillage)|(Lockout duration)'
 
 
 $chaine += $traitement
@@ -531,10 +541,10 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
+$id = "ALP" +  "$indextest"
 
-
-$chaine = "$indextest" + ";" + "Ensure Account lockout threshold is set to 10 or fewer invalid logon attempt(s), but not 0" + ";"
-$traitement = "Check $gpofile OR ask to see the AD configuration"
+$chaine = "$id" + ";" + "Ensure Account lockout threshold is set to 10 or fewer invalid logon attempt(s), but not 0" + ";"
+$traitement = Get-Content $nomfichierNetAccount |Select-String -pattern '(Seuil de verrouillage)|(Lockout threshold)'
 #to improve 
 
 
@@ -545,24 +555,24 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Reset account lockout counter after is set to 15 or more minute(s)" + ";"
-$traitement = "Check $gpofile OR ask to see the AD configuration"
+$id = "ALP" +  "$indextest"
+$chaine = "$id" + ";" + "Reset account lockout counter after is set to 15 or more minute(s)" + ";"
+$traitement = Get-Content $nomfichierNetAccount |Select-String -pattern "(Fenêtre d'observation du verrouillage)|(Lockout observation window)"
 #to improve 
 
 $chaine += $traitement
 $chaine>> $nomfichier
 
 #Check Reset account lockout
-#Check lock out policy
+#Check  user rights assignment audit
 Write-Host "#########>Begin user rights assignment audit<#########" -ForegroundColor DarkGreen
 
 #Check Access Credential Manager 
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Acess Credential Manager as a trusted caller is set to No One , value must be empty" + ";"
+$id = "URA" +  "$indextest"
+$chaine = "$id" + ";" + "Acess Credential Manager as a trusted caller is set to No One , value must be empty" + ";"
 $traitement = Get-Content $seceditfile |Select-String "SeTrustedCredManAccessPrivilege"
 
 $chaine += $traitement
@@ -572,8 +582,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Access this computer from the network, Only Administrators, Authenticated Users. " + ";"
+$id = "URA" +  "$indextest"
+$chaine = "$id" + ";" + "Access this computer from the network, Only Administrators, Authenticated Users. " + ";"
 $chaineSID = Get-Content $seceditfile |Select-String "SeNetworkLogonRight" 
 $chaineSID = $chaineSID.line
 $traitement = "SeNetworkLogonRight" + ":"
@@ -587,8 +597,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Act as part of the operating system' , Must be empty " + ";"
+$id = "URA" +  "$indextest"
+$chaine = "$id" + ";" + "Act as part of the operating system' , Must be empty " + ";"
 $test = Get-Content $seceditfile |Select-String "SeTcbPrivilege"
 $chaineSID = $chaineSID.line
 $traitement = "SeTcbPrivilege" + ":"
@@ -602,8 +612,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Adjust memory quotas for a process , Administrators, LOCAL SERVICE, NETWORK SERVICE " + ";"
+$id = "URA" +  "$indextest"
+$chaine = "$id" + ";" + "Adjust memory quotas for a process , Administrators, LOCAL SERVICE, NETWORK SERVICE " + ";"
 $traitement = "Check $gpofile OR ask to see the AD configuration"
 
 $chaine += $traitement
@@ -614,8 +624,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 
-
-$chaine = "$indextest" + ";" + "Allow log on locally', Only Administrators," + ";"
+$id = "URA" +  "$indextest"
+$chaine = "$id" + ";" + "Allow log on locally', Only Administrators," + ";"
 $chaineSID = Get-Content $seceditfile |Select-String "SeInteractiveLogonRight" 
 $chaineSID = $chaineSID.line
 $traitement = "SeInteractiveLogonRight" + ":"
@@ -627,8 +637,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Allow log on locally', Only Administrators, Remote Desktop Users. If Remote Apps or CItrix authentificated users" + ";"
+$id = "URA" +  "$indextest"
+$chaine = "$id" + ";" + "Allow log on locally', Only Administrators, Remote Desktop Users. If Remote Apps or CItrix authentificated users" + ";"
 $chaineSID = Get-Content $seceditfile |Select-String "SeRemoteInteractiveLogonRight" 
 $chaineSID = $chaineSID.line
 $traitement = "SeRemoteInteractiveLogonRight" + ":"
@@ -642,8 +652,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Allow log on through Remote Desktop Services, Only Administrators, Remote Desktop Users. If Remote Apps or CItrix authentificated users" + ";"
+$id = "URA" +  "$indextest"
+$chaine = "$id" + ";" + "Allow log on through Remote Desktop Services, Only Administrators, Remote Desktop Users. If Remote Apps or CItrix authentificated users" + ";"
 $chaineSID = Get-Content $seceditfile |Select-String "SeRemoteInteractiveLogonRight" 
 $chaineSID = $chaineSID.line
 $traitement = "SeRemoteInteractiveLogonRight" + ":"
@@ -658,8 +668,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure Back up files and directories, Only Administrators," + ";"
+$id = "URA" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure Back up files and directories, Only Administrators," + ";"
 $chaineSID = Get-Content $seceditfile |Select-String "SeBackupPrivilege" 
 $chaineSID = $chaineSID.line
 $traitement = "SeBackupPrivilege" + ":"
@@ -668,14 +678,14 @@ $traitement += Reverse-SID $chaineSID
 $chaine += $traitement
 $chaine>> $nomfichier
 
-#Change the system time'
+#Change the system time
 
 
 $indextest += 1
 $chaine = $null
 $traitement = $null
 
-$chaine = "$indextest" + ";" + "Change the system time, Only Administrators and local service" + ";"
+$chaine = "$id" + ";" + "Change the system time, Only Administrators and local service" + ";"
 $chaineSID = Get-Content $seceditfile |Select-String "SeSystemtimePrivilege" 
 $chaineSID = $chaineSID.line
 $traitement = "SeSystemtimePrivilege" + ":"
@@ -691,8 +701,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Change the time zone', Only Administrators and local service" + ";"
+$id = "URA" +  "$indextest"
+$chaine = "$id" + ";" + "Change the time zone', Only Administrators and local service" + ";"
 $chaineSID = Get-Content $seceditfile |Select-String "SeTimeZonePrivilege" 
 $chaineSID = $chaineSID.line
 $traitement = "SeTimeZonePrivilege" + ":"
@@ -707,8 +717,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Create a pagefile, Only Administrators " + ";"
+$id = "URA" +  "$indextest"
+$chaine = "$id" + ";" + "Create a pagefile, Only Administrators " + ";"
 $chaineSID = Get-Content $seceditfile |Select-String "SeCreatePagefilePrivilege" 
 $chaineSID = $chaineSID.line
 $traitement = "SeCreatePagefilePrivilege" + ":"
@@ -722,8 +732,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Create a token object, No one " + ";"
+$id = "URA" +  "$indextest"
+$chaine = "$id" + ";" + "Create a token object, No one " + ";"
 $chaineSID = Get-Content $seceditfile |Select-String "SeCreateTokenPrivilege" 
 $chaineSID = $chaineSID.line
 $traitement = "SeCreateTokenPrivilege" + ":"
@@ -737,8 +747,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure Create global objects is set to Administrators, LOCAL SERVICE, NETWORK SERVICE, SERVICE" + ";"
+$id = "URA" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure Create global objects is set to Administrators, LOCAL SERVICE, NETWORK SERVICE, SERVICE" + ";"
 $chaineSID = Get-Content $seceditfile |Select-String "SeCreateGlobalPrivilege" 
 $chaineSID = $chaineSID.line
 $traitement = "SeCreateGlobalPrivilege" + ":"
@@ -752,8 +762,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure Create permanent shared objects, No one" + ";"
+$id = "URA" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure Create permanent shared objects, No one" + ";"
 $chaineSID = Get-Content $seceditfile |Select-String "SeCreateGlobalPrivilege" 
 $chaineSID = $chaineSID.line
 $traitement = "SeCreatePermanentPrivilege" + ":"
@@ -768,8 +778,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Create symbolic links, Administrator and for Hyper V NT VIRTUAL MACHINE\Virtual Machines. " + ";"
+$id = "URA" +  "$indextest"
+$chaine = "$id" + ";" + "Create symbolic links, Administrator and for Hyper V NT VIRTUAL MACHINE\Virtual Machines. " + ";"
 $chaineSID = Get-Content $seceditfile |Select-String "SeCreateSymbolicLinkPrivilege" 
 $chaineSID = $chaineSID.line
 $traitement = "SeCreateSymbolicLinkPrivilege" + ":"
@@ -783,8 +793,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure Debug programs is set to Administrators " + ";"
+$id = "URA" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure Debug programs is set to Administrators " + ";"
 $chaineSID = Get-Content $seceditfile |Select-String "SeDebugPrivilege" 
 $chaineSID = $chaineSID.line
 $traitement = "SeDebugPrivilege" + ":"
@@ -799,8 +809,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Deny access to this computer from the network,Guest Local Account and member of Domain admin  " + ";"
+$id = "URA" +  "$indextest"
+$chaine = "$id" + ";" + "Deny access to this computer from the network,Guest Local Account and member of Domain admin  " + ";"
 $chaineSID = Get-Content $seceditfile |Select-String "SeDenyNetworkLogonRight" 
 $chaineSID = $chaineSID.line
 $traitement = "SeDenyNetworkLogonRight" + ":"
@@ -815,8 +825,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Deny access to this computer from the network,Guest Local Account and member of Domain admin  " + ";"
+$id = "URA" +  "$indextest"
+$chaine = "$id" + ";" + "Deny access to this computer from the network,Guest Local Account and member of Domain admin  " + ";"
 $chaineSID = Get-Content $seceditfile |Select-String "SeDenyNetworkLogonRight" 
 $chaineSID = $chaineSID.line
 $traitement = "SeDenyNetworkLogonRight" + ":"
@@ -829,8 +839,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Deny log on as a batch job, Guest  " + ";"
+$id = "URA" +  "$indextest"
+$chaine = "$id" + ";" + "Deny log on as a batch job, Guest  " + ";"
 $chaineSID = Get-Content $seceditfile |Select-String "SeDenyBatchLogonRight" 
 $chaineSID = $chaineSID.line
 $traitement = "SeDenyBatchLogonRight" + ":"
@@ -844,8 +854,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Deny log on as a service, Guest  " + ";"
+$id = "URA" +  "$indextest"
+$chaine = "$id" + ";" + "Deny log on as a service, Guest  " + ";"
 $chaineSID = Get-Content $seceditfile |Select-String "SeDenyServiceLogonRight" 
 $chaineSID = $chaineSID.line
 $traitement = "SeDenyServiceLogonRight" + ":"
@@ -859,8 +869,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Deny log on locally, Guest  " + ";"
+$id = "URA" +  "$indextest"
+$chaine = "$id" + ";" + "Deny log on locally, Guest  " + ";"
 $chaineSID = Get-Content $seceditfile |Select-String "SeDenyInteractiveLogonRight" 
 $chaineSID = $chaineSID.line
 $traitement = "SeDenyInteractiveLogonRight" + ":"
@@ -874,8 +884,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Deny log on through Remote Desktop Services, Guest and Local account' " + ";"
+$id = "URA" +  "$indextest"
+$chaine = "$id" + ";" + "Deny log on through Remote Desktop Services, Guest and Local account' " + ";"
 $chaineSID = Get-Content $seceditfile |Select-String "SeDenyRemoteInteractiveLogonRight" 
 $chaineSID = $chaineSID.line
 $traitement = "SeDenyRemoteInteractiveLogonRight" + ":"
@@ -889,8 +899,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Enable computer and user accounts to be trusted for delegation,No one " + ";"
+$id = "URA" +  "$indextest"
+$chaine = "$id" + ";" + "Enable computer and user accounts to be trusted for delegation,No one " + ";"
 $chaineSID = Get-Content $seceditfile |Select-String "SeEnableDelegationPrivilege" 
 $chaineSID = $chaineSID.line
 $traitement = "SeEnableDelegationPrivilege" + ":"
@@ -904,8 +914,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Force shutdown from a remote system, Only administrators " + ";"
+$id = "URA" +  "$indextest"
+$chaine = "$id" + ";" + "Force shutdown from a remote system, Only administrators " + ";"
 $chaineSID = Get-Content $seceditfile |Select-String "SeRemoteShutdownPrivilege" 
 $chaineSID = $chaineSID.line
 $traitement = "SeRemoteShutdownPrivilege" + ":"
@@ -918,8 +928,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Generate security audits is set to LOCAL SERVICE, NETWORK SERVICE " + ";"
+$id = "URA" +  "$indextest"
+$chaine = "$id" + ";" + "Generate security audits is set to LOCAL SERVICE, NETWORK SERVICE " + ";"
 $chaineSID = Get-Content $seceditfile |Select-String "SeAuditPrivilege" 
 $chaineSID = $chaineSID.line
 $traitement = "SeAuditPrivilege" + ":"
@@ -932,8 +942,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Impersonate a client after authentication , Administrators, LOCAL SERVICE, NETWORK SERVICE, SERVICE and IIS_IUSRS if IIS" + ";"
+$id = "URA" +  "$indextest"
+$chaine = "$id" + ";" + "Impersonate a client after authentication , Administrators, LOCAL SERVICE, NETWORK SERVICE, SERVICE and IIS_IUSRS if IIS" + ";"
 $chaineSID = Get-Content $seceditfile |Select-String "SeImpersonatePrivilege" 
 $chaineSID = $chaineSID.line
 $traitement = "SeImpersonatePrivilege" + ":"
@@ -947,8 +957,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Increase scheduling priority , only Administrator" + ";"
+$id = "URA" +  "$indextest"
+$chaine = "$id" + ";" + "Increase scheduling priority , only Administrator" + ";"
 $chaineSID = Get-Content $seceditfile |Select-String "SeIncreaseBasePriorityPrivilege" 
 $chaineSID = $chaineSID.line
 $traitement = "SeIncreaseBasePriorityPrivilege" + ":"
@@ -962,8 +972,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Load and unload device drivers' , only Administrator" + ";"
+$id = "URA" +  "$indextest"
+$chaine = "$id" + ";" + "Load and unload device drivers' , only Administrator" + ";"
 $chaineSID = Get-Content $seceditfile |Select-String "SeLoadDriverPrivilege" 
 $chaineSID = $chaineSID.line
 $traitement = "SeLoadDriverPrivilege" + ":"
@@ -976,8 +986,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Lock pages in memory, No one" + ";"
+$id = "URA" +  "$indextest"
+$chaine = "$id" + ";" + "Lock pages in memory, No one" + ";"
 $chaineSID = Get-Content $seceditfile |Select-String "SeLockMemoryPrivilege" 
 $chaineSID = $chaineSID.line
 $traitement = "SeLockMemoryPrivilege" + ":"
@@ -991,8 +1001,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Log on as a batch job',Administrators" + ";"
+$id = "URA" +  "$indextest"
+$chaine = "$id" + ";" + "Log on as a batch job',Administrators" + ";"
 $chaineSID = Get-Content $seceditfile |Select-String "SeBatchLogonRight" 
 $chaineSID = $chaineSID.line
 $traitement = "SeBatchLogonRight" + ":"
@@ -1007,8 +1017,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Manage auditing and security log,Administrators" + ";"
+$id = "URA" +  "$indextest"
+$chaine = "$id" + ";" + "Manage auditing and security log,Administrators" + ";"
 $chaineSID = Get-Content $seceditfile |Select-String "SeSecurityPrivilege" 
 $chaineSID = $chaineSID.line
 $traitement = "SeSecurityPrivilege" + ":"
@@ -1021,8 +1031,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Modify an object label, No one" + ";"
+$id = "URA" +  "$indextest"
+$chaine = "$id" + ";" + "Modify an object label, No one" + ";"
 $chaineSID = Get-Content $seceditfile |Select-String "SeRelabelPrivilege" 
 $chaineSID = $chaineSID.line
 $traitement = "SeRelabelPrivilege" + ":"
@@ -1035,8 +1045,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Modify firmware environment values is set to Administrators" + ";"
+$id = "URA" +  "$indextest"
+$chaine = "$id" + ";" + "Modify firmware environment values is set to Administrators" + ";"
 $chaineSID = Get-Content $seceditfile |Select-String "SeSystemEnvironmentPrivilege" 
 $chaineSID = $chaineSID.line
 $traitement = "SeSystemEnvironmentPrivilege" + ":"
@@ -1049,8 +1059,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Perform volume maintenance tasks is set to Administrators" + ";"
+$id = "URA" +  "$indextest"
+$chaine = "$id" + ";" + "Perform volume maintenance tasks is set to Administrators" + ";"
 $chaineSID = Get-Content $seceditfile |Select-String "SeManageVolumePrivilege" 
 $chaineSID = $chaineSID.line
 $traitement = "SeManageVolumePrivilege" + ":"
@@ -1063,8 +1073,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Profile single process is set to Administrators" + ";"
+$id = "URA" +  "$indextest"
+$chaine = "$id" + ";" + "Profile single process is set to Administrators" + ";"
 $chaineSID = Get-Content $seceditfile |Select-String "SeProfileSingleProcessPrivilege" 
 $chaineSID = $chaineSID.line
 $traitement = "SeProfileSingleProcessPrivilege" + ":"
@@ -1078,8 +1088,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Profile system performance is set to Administrators, NT SERVICE\WdiServiceHost" + ";"
+$id = "URA" +  "$indextest"
+$chaine = "$id" + ";" + "Profile system performance is set to Administrators, NT SERVICE\WdiServiceHost" + ";"
 $chaineSID = Get-Content $seceditfile |Select-String "SeSystemProfilePrivilege" 
 $chaineSID = $chaineSID.line
 $traitement = "SeSystemProfilePrivilege" + ":"
@@ -1092,8 +1102,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Replace a process level token is set to LOCAL SERVICE, NETWORK SERVICE and for IIS server you may have IIS applications pools" + ";"
+$id = "URA" +  "$indextest"
+$chaine = "$id" + ";" + "Replace a process level token is set to LOCAL SERVICE, NETWORK SERVICE and for IIS server you may have IIS applications pools" + ";"
 $chaineSID = Get-Content $seceditfile |Select-String "SeAssignPrimaryTokenPrivilege" 
 $chaineSID = $chaineSID.line
 $traitement = "SeAssignPrimaryTokenPrivilege" + ":"
@@ -1106,8 +1116,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Restore files and directories is set to Administrators" + ";"
+$id = "URA" +  "$indextest"
+$chaine = "$id" + ";" + "Restore files and directories is set to Administrators" + ";"
 $chaineSID = Get-Content $seceditfile |Select-String "SeRestorePrivilege" 
 $chaineSID = $chaineSID.line
 $traitement = "SeRestorePrivilege" + ":"
@@ -1120,8 +1130,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Shut down the system is set to Administrators" + ";"
+$id = "URA" +  "$indextest"
+$chaine = "$id" + ";" + "Shut down the system is set to Administrators" + ";"
 $chaineSID = Get-Content $seceditfile |Select-String "SeShutdownPrivilege" 
 $chaineSID = $chaineSID.line
 $traitement = "SeShutdownPrivilege" + ":"
@@ -1135,8 +1145,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Take ownership of files or other objects is set to Administrators" + ";"
+$id = "URA" +  "$indextest"
+$chaine = "$id" + ";" + "Take ownership of files or other objects is set to Administrators" + ";"
 $chaineSID = Get-Content $seceditfile |Select-String "SeTakeOwnershipPrivilege" 
 $chaineSID = $chaineSID.line
 $traitement = "SeTakeOwnershipPrivilege" + ":"
@@ -1147,14 +1157,14 @@ $chaine>> $nomfichier
 
 
 #Checking Account
-Write-Host "#########>Begin password policy audit<#########" -ForegroundColor DarkGreen
+Write-Host "#########>Begin Accounts audit<#########" -ForegroundColor DarkGreen
 
 #Ensure 'Accounts: Administrator account status' is set to 'Disabled
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Accounts: Administrator account status is set to Disabled" + ";"
+$id = "AA" +  "$indextest"
+$chaine = "$id" + ";" + "Accounts: Administrator account status is set to Disabled" + ";"
 $traitement = "Default admin Account:" + $nomcompteadmin + ",statut :$adminstate"
 
 $chaine += $traitement
@@ -1165,8 +1175,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Accounts: Block Microsoft accounts is set to Users cant add or log on with Microsoft accounts Value must be 3 " + ";"
+$id = "AA" +  "$indextest"
+$chaine = "$id" + ";" + "Accounts: Block Microsoft accounts is set to Users cant add or log on with Microsoft accounts Value must be 3 " + ";"
 $exist = Test-Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System | Select-Object NoConnectedUser
@@ -1183,8 +1193,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure Accounts: Guest account status is set to 'Disabled" + ";"
+$id = "AA" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure Accounts: Guest account status is set to 'Disabled" + ";"
 $traitement = "Default guest Account:" + $nomcompteguest + ",statut : $gueststate"
 
 
@@ -1196,8 +1206,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Accounts: Limit local account use of blank passwords to console logon only is set to Enabled, Value must be 1 " + ";"
+$id = "AA" +  "$indextest"
+$chaine = "$id" + ";" + "Accounts: Limit local account use of blank passwords to console logon only is set to Enabled, Value must be 1 " + ";"
 $exist = Test-Path HKLM:\SYSTEM\CurrentControlSet\Control\Lsa
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty HKLM:\SYSTEM\CurrentControlSet\Control\Lsa |Select-Object LimitBlankPasswordUse
@@ -1216,8 +1226,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Accounts: Rename administrator account" + ";"
+$id = "AA" +  "$indextest"
+$chaine = "$id" + ";" + "Accounts: Rename administrator account" + ";"
 $traitement = "Default local admin Account:" + $nomcompteadmin 
 $chaine += $traitement
 $chaine>> $nomfichier
@@ -1230,8 +1240,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Accounts: Rename guest account" + ";"
+$id = "AA" +  "$indextest"
+$chaine = "$id" + ";" + "Accounts: Rename guest account" + ";"
 $traitement = "Default guest Account:" + $nomcompteguest
 
 
@@ -1246,8 +1256,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Audit: Force audit policy subcategory settings (Windows Vista or later) to override audit policy category settings is set to Enabled, Value must be 1 " + ";"
+$id = "APA" +  "$indextest"
+$chaine = "$id" + ";" + "Audit: Force audit policy subcategory settings (Windows Vista or later) to override audit policy category settings is set to Enabled, Value must be 1 " + ";"
 $exist = Test-Path HKLM:\SYSTEM\CurrentControlSet\Control\Lsa
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty HKLM:\SYSTEM\CurrentControlSet\Control\Lsa |Select-Object SCENoApplyLegacyAuditPolicy
@@ -1265,8 +1275,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Audit: Shut down system immediately if unable to log security audits is set to Disabled, Value must be 0 " + ";"
+$id = "APA" +  "$indextest"
+$chaine = "$id" + ";" + "Audit: Shut down system immediately if unable to log security audits is set to Disabled, Value must be 0 " + ";"
 $exist = Test-Path HKLM:\SYSTEM\CurrentControlSet\Control\Lsa
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty HKLM:\SYSTEM\CurrentControlSet\Control\Lsa |Select-Object CrashOnAuditFail
@@ -1287,8 +1297,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Ensure Devices: Allowed to format and eject removable media is set to Administrators " + ";"
+$id = "DEV" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure Devices: Allowed to format and eject removable media is set to Administrators " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" |Select-Object AllocateDASD
@@ -1307,8 +1317,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Devices: Prevent users from installing printer drivers is set to Enabled, Value must be 1 " + ";"
+$id = "DEV" +  "$indextest"
+$chaine = "$id" + ";" + "Devices: Prevent users from installing printer drivers is set to Enabled, Value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Control\Print\Providers\LanMan Print Services\Servers"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Control\Print\Providers\LanMan Print Services\Servers" |Select-Object AddPrinterDrivers
@@ -1330,8 +1340,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Domain member: Digitally encrypt or sign secure channel data (always) is set to Enabled, Value must be 1 " + ";"
+$id = "DMP" +  "$indextest"
+$chaine = "$id" + ";" + "Domain member: Digitally encrypt or sign secure channel data (always) is set to Enabled, Value must be 1 " + ";"
 $exist = Test-Path HKLM:\SYSTEM\CurrentControlSet\Services\Netlogon\Parameters
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty HKLM:\SYSTEM\CurrentControlSet\Services\Netlogon\Parameters |Select-Object RequireSignOrSeal
@@ -1350,8 +1360,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Domain member: Digitally encrypt secure channel data (when possible) is set to Enabled, Value must be 1 " + ";"
+$id = "DMP" +  "$indextest"
+$chaine = "$id" + ";" + "Domain member: Digitally encrypt secure channel data (when possible) is set to Enabled, Value must be 1 " + ";"
 $exist = Test-Path HKLM:\SYSTEM\CurrentControlSet\Services\Netlogon\Parameters
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty HKLM:\SYSTEM\CurrentControlSet\Services\Netlogon\Parameters |Select-Object SealSecureChannel
@@ -1371,8 +1381,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Domain member: Disable machine account password changes is set to Disabled, Value must be 0 " + ";"
+$id = "DMP" +  "$indextest"
+$chaine = "$id" + ";" + "Domain member: Disable machine account password changes is set to Disabled, Value must be 0 " + ";"
 $exist = Test-Path HKLM:\SYSTEM\CurrentControlSet\Services\Netlogon\Parameters
 if ( $exist -eq $true) {
 				$traitement = Get-ItemProperty HKLM:\SYSTEM\CurrentControlSet\Services\Netlogon\Parameters |Select-Object DisablePasswordChange
@@ -1391,8 +1401,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Domain member: Maximum machine account password age is set to 30 or fewer days, but not 0 " + ";"
+$id = "DMP" +  "$indextest"
+$chaine = "$id" + ";" + "Domain member: Maximum machine account password age is set to 30 or fewer days, but not 0 " + ";"
 $exist = Test-Path HKLM:\SYSTEM\CurrentControlSet\Services\Netlogon\Parameters
 if ( $exist -eq $true) {
 				$traitement = Get-ItemProperty HKLM:\SYSTEM\CurrentControlSet\Services\Netlogon\Parameters |Select-Object MaximumPasswordAge
@@ -1411,8 +1421,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Domain member: Require strong (Windows 2000 or later) session key' is set to 'Enabled,value must 1 " + ";"
+$id = "DMP" +  "$indextest"
+$chaine = "$id" + ";" + "Domain member: Require strong (Windows 2000 or later) session key' is set to 'Enabled,value must 1 " + ";"
 $exist = Test-Path HKLM:\SYSTEM\CurrentControlSet\Services\Netlogon\Parameters
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty HKLM:\SYSTEM\CurrentControlSet\Services\Netlogon\Parameters |Select-Object RequireStrongKey
@@ -1434,8 +1444,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Ensure Interactive logon: Do not display last user name is set to Enabled,value must 1 " + ";"
+$id = "IL" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure Interactive logon: Do not display last user name is set to Enabled,value must 1 " + ";"
 $exist = Test-Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System |Select-Object DontDisplayLastUserName
@@ -1455,8 +1465,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Ensure Interactive logon: Do not require CTRL+ALT+DEL' is set to Disabled,value must 0 " + ";"
+$id = "IL" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure Interactive logon: Do not require CTRL+ALT+DEL' is set to Disabled,value must 0 " + ";"
 $exist = Test-Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System |Select-Object DisableCAD
@@ -1476,8 +1486,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Ensure Interactive logon: Machine inactivity limit' is set to 900 or fewer second(s), but not 0 " + ";"
+$id = "IL" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure Interactive logon: Machine inactivity limit' is set to 900 or fewer second(s), but not 0 " + ";"
 $exist = Test-Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System |Select-Object InactivityTimeoutSecs
@@ -1496,8 +1506,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Configure 'Interactive logon: Message text for users attempting to log on, but not empty " + ";"
+$id = "IL" +  "$indextest"
+$chaine = "$id" + ";" + "Configure 'Interactive logon: Message text for users attempting to log on, but not empty " + ";"
 $exist = Test-Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System |Select-Object LegalNoticeText
@@ -1517,8 +1527,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Configure Interactive logon: Message title for users attempting to log on, but not empty " + ";"
+$id = "IL" +  "$indextest"
+$chaine = "$id" + ";" + "Configure Interactive logon: Message title for users attempting to log on, but not empty " + ";"
 $exist = Test-Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System |Select-Object LegalNoticeCaption
@@ -1537,8 +1547,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Ensure interactive logon: Number of previous logons to cache (in case domain controller is not available) is set to 4 or fewer logon(s) " + ";"
+$id = "IL" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure interactive logon: Number of previous logons to cache (in case domain controller is not available) is set to 4 or fewer logon(s) " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" |Select-Object CachedLogonsCount
@@ -1559,8 +1569,8 @@ $chaine = $null
 $traitement = $null
 $exist = $null
 
-
-$chaine = "$indextest" + ";" + "Ensure Interactive logon: Prompt user to change password before expiration is set to between 5 and 14 days " + ";"
+$id = "IL" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure Interactive logon: Prompt user to change password before expiration is set to between 5 and 14 days " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" |Select-Object PasswordExpiryWarning
@@ -1581,8 +1591,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Ensure Interactive logon: Smart card removal behavior is set to Lock Workstation or higher,value must be 1 (Lock Workstation) or 2 (Force Logoff) " + ";"
+$id = "IL" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure Interactive logon: Smart card removal behavior is set to Lock Workstation or higher,value must be 1 (Lock Workstation) or 2 (Force Logoff) " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" |Select-Object ScRemoveOption
@@ -1605,8 +1615,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Ensure Microsoft network client: Digitally sign communications (always) is set to Enabled,value must be 1 " + ";"
+$id = "MNC" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure Microsoft network client: Digitally sign communications (always) is set to Enabled,value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanWorkstation\Parameters"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanWorkstation\Parameters" |Select-Object RequireSecuritySignature
@@ -1625,8 +1635,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Ensure Microsoft network client: Digitally sign communications (if server agrees) is set to Enabled,value must be 1 " + ";"
+$id = "MNC" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure Microsoft network client: Digitally sign communications (if server agrees) is set to Enabled,value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanWorkstation\Parameters"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanWorkstation\Parameters" |Select-Object EnableSecuritySignature
@@ -1645,8 +1655,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Ensure Microsoft network client: Send unencrypted password to third-party SMB servers is set to Disabled,value must be 0 " + ";"
+$id = "MNC" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure Microsoft network client: Send unencrypted password to third-party SMB servers is set to Disabled,value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanWorkstation\Parameters"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanWorkstation\Parameters" |Select-Object EnablePlainTextPassword
@@ -1668,8 +1678,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Microsoft network server: Amount of idle time required before suspending session is set to 15 or fewer minute(s) but not 0, " + ";"
+$id = "MNS" +  "$indextest"
+$chaine = "$id" + ";" + "Microsoft network server: Amount of idle time required before suspending session is set to 15 or fewer minute(s) but not 0, " + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanManServer\Parameters"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Services\LanManServer\Parameters" |Select-Object AutoDisconnect
@@ -1688,8 +1698,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Ensure Microsoft network server: Digitally sign communications (always) is set to Enabled,must be 1 " + ";"
+$id = "MNS" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure Microsoft network server: Digitally sign communications (always) is set to Enabled,must be 1 " + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanManServer\Parameters" 
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Services\LanManServer\Parameters" |Select-Object RequireSecuritySignature
@@ -1708,8 +1718,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Ensure Microsoft network server: Digitally sign communications (if client agrees) is set to Enabled,must be 1 " + ";"
+$id = "MNS" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure Microsoft network server: Digitally sign communications (if client agrees) is set to Enabled,must be 1 " + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanManServer\Parameters"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Services\LanManServer\Parameters" |Select-Object EnableSecuritySignature
@@ -1726,8 +1736,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Ensure Microsoft network server: Disconnect clients when logon hours expire is set to Enabled,must be 1 " + ";"
+$id = "MNS" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure Microsoft network server: Disconnect clients when logon hours expire is set to Enabled,must be 1 " + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanManServer\Parameters"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Services\LanManServer\Parameters" |Select-Object EnableForcedLogoff
@@ -1747,8 +1757,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Microsoft network server: Server SPN target name validation level is set to Accept if provided by client or higher,must be 1 or highter  " + ";"
+$id = "MNS" +  "$indextest"
+$chaine = "$id" + ";" + "Microsoft network server: Server SPN target name validation level is set to Accept if provided by client or higher,must be 1 or highter  " + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanManServer\Parameters"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Services\LanManServer\Parameters" |Select-Object SMBServerNameHardeningLevel
@@ -1770,8 +1780,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Ensure Network access: Allow anonymous SID/Name translation is set to Disabled,must be 0  " + ";"
+$id = "NA" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure Network access: Allow anonymous SID/Name translation is set to Disabled,must be 0  " + ";"
 $exist = Test-Path HKLM:\System\CurrentControlSet\Control\Lsa
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty HKLM:\System\CurrentControlSet\Control\Lsa |Select-Object AnonymousNameLookup
@@ -1789,8 +1799,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure Network access: Do not allow anonymous enumeration of SAM accounts is set to Enabled,must be 1  " + ";"
+$id = "NA" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure Network access: Do not allow anonymous enumeration of SAM accounts is set to Enabled,must be 1  " + ";"
 $traitement = Get-ItemProperty HKLM:\System\CurrentControlSet\Control\Lsa |Select-Object RestrictAnonymousSAM
 $traitement = $traitement.RestrictAnonymousSAM
 $chaine += $traitement
@@ -1801,8 +1811,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Network access: Do not allow storage of passwords and credentials for network authentication is set to Enabled,must be 1  " + ";"
+$id = "NA" +  "$indextest"
+$chaine = "$id" + ";" + "Network access: Do not allow storage of passwords and credentials for network authentication is set to Enabled,must be 1  " + ";"
 $exist = Test-Path HKLM:\System\CurrentControlSet\Control\Lsa
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty HKLM:\System\CurrentControlSet\Control\Lsa |Select-Object DisableDomainCreds
@@ -1821,8 +1831,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Ensure Network access: Let Everyone permissions apply to anonymous users is set to Disabled,must be 0  " + ";"
+$id = "NA" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure Network access: Let Everyone permissions apply to anonymous users is set to Disabled,must be 0  " + ";"
 $exist = Test-Path HKLM:\System\CurrentControlSet\Control\Lsa
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty HKLM:\System\CurrentControlSet\Control\Lsa |Select-Object EveryoneIncludesAnonymous
@@ -1840,8 +1850,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Configure Network access: Named Pipes that can be accessed anonymously,must be empty OR{} ,Remote Desktop service server  may have HydraLSPipe &  TermServLicensing" + ";"
+$id = "NA" +  "$indextest"
+$chaine = "$id" + ";" + "Configure Network access: Named Pipes that can be accessed anonymously,must be empty OR{} ,Remote Desktop service server  may have HydraLSPipe &  TermServLicensing" + ";"
 $exist = Test-Path HKLM:\SYSTEM\CurrentControlSet\Services\LanManServer\Parameters
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty HKLM:\SYSTEM\CurrentControlSet\Services\LanManServer\Parameters |Select-Object NullSessionPipes
@@ -1860,8 +1870,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Network access: Remotely accessible registry paths, musbe System\CurrentControlSet\Control\ProductOptions | System\CurrentControlSet\Control\Server Applications |Software\Microsoft\Windows NT\CurrentVersion " + ";"
+$id = "NA" +  "$indextest"
+$chaine = "$id" + ";" + "Network access: Remotely accessible registry paths, musbe System\CurrentControlSet\Control\ProductOptions | System\CurrentControlSet\Control\Server Applications |Software\Microsoft\Windows NT\CurrentVersion " + ";"
 $exist = Test-Path HKLM:\SYSTEM\CurrentControlSet\Control\SecurePipeServers\Winreg\AllowedExactPaths
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty HKLM:\SYSTEM\CurrentControlSet\Control\SecurePipeServers\Winreg\AllowedExactPaths |Select-Object Machine
@@ -1881,8 +1891,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Network access: Remotely accessible registry paths and sub-paths:, check 2.3.10.8 part for the liste" + ";"
+$id = "NA" +  "$indextest"
+$chaine = "$id" + ";" + "Network access: Remotely accessible registry paths and sub-paths:, check 2.3.10.8 part for the liste" + ";"
 $exist = Test-Path HKLM:\SYSTEM\CurrentControlSet\Control\SecurePipeServers\Winreg\AllowedPaths
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty HKLM:\SYSTEM\CurrentControlSet\Control\SecurePipeServers\Winreg\AllowedPaths |Select-Object Machine
@@ -1901,8 +1911,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Ensure Network access: Restrict anonymous access to Named Pipes and Shares is set to Enabled,value must be 1" + ";"
+$id = "NA" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure Network access: Restrict anonymous access to Named Pipes and Shares is set to Enabled,value must be 1" + ";"
 $exist = Test-Path HKLM:\SYSTEM\CurrentControlSet\Services\LanManServer\Parameters
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty HKLM:\SYSTEM\CurrentControlSet\Services\LanManServer\Parameters |Select-Object RestrictNullSessAccess
@@ -1920,8 +1930,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Ensure Network access: Restrict clients allowed to make remote calls to SAM is set to Administrators: Remote Access: Allow" + ";"
+$id = "NA" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure Network access: Restrict clients allowed to make remote calls to SAM is set to Administrators: Remote Access: Allow" + ";"
 $exist = Test-Path HKLM:\SYSTEM\CurrentControlSet\Control\Lsa
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty HKLM:\SYSTEM\CurrentControlSet\Control\Lsa |Select-Object restrictremotesam
@@ -1939,8 +1949,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Network access: Shares that can be accessed anonymously' is set to 'None, value must be empty or {}" + ";"
+$id = "NA" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Network access: Shares that can be accessed anonymously' is set to 'None, value must be empty or {}" + ";"
 $exist = Test-Path HKLM:\SYSTEM\CurrentControlSet\Services\LanManServer\Parameters
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty HKLM:\SYSTEM\CurrentControlSet\Services\LanManServer\Parameters |Select-Object NullSessionShares
@@ -1959,8 +1969,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Ensure Network access: Sharing and security model for local accounts is set to Classic - local users authenticate as themselves,value must be 0" + ";"
+$id = "NA" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure Network access: Sharing and security model for local accounts is set to Classic - local users authenticate as themselves,value must be 0" + ";"
 $exist = Test-Path HKLM:\SYSTEM\CurrentControlSet\Control\Lsa
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty HKLM:\SYSTEM\CurrentControlSet\Control\Lsa |Select-Object ForceGuest
@@ -1980,8 +1990,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Network security: Allow Local System to use computer identity for NTLM is set to 'Enabled,value must be 1" + ";"
+$id = "NS" +  "$indextest"
+$chaine = "$id" + ";" + "Network security: Allow Local System to use computer identity for NTLM is set to 'Enabled,value must be 1" + ";"
 $exist = Test-Path HKLM:\SYSTEM\CurrentControlSet\Control\Lsa
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty HKLM:\SYSTEM\CurrentControlSet\Control\Lsa |Select-Object UseMachineId
@@ -1999,8 +2009,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure Network security: Allow LocalSystem NULL session fallback' is set to 'Disabled,value must be 0" + ";"
+$id = "NS" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure Network security: Allow LocalSystem NULL session fallback' is set to 'Disabled,value must be 0" + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Control\Lsa\MSV1_0"
 if ( $exist -eq $true) {
 $traitement = Get-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Control\Lsa\MSV1_0"|Select-Object AllowNullSessionFallback
@@ -2017,8 +2027,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Network Security: Allow PKU2U authentication requests to this computer to use online identities is set to Disabled,value must be 0" + ";"
+$id = "NS" +  "$indextest"
+$chaine = "$id" + ";" + "Network Security: Allow PKU2U authentication requests to this computer to use online identities is set to Disabled,value must be 0" + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Control\Lsa\pku2u"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Control\Lsa\pku2u"|Select-Object AllowOnlineID
@@ -2036,8 +2046,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Ensure Network security: Configure encryption types allowed for Kerberos is set to RC4_HMAC_MD5, AES128_HMAC_SHA1, AES256_HMAC_SHA1, Future encryption types" + ";"
+$id = "NS" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure Network security: Configure encryption types allowed for Kerberos is set to RC4_HMAC_MD5, AES128_HMAC_SHA1, AES256_HMAC_SHA1, Future encryption types" + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\Kerberos\Parameters"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\Kerberos\Parameters"|Select-Object SupportedEncryptionTypes
@@ -2056,8 +2066,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Network security: Do not store LAN Manager hash value on next password change is set to Enabled,value must be 1" + ";"
+$id = "NS" +  "$indextest"
+$chaine = "$id" + ";" + "Network security: Do not store LAN Manager hash value on next password change is set to Enabled,value must be 1" + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Control\Lsa"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Control\Lsa"|Select-Object NoLMHash
@@ -2075,8 +2085,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Network security: Force logoff when logon hours expire is set to Enabled,value must be 1" + ";"
+$id = "NS" +  "$indextest"
+$chaine = "$id" + ";" + "Network security: Force logoff when logon hours expire is set to Enabled,value must be 1" + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanManServer\Parameters"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Services\LanManServer\Parameters"|Select-Object EnableForcedLogOff
@@ -2095,8 +2105,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Ensure Network security: LAN Manager authentication level is set to Send NTLMv2 response only. Refuse LM & NTLM,value must be 5" + ";"
+$id = "NS" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure Network security: LAN Manager authentication level is set to Send NTLMv2 response only. Refuse LM & NTLM,value must be 5" + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Control\Lsa"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Control\Lsa"|Select-Object LmCompatibilityLevel
@@ -2115,8 +2125,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Ensure Network security: LDAP client signing requirements is set to Negotiate signing or higher,value must be 1 or highter" + ";"
+$id = "NS" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure Network security: LDAP client signing requirements is set to Negotiate signing or higher,value must be 1 or highter" + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\LDAP"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Services\LDAP"|Select-Object LDAPClientIntegrity
@@ -2133,8 +2143,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Ensure Network security: Minimum session security for NTLM SSP based (including secure RPC) clients is set to Require NTLMv2 session security, Require 128-bit encryption,value must be 537395200" + ";"
+$id = "NS" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure Network security: Minimum session security for NTLM SSP based (including secure RPC) clients is set to Require NTLMv2 session security, Require 128-bit encryption,value must be 537395200" + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Control\Lsa\MSV1_0"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Control\Lsa\MSV1_0"|Select-Object NTLMMinClientSec
@@ -2158,8 +2168,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Ensure Shutdown: Allow system to be shut down without having to log on is set to Disabled,value must be 0" + ";"
+$id = "SHUT" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure Shutdown: Allow system to be shut down without having to log on is set to Disabled,value must be 0" + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System"|Select-Object ShutdownWithoutLogon
@@ -2182,8 +2192,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Ensure System objects: Require case insensitivity for non-Windows subsystems is set to Enabled,value must be 1" + ";"
+$id = "SO" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure System objects: Require case insensitivity for non-Windows subsystems is set to Enabled,value must be 1" + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Kernel"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Kernel"|Select-Object ObCaseInsensitive
@@ -2203,8 +2213,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Ensure System objects: Strengthen default permissions of internal system objects (e.g. Symbolic Links) is set to Enabled,value must be 1" + ";"
+$id = "SO" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure System objects: Strengthen default permissions of internal system objects (e.g. Symbolic Links) is set to Enabled,value must be 1" + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager"|Select-Object ProtectionMode
@@ -2226,8 +2236,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Ensure User Account Control: Admin Approval Mode for the Built-in Administrator account is set to Enabled,value must be 1" + ";"
+$id = "UAC" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure User Account Control: Admin Approval Mode for the Built-in Administrator account is set to Enabled,value must be 1" + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System"|Select-Object FilterAdministratorToken
@@ -2247,8 +2257,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Ensure User Account Control: Allow UIAccess applications to prompt for elevation without using the secure desktop is set to Disabled,value must be 0" + ";"
+$id = "UAC" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure User Account Control: Allow UIAccess applications to prompt for elevation without using the secure desktop is set to Disabled,value must be 0" + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System"|Select-Object EnableUIADesktopToggle
@@ -2269,8 +2279,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'User Account Control: Behavior of the elevation prompt for administrators in Admin Approval Mode is set to Prompt for consent on the secure desktop,value must be 2(The value of 2 displays the UAC prompt that needs to be permitted or denied on a secure desktop. No authentication is required) or 1(A value of 1 requires the admin to enter username and password when operations require elevated privileges on a secure desktop)" + ";"
+$id = "UAC" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'User Account Control: Behavior of the elevation prompt for administrators in Admin Approval Mode is set to Prompt for consent on the secure desktop,value must be 2(The value of 2 displays the UAC prompt that needs to be permitted or denied on a secure desktop. No authentication is required) or 1(A value of 1 requires the admin to enter username and password when operations require elevated privileges on a secure desktop)" + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System"|Select-Object ConsentPromptBehaviorAdmin
@@ -2291,8 +2301,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Ensure User Account Control: Behavior of the elevation prompt for standard users is set to Automatically deny elevation requests, value must be 0(A value of 0 will automatically deny any operation that requires elevated privileges if executed by standard users)." + ";"
+$id = "UAC" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure User Account Control: Behavior of the elevation prompt for standard users is set to Automatically deny elevation requests, value must be 0(A value of 0 will automatically deny any operation that requires elevated privileges if executed by standard users)." + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System"|Select-Object ConsentPromptBehaviorUser
@@ -2312,8 +2322,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'User Account Control: Detect application installations and prompt for elevation' is set to Enabled, value must be 1" + ";"
+$id = "UAC" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'User Account Control: Detect application installations and prompt for elevation' is set to Enabled, value must be 1" + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System"|Select-Object EnableInstallerDetection
@@ -2332,8 +2342,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'User Account Control: Only elevate UIAccess applications that are installed in secure locations' is set to 'Enabled, value must be 1" + ";"
+$id = "UAC" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'User Account Control: Only elevate UIAccess applications that are installed in secure locations' is set to 'Enabled, value must be 1" + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System"|Select-Object EnableSecureUIAPaths
@@ -2351,8 +2361,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'User Account Control: Run all administrators in Admin Approval Mode is set to Enabled, value must be 1" + ";"
+$id = "UAC" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'User Account Control: Run all administrators in Admin Approval Mode is set to Enabled, value must be 1" + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System"|Select-Object EnableLUA
@@ -2370,8 +2380,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'User Account Control: Switch to the secure desktop when prompting for elevation' is set to 'Enabled', value must be 1" + ";"
+$id = "UAC" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'User Account Control: Switch to the secure desktop when prompting for elevation' is set to 'Enabled', value must be 1" + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System"|Select-Object PromptOnSecureDesktop
@@ -2389,8 +2399,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'User Account Control: Virtualize file and registry write failures to per-user locations' is set to 'Enabled, value must be 1" + ";"
+$id = "UAC" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'User Account Control: Virtualize file and registry write failures to per-user locations' is set to 'Enabled, value must be 1" + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System"|Select-Object EnableVirtualization
@@ -2413,8 +2423,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 
-
-$chaine = "$indextest" + ";" + "Ensure 'Windows Firewall: Domain: Firewall state' is set to 'On, value must be True" + ";"
+$id = "WFDP" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Windows Firewall: Domain: Firewall state' is set to 'On, value must be True" + ";"
 $traitement = Get-NetFirewallProfile -Name "Domain" |Select-Object Enabled
 $traitement = $traitement.Enabled
 
@@ -2426,8 +2436,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Windows Firewall: Domain: Inbound connections' is set to 'Block (default), value must be Block" + ";"
+$id = "WFDP" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Windows Firewall: Domain: Inbound connections' is set to 'Block (default), value must be Block" + ";"
 $traitement = Get-NetFirewallProfile -Name "Domain" |Select-Object DefaultInboundAction
 $traitement = $traitement.DefaultInboundAction
 
@@ -2439,8 +2449,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Windows Firewall: Domain: Outbound connections' is set to 'Allow (default), value must be Allow but if it's block it s fucking badass" + ";"
+$id = "WFDP" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Windows Firewall: Domain: Outbound connections' is set to 'Allow (default), value must be Allow but if it's block it s fucking badass" + ";"
 $traitement = Get-NetFirewallProfile -Name "Domain" |Select-Object DefaultOutboundAction
 $traitement = $traitement.DefaultOutboundAction
 
@@ -2451,8 +2461,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Windows Firewall: Domain: Settings: Display a notification' is set to 'No', value must false " + ";"
+$id = "WFDP" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Windows Firewall: Domain: Settings: Display a notification' is set to 'No', value must false " + ";"
 $traitement = Get-NetFirewallProfile -Name "Domain" |Select-Object NotifyOnListen
 $traitement = $traitement.NotifyOnListen
 
@@ -2466,8 +2476,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Windows Firewall: Domain: Settings: Apply local firewall rules' is set to 'Yes (default)', value must 1 " + ";"
+$id = "WFDP" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Windows Firewall: Domain: Settings: Apply local firewall rules' is set to 'Yes (default)', value must 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\WindowsFirewall\DomainProfile"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\WindowsFirewall\DomainProfile"|Select-Object AllowLocalPolicyMerge
@@ -2485,8 +2495,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Windows Firewall: Domain: Settings: Apply local connection security rules' is set to 'Yes (default)', value must 1 " + ";"
+$id = "WFDP" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Windows Firewall: Domain: Settings: Apply local connection security rules' is set to 'Yes (default)', value must 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\WindowsFirewall\DomainProfile"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\WindowsFirewall\DomainProfile"|Select-Object AllowLocalIPsecPolicyMerge
@@ -2504,8 +2514,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 
-
-$chaine = "$indextest" + ";" + "Ensure 'Windows Firewall: Domain: Logging: Name' is set to '%SYSTEMROOT%\System32\logfiles\firewall\domainfw.log " + ";"
+$id = "WFDP" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Windows Firewall: Domain: Logging: Name' is set to '%SYSTEMROOT%\System32\logfiles\firewall\domainfw.log " + ";"
 $traitement = Get-NetFirewallProfile -Name "Domain" |Select-Object LogFileName
 $traitement = $traitement.LogFileName
 
@@ -2516,8 +2526,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Windows Firewall: Domain: Logging: Size limit (KB)' is set to '16,384 KB or greater, value must 16384 or higthter  " + ";"
+$id = "WFDP" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Windows Firewall: Domain: Logging: Size limit (KB)' is set to '16,384 KB or greater, value must 16384 or higthter  " + ";"
 $traitement = Get-NetFirewallProfile -Name "Domain" |Select-Object LogMaxSizeKilobytes
 $traitement = $traitement.LogMaxSizeKilobytes
 
@@ -2528,8 +2538,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Windows Firewall: Domain: Logging: Log dropped packets' is set to 'Yes',value must be true " + ";"
+$id = "WFDP" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Windows Firewall: Domain: Logging: Log dropped packets' is set to 'Yes',value must be true " + ";"
 $traitement = Get-NetFirewallProfile -Name "Domain" |Select-Object LogBlocked
 $traitement = $traitement.LogBlocked
 
@@ -2540,8 +2550,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Windows Firewall: Domain: Logging: Log successful connections' is set to 'Yes,value must be true " + ";"
+$id = "WFDP" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Windows Firewall: Domain: Logging: Log successful connections' is set to 'Yes,value must be true " + ";"
 $traitement = Get-NetFirewallProfile -Name "Domain" |Select-Object LogAllowed
 $traitement = $traitement.LogAllowed
 $chaine += $traitement
@@ -2557,8 +2567,8 @@ Write-Host "#########>Begin Firewall Private Profile audit<#########" -Foregroun
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Windows Firewall: Private: Firewall state' is set to 'On, value must be True" + ";"
+$id = "WFPPRIP" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Windows Firewall: Private: Firewall state' is set to 'On, value must be True" + ";"
 $traitement = Get-NetFirewallProfile -Name "Private" |Select-Object Enabled
 $traitement = $traitement.Enabled
 $chaine += $traitement
@@ -2569,8 +2579,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Windows Firewall: Private: Inbound connections' is set to 'Block (default, value must be Block" + ";"
+$id = "WFPPRIP" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Windows Firewall: Private: Inbound connections' is set to 'Block (default, value must be Block" + ";"
 $traitement = Get-NetFirewallProfile -Name "Private" |Select-Object DefaultInboundAction
 $traitement = $traitement.DefaultInboundAction
 $chaine += $traitement
@@ -2581,8 +2591,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Windows Firewall: Private: Outbound connections' is set to 'Allow (default)', value must be Allow but if it's block it s fucking badass" + ";"
+$id = "WFPPRIP" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Windows Firewall: Private: Outbound connections' is set to 'Allow (default)', value must be Allow but if it's block it s fucking badass" + ";"
 $traitement = Get-NetFirewallProfile -Name "Private" |Select-Object DefaultOutboundAction
 $traitement = $traitement.DefaultOutboundAction
 
@@ -2593,8 +2603,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Windows Firewall: Private: Settings: Display a notification' is set to 'No, value must false " + ";"
+$id = "WFPPRIP" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Windows Firewall: Private: Settings: Display a notification' is set to 'No, value must false " + ";"
 $traitement = Get-NetFirewallProfile -Name "Private" |Select-Object NotifyOnListen
 $traitement = $traitement.NotifyOnListen
 
@@ -2608,8 +2618,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Windows Firewall: Private: Settings: Apply local firewall rules' is set to 'Yes (default)', value must 1 " + ";"
+$id = "WFPPRIP" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Windows Firewall: Private: Settings: Apply local firewall rules' is set to 'Yes (default)', value must 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\WindowsFirewall\PrivateProfile"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\WindowsFirewall\PrivateProfile"|Select-Object AllowLocalPolicyMerge
@@ -2628,8 +2638,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Windows Firewall: Private: Settings: Apply local connection security rules' is set to 'Yes (default)', value must 1 " + ";"
+$id = "WFPPRIP" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Windows Firewall: Private: Settings: Apply local connection security rules' is set to 'Yes (default)', value must 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\WindowsFirewall\PrivateProfile"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\WindowsFirewall\PrivateProfile"|Select-Object AllowLocalIPsecPolicyMerge
@@ -2646,8 +2656,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Windows Firewall: Private: Logging: Name' is set to '%SYSTEMROOT%\System32\logfiles\firewall\privatefw.log " + ";"
+$id = "WFPPRIP" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Windows Firewall: Private: Logging: Name' is set to '%SYSTEMROOT%\System32\logfiles\firewall\privatefw.log " + ";"
 $traitement = Get-NetFirewallProfile -Name "Private" |Select-Object LogFileName
 $traitement = $traitement.LogFileName
 
@@ -2658,8 +2668,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Windows Firewall: Private: Logging: Size limit (KB)' is set to '16,384 KB or greater, value must 16384 or higthter  " + ";"
+$id = "WFPPRIP" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Windows Firewall: Private: Logging: Size limit (KB)' is set to '16,384 KB or greater, value must 16384 or higthter  " + ";"
 $traitement = Get-NetFirewallProfile -Name "Private" |Select-Object LogMaxSizeKilobytes
 $traitement = $traitement.LogMaxSizeKilobytes
 
@@ -2670,8 +2680,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Windows Firewall: Private: Logging: Log dropped packets' is set to 'Yes',value must be true " + ";"
+$id = "WFPPRIP" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Windows Firewall: Private: Logging: Log dropped packets' is set to 'Yes',value must be true " + ";"
 $traitement = Get-NetFirewallProfile -Name "Private" |Select-Object LogBlocked
 $traitement = $traitement.LogBlocked
 
@@ -2682,8 +2692,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Windows Firewall: Private: Logging: Log successful connections' is set to 'Yes',value must be true " + ";"
+$id = "WFPPRIP" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Windows Firewall: Private: Logging: Log successful connections' is set to 'Yes',value must be true " + ";"
 $traitement = Get-NetFirewallProfile -Name "Domain" |Select-Object LogAllowed
 $traitement = $traitement.LogAllowed
 $chaine += $traitement
@@ -2699,8 +2709,8 @@ Write-Host "#########>Begin Firewall Public Profile audit<#########" -Foreground
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Windows Firewall: Public: Firewall state' is set to 'On, value must be True" + ";"
+$id = "WFPPUBP" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Windows Firewall: Public: Firewall state' is set to 'On, value must be True" + ";"
 $traitement = Get-NetFirewallProfile -Name "Public" |Select-Object Enabled
 $traitement = $traitement.Enabled
 
@@ -2712,8 +2722,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Windows Firewall: Public: Inbound connections' is set to 'Block , value must be Block" + ";"
+$id = "WFPPUBP" +  "$indextest"
+$chaine = "$id" + ";" + "Windows Firewall: Public: Inbound connections' is set to 'Block , value must be Block" + ";"
 $traitement = Get-NetFirewallProfile -Name "Public" |Select-Object DefaultInboundAction
 $traitement = $traitement.DefaultInboundAction
 
@@ -2725,8 +2735,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Windows Firewall: Public: Outbound connections' is set to 'Allow (default), value must be Allow but if it's block it s fucking badass" + ";"
+$id = "WFPPUBP" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Windows Firewall: Public: Outbound connections' is set to 'Allow (default), value must be Allow but if it's block it s fucking badass" + ";"
 $traitement = Get-NetFirewallProfile -Name "Public" |Select-Object DefaultOutboundAction
 $traitement = $traitement.DefaultOutboundAction
 
@@ -2737,8 +2747,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Windows Firewall: Public: Settings: Display a notification' is set to 'Yes, value must false " + ";"
+$id = "WFPPUBP" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Windows Firewall: Public: Settings: Display a notification' is set to 'Yes, value must false " + ";"
 $traitement = Get-NetFirewallProfile -Name "Public" |Select-Object NotifyOnListen
 $traitement = $traitement.NotifyOnListen
 
@@ -2752,8 +2762,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Windows Firewall: Public: Settings: Apply local firewall rules' is set to 'No, value must 0 " + ";"
+$id = "WFPPUBP" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Windows Firewall: Public: Settings: Apply local firewall rules' is set to 'No, value must 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\WindowsFirewall\PublicProfile"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\WindowsFirewall\PublicProfile"|Select-Object AllowLocalPolicyMerge
@@ -2773,8 +2783,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Windows Firewall: Public: Settings: Apply local connection security rules' is set to 'No', value must 0 " + ";"
+$id = "WFPPUBP" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Windows Firewall: Public: Settings: Apply local connection security rules' is set to 'No', value must 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\WindowsFirewall\PublicProfile"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\WindowsFirewall\PublicProfile"|Select-Object AllowLocalIPsecPolicyMerge
@@ -2791,8 +2801,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Windows Firewall: Public: Logging: Name' is set to '%SYSTEMROOT%\System32\logfiles\firewall\publicfw.log" + ";"
+$id = "WFPPUBP" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Windows Firewall: Public: Logging: Name' is set to '%SYSTEMROOT%\System32\logfiles\firewall\publicfw.log" + ";"
 $traitement = Get-NetFirewallProfile -Name "Public" |Select-Object LogFileName
 $traitement = $traitement.LogFileName
 
@@ -2803,8 +2813,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Windows Firewall: Public: Logging: Size limit (KB)' is set to '16,384 KB or greater" + ";"
+$id = "WFPPUBP" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Windows Firewall: Public: Logging: Size limit (KB)' is set to '16,384 KB or greater" + ";"
 $traitement = Get-NetFirewallProfile -Name "Public" |Select-Object LogMaxSizeKilobytes
 $traitement = $traitement.LogMaxSizeKilobytes
 
@@ -2815,8 +2825,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Windows Firewall: Public: Logging: Log dropped packets' is set to 'Yes',value must be true " + ";"
+$id = "WFPPUBP" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Windows Firewall: Public: Logging: Log dropped packets' is set to 'Yes',value must be true " + ";"
 $traitement = Get-NetFirewallProfile -Name "Public" |Select-Object LogBlocked
 $traitement = $traitement.LogBlocked
 
@@ -2827,8 +2837,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Windows Firewall: Public: Logging: Log successful connections' is set to 'Yes',value must be true " + ";"
+$id = "WFPPUBP" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Windows Firewall: Public: Logging: Log successful connections' is set to 'Yes',value must be true " + ";"
 $traitement = Get-NetFirewallProfile -Name "Public" |Select-Object LogAllowed
 $traitement = $traitement.LogAllowed
 
@@ -2842,8 +2852,8 @@ Write-Host "#########>Begin Advanced Audit Policy audit<#########" -ForegroundCo
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Audit Credential Validation' is set to 'Success and Failure" + ";"
+$id = "AAAPA" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Audit Credential Validation' is set to 'Success and Failure" + ";"
 $traitement = Get-Content $auditconfigfile |Select-String -pattern "(Validation des informations d'identification)|(Credential Validation)"
 $traitement = $traitement.line
 
@@ -2855,8 +2865,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Audit Application Group Management' is set to 'Success and Failure" + ";"
+$id = "AAAPA" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Audit Application Group Management' is set to 'Success and Failure" + ";"
 $traitement = Get-Content $auditconfigfile |Select-String -pattern "(Gestion des groupes d'applications)|(Application Group Management)"
 $traitement = $traitement.line
 
@@ -2867,8 +2877,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Audit Other Account Management Events' is set to 'Success and Failure" + ";"
+$id = "AAAPA" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Audit Other Account Management Events' is set to 'Success and Failure" + ";"
 $traitement = Get-Content $auditconfigfile |Select-String -pattern "(Autres événements d'ouverture de session)|(Other Account Management Events)"
 $traitement = $traitement.line
 $chaine += $traitement
@@ -2879,8 +2889,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Audit Security Group Management' is set to 'Success and Failure'" + ";"
+$id = "AAAPA" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Audit Security Group Management' is set to 'Success and Failure'" + ";"
 $traitement = Get-Content $auditconfigfile |Select-String -pattern "(Gestion des groupes de sécurité)|(Security Group Management)"
 $traitement = $traitement.line
 
@@ -2891,8 +2901,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Audit User Account Management' is set to 'Success and Failure" + ";"
+$id = "AAAPA" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Audit User Account Management' is set to 'Success and Failure" + ";"
 $traitement = Get-Content $auditconfigfile |Select-String -pattern "(Gestion des comptes d'utilisateur)|(User Account Management)"
 $traitement = $traitement.line
 
@@ -2903,8 +2913,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Audit PNP Activity' is set to 'Success'" + ";"
+$id = "AAAPA" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Audit PNP Activity' is set to 'Success'" + ";"
 $traitement = Get-Content $auditconfigfile |Select-String -pattern "(événements Plug-and-Play)|(PNP Activity)"
 $traitement = $traitement.line
 
@@ -2915,8 +2925,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Audit Process Creation' is set to 'Success" + ";"
+$id = "AAAPA" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Audit Process Creation' is set to 'Success" + ";"
 $traitement = Get-Content $auditconfigfile |Select-String -pattern "(Création du processus)|(Process Creation)"
 $traitement = $traitement.line
 
@@ -2927,8 +2937,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Audit Account Lockout' is set to 'Success and Failure'" + ";"
+$id = "AAAPA" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Audit Account Lockout' is set to 'Success and Failure'" + ";"
 $traitement = Get-Content $auditconfigfile |Select-String -pattern "(Verrouillage du compte)|(Account Lockout)"
 $traitement = $traitement.line
 
@@ -2940,8 +2950,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Audit Group Membership' is set to 'Success" + ";"
+$id = "AAAPA" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Audit Group Membership' is set to 'Success" + ";"
 $traitement = Get-Content $auditconfigfile |Select-String -pattern "(Appartenance é un groupe)|(Group Membership)"
 $traitement = $traitement.line
 $chaine += $traitement
@@ -2952,8 +2962,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Audit Logoff' is set to 'Success'" + ";"
+$id = "AAAPA" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Audit Logoff' is set to 'Success'" + ";"
 $traitement = Get-Content $auditconfigfile |Select-String -pattern "(Fermer la session)|(Logoff)"
 $traitement = $traitement.line
 
@@ -2965,8 +2975,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Audit Logon' is set to 'Success and Failure'" + ";"
+$id = "AAAPA" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Audit Logon' is set to 'Success and Failure'" + ";"
 $traitement = Get-Content $auditconfigfile |Select-String -pattern "(Ouvrir la session)|(Logon)"
 $traitement = $traitement.line
 
@@ -2978,8 +2988,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Audit Other Logon/Logoff Events' is set to 'Success and Failure'" + ";"
+$id = "AAAPA" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Audit Other Logon/Logoff Events' is set to 'Success and Failure'" + ";"
 $traitement = Get-Content $auditconfigfile |Select-String -pattern "(Autres événements d'ouverture/fermeture de session)|(Other Logon/Logoff Events)"
 $traitement = $traitement.line 
 
@@ -2991,8 +3001,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Audit Special Logon' is set to 'Success'" + ";"
+$id = "AAAPA" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Audit Special Logon' is set to 'Success'" + ";"
 $traitement = Get-Content $auditconfigfile |Select-String -pattern "(Ouverture de session spéciale)|(Special Logon)"
 $traitement = $traitement.line 
 
@@ -3003,8 +3013,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Audit Removable Storage' is set to 'Success and Failure'" + ";"
+$id = "AAAPA" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Audit Removable Storage' is set to 'Success and Failure'" + ";"
 $traitement = Get-Content $auditconfigfile |Select-String -pattern "(Stockage amovible)|(Removable Storage)"
 $traitement = $traitement.line 
 
@@ -3015,8 +3025,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Audit Audit Policy Change' is set to 'Success and Failure'" + ";"
+$id = "AAAPA" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Audit Audit Policy Change' is set to 'Success and Failure'" + ";"
 $traitement = Get-Content $auditconfigfile |Select-String -pattern "(Modification de la stratégie d'audit)|(Audit Policy Change)"
 $traitement = $traitement.line 
 
@@ -3027,8 +3037,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Audit Authentication Policy Change' is set to 'Success''" + ";"
+$id = "AAAPA" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Audit Authentication Policy Change' is set to 'Success''" + ";"
 $traitement = Get-Content $auditconfigfile |Select-String -pattern "(Modification de la stratégie d'authentification)|(Authentication Policy Change)"
 $traitement = $traitement.line 
 
@@ -3039,8 +3049,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Audit Authorization Policy Change' is set to 'Success''" + ";"
+$id = "AAAPA" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Audit Authorization Policy Change' is set to 'Success''" + ";"
 $traitement = Get-Content $auditconfigfile |Select-String -pattern "(Modification de la stratégie d'autorisation)|(Authorization Policy Change)"
 $traitement = $traitement.line 
 
@@ -3052,8 +3062,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Audit Sensitive Privilege Use' is set to 'Success and Failure'" + ";"
+$id = "AAAPA" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Audit Sensitive Privilege Use' is set to 'Success and Failure'" + ";"
 $traitement = Get-Content $auditconfigfile |Select-String -pattern "(Utilisation de priviléges sensibles)|(Sensitive Privilege Use)"
 $traitement = $traitement.line 
 
@@ -3064,8 +3074,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Audit IPsec Driver' is set to 'Success and Failure'" + ";"
+$id = "AAAPA" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Audit IPsec Driver' is set to 'Success and Failure'" + ";"
 $traitement = Get-Content $auditconfigfile |Select-String -pattern "(Pilote IPSEC)|(IPsec Driver)"
 $traitement = $traitement.line 
 
@@ -3076,8 +3086,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Audit Other System Events' is set to 'Success and Failure'" + ";"
+$id = "AAAPA" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Audit Other System Events' is set to 'Success and Failure'" + ";"
 $traitement = Get-Content $auditconfigfile |Select-String -pattern "(Autres événements systéme)|(Other System Events)"
 $traitement = $traitement.line
      
@@ -3088,8 +3098,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Audit Security State Change' is set to 'Success" + ";"
+$id = "AAAPA" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Audit Security State Change' is set to 'Success" + ";"
 $traitement = Get-Content $auditconfigfile |Select-String -pattern "(Modification de l'état de la sécurité)|(Security State Change)"
 $traitement = $traitement.line 
 
@@ -3100,8 +3110,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Audit Security System Extension' is set to 'Success and Failure" + ";"
+$id = "AAAPA" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Audit Security System Extension' is set to 'Success and Failure" + ";"
 $traitement = Get-Content $auditconfigfile |Select-String -pattern "(Extension systéme de sécurité)|(Security System Extension)"
 $traitement = $traitement.line 
 
@@ -3113,8 +3123,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Audit System Integrity' is set to 'Success and Failure'" + ";"
+$id = "AAAPA" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Audit System Integrity' is set to 'Success and Failure'" + ";"
 $traitement = Get-Content $auditconfigfile |Select-String -pattern "(Intégrité du systéme)|(System Integrity)"
 $traitement = $traitement.line 
 
@@ -3131,9 +3141,9 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
+$id = "PA" +  "$indextest"
 
-
-$chaine = "$indextest" + ";" + "Ensure 'Prevent enabling lock screen camera' is set to 'Enabled, value must 1 " + ";"
+$chaine = "$id" + ";" + "Ensure 'Prevent enabling lock screen camera' is set to 'Enabled, value must 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Personalization"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Personalization"|Select-Object NoLockScreenCamera
@@ -3151,8 +3161,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Prevent enabling lock screen slide show' is set to 'Enabled', value must 1 " + ";"
+$id = "PA" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Prevent enabling lock screen slide show' is set to 'Enabled', value must 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Personalization"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Personalization"|Select-Object NoLockScreenSlideshow
@@ -3169,8 +3179,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Allow Input Personalization' is set to 'Disabled', value must 0 " + ";"
+$id = "PA" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Allow Input Personalization' is set to 'Disabled', value must 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\InputPersonalization"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\InputPersonalization"|Select-Object AllowInputPersonalization
@@ -3190,8 +3200,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Ensure LAPS AdmPwd GPO Extension / CSE is installed, value must true " + ";"
+$id = "LAPS" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure LAPS AdmPwd GPO Extension / CSE is installed, value must true " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon\GPExtensions\{D76B9641-3288-4f75-942D-087DE603E3EA}"
 if ( $exist -eq $true) {
     $traitement = Test-Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon\GPExtensions\{D76B9641-3288-4f75-942D-087DE603E3EA}"|Select-Object DllName
@@ -3212,8 +3222,8 @@ $chaine = $null
 $traitement = $null
 $exist = $null
 
-
-$chaine = "$indextest" + ";" + "Ensure 'Do not allow password expiration time longer than required by policy' is set to 'Enabled, value must 1 " + ";"
+$id = "LAPS" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Do not allow password expiration time longer than required by policy' is set to 'Enabled, value must 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft Services\AdmPwd"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft Services\AdmPwd"|Select-Object PwdExpirationProtectionEnabled
@@ -3232,8 +3242,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Enable Local Admin Password Management' is set to 'Enabled', value must 1 " + ";"
+$id = "LAPS" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Enable Local Admin Password Management' is set to 'Enabled', value must 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft Services\AdmPwd"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft Services\AdmPwd"|Select-Object AdmPwdEnabled
@@ -3250,8 +3260,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Password Settings: Password Complexity' is set to 'Enabled: Large letters + small letters + numbers + special characters, value must 1 " + ";"
+$id = "LAPS" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Password Settings: Password Complexity' is set to 'Enabled: Large letters + small letters + numbers + special characters, value must 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft Services\AdmPwd"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft Services\AdmPwd"|Select-Object PasswordComplexity
@@ -3270,8 +3280,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Password Settings: Password Length' is set to 'Enabled: 15 or more, value must greater than 15 " + ";"
+$id = "LAPS" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Password Settings: Password Length' is set to 'Enabled: 15 or more, value must greater than 15 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft Services\AdmPwd"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft Services\AdmPwd"|Select-Object PasswordLength
@@ -3290,8 +3300,8 @@ $chaine = $null
 $traitement = $null
 $exist = $null
 
-
-$chaine = "$indextest" + ";" + "Ensure 'Password Settings: Password Age (Days)' is set to 'Enabled: 30 or fewer', value must less than 30 " + ";"
+$id = "LAPS" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Password Settings: Password Age (Days)' is set to 'Enabled: 30 or fewer', value must less than 30 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft Services\AdmPwd"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft Services\AdmPwd"|Select-Object PasswordAgeDays
@@ -3316,8 +3326,8 @@ $chaine = $null
 $traitement = $null
 $exist = $null
 
-
-$chaine = "$indextest" + ";" + "Ensure 'MSS: (AutoAdminLogon) Enable Automatic Logon (not recommended)' is set to 'Disabled, value must be 0  or empty" + ";"
+$id = "MSSG" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'MSS: (AutoAdminLogon) Enable Automatic Logon (not recommended)' is set to 'Disabled, value must be 0  or empty" + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"|Select-Object AutoAdminLogon
@@ -3336,8 +3346,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'MSS: (DisableIPSourceRouting IPv6) IP source routing protection level (protects against packet spoofing)' is set to 'Enabled: Highest protection, source routing is completely disabled, value must be 2" + ";"
+$id = "MSSG" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'MSS: (DisableIPSourceRouting IPv6) IP source routing protection level (protects against packet spoofing)' is set to 'Enabled: Highest protection, source routing is completely disabled, value must be 2" + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip6\Parameters"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip6\Parameters"|Select-Object disableIPSourceRouting
@@ -3356,8 +3366,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'MSS: (DisableIPSourceRouting) IP source routing protection level (protects against packet spoofing)' is set to 'Enabled: Highest protection, source routing is completely disabled, value must be 2" + ";"
+$id = "MSSG" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'MSS: (DisableIPSourceRouting) IP source routing protection level (protects against packet spoofing)' is set to 'Enabled: Highest protection, source routing is completely disabled, value must be 2" + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters"|Select-Object disableIPSourceRouting
@@ -3377,8 +3387,8 @@ $chaine = $null
 $traitement = $null
 $exist = $null
 
-
-$chaine = "$indextest" + ";" + "Ensure 'MSS: (EnableICMPRedirect) Allow ICMP redirects to override OSPF generated routes' is set to 'Disabled, value must be 0" + ";"
+$id = "MSSG" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'MSS: (EnableICMPRedirect) Allow ICMP redirects to override OSPF generated routes' is set to 'Disabled, value must be 0" + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters"|Select-Object EnableICMPRedirect
@@ -3397,8 +3407,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'MSS: (KeepAliveTime) How often keep-alive packets are sent in milliseconds' is set to 'Enabled: 300,000 or 5 minutes, value must be 300000" + ";"
+$id = "MSSG" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'MSS: (KeepAliveTime) How often keep-alive packets are sent in milliseconds' is set to 'Enabled: 300,000 or 5 minutes, value must be 300000" + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters"|Select-Object KeepAliveTime
@@ -3416,8 +3426,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'MSS: (NoNameReleaseOnDemand) Allow the computer to ignore NetBIOS name release requests except from WINS servers' is set to 'Enabled, value must be 300000" + ";"
+$id = "MSSG" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'MSS: (NoNameReleaseOnDemand) Allow the computer to ignore NetBIOS name release requests except from WINS servers' is set to 'Enabled, value must be 300000" + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\NetBT\\Parameters"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Services\NetBT\Parameters" |Select-Object NoNameReleaseOnDemand
@@ -3435,8 +3445,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'MSS: (PerformRouterDiscovery) Allow IRDP to detect and configure Default Gateway addresses (could lead to DoS)' is set to 'Disabled', value must be 0" + ";"
+$id = "MSSG" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'MSS: (PerformRouterDiscovery) Allow IRDP to detect and configure Default Gateway addresses (could lead to DoS)' is set to 'Disabled', value must be 0" + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\\Parameters"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" |Select-Object PerformRouterDiscovery
@@ -3454,8 +3464,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'MSS: (SafeDllSearchMode) Enable Safe DLL search mode (recommended)' is set to 'Enabled, value must be 1" + ";"
+$id = "MSSG" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'MSS: (SafeDllSearchMode) Enable Safe DLL search mode (recommended)' is set to 'Enabled, value must be 1" + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager"
 if ( $exist -eq $true) {
 				$traitement = Get-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager" |Select-Object SafeDllSearchMode
@@ -3472,8 +3482,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure MSS: (ScreenSaverGracePeriod) The time in seconds before the screen saver grace period expires (0 recommended) is set to 'Enabled: 5 or fewer seconds,' value must be 5 or less " + ";"
+$id = "MSSG" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure MSS: (ScreenSaverGracePeriod) The time in seconds before the screen saver grace period expires (0 recommended) is set to 'Enabled: 5 or fewer seconds,' value must be 5 or less " + ";"
 $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" |Select-Object ScreenSaverGracePeriod
 $traitement = $traitement.ScreenSaverGracePeriod
 $chaine += $traitement
@@ -3484,8 +3494,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'MSS: (TcpMaxDataRetransmissions IPv6) How many times unacknowledged data is retransmitted' is set to 'Enabled: 3: value must be 3 " + ";"
+$id = "MSSG" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'MSS: (TcpMaxDataRetransmissions IPv6) How many times unacknowledged data is retransmitted' is set to 'Enabled: 3: value must be 3 " + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\TCPIP6\Parameters"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Services\TCPIP6\Parameters" |Select-Object tcpMaxDataRetransmissions
@@ -3502,8 +3512,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'MSS: (TcpMaxDataRetransmissions) How many times unacknowledged data is retransmitted' is set to 'Enabled: 3: value must be 3 " + ";"
+$id = "MSSG" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'MSS: (TcpMaxDataRetransmissions) How many times unacknowledged data is retransmitted' is set to 'Enabled: 3: value must be 3 " + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\TCPIP\Parameters" 
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Services\TCPIP\Parameters" |Select-Object tcpMaxDataRetransmissions
@@ -3520,8 +3530,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'MSS: (WarningLevel) Percentage threshold for the security event log at which the system will generate a warning' is set to 'Enabled: 90% or less " + ";"
+$id = "MSSG" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'MSS: (WarningLevel) Percentage threshold for the security event log at which the system will generate a warning' is set to 'Enabled: 90% or less " + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\Eventlog\Security"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Services\Eventlog\Security" |Select-Object WarningLevel
@@ -3543,8 +3553,8 @@ $chaine = $null
 $traitement = $null
 $exist = $null
 
-
-$chaine = "$indextest" + ";" + "Set 'NetBIOS node type' to 'P-node' (Ensure NetBT Parameter 'NodeType' is set to '0x2 (2)') (MS Only), value must be 2 " + ";"
+$id = "DNSC" +  "$indextest"
+$chaine = "$id" + ";" + "Set 'NetBIOS node type' to 'P-node' (Ensure NetBT Parameter 'NodeType' is set to '0x2 (2)') (MS Only), value must be 2 " + ";"
 $exist = Test-Path "HKLM:\System\CurrentControlSet\Services\NetBT\Parameters"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\System\CurrentControlSet\Services\NetBT\Parameters" |Select-Object NodeType
@@ -3563,8 +3573,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Turn off multicast name resolution' is set to 'Enabled' (MS Only), value must be 0 " + ";"
+$id = "DNSC" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Turn off multicast name resolution' is set to 'Enabled' (MS Only), value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\DNSClient"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\DNSClient" |Select-Object EnableMulticast
@@ -3586,8 +3596,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Enable Font Providers' is set to 'Disabled, value must be 0 " + ";"
+$id = "FONT" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Enable Font Providers' is set to 'Disabled, value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System" |Select-Object EnableFontProviders
@@ -3609,8 +3619,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Enable insecure guest logons' is set to 'Disabled', value must be 0 " + ";"
+$id = "LW" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Enable insecure guest logons' is set to 'Disabled', value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\LanmanWorkstation"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\LanmanWorkstation" |Select-Object AllowInsecureGuestAuth
@@ -3631,8 +3641,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Turn on Mapper I/O (LLTDIO) driver' is set to 'Disabled', value must be 0 " + ";"
+$id = "LLTDIO" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Turn on Mapper I/O (LLTDIO) driver' is set to 'Disabled', value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\LLTD"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\LLTD" |Select-Object AllowLLTDIOOnDomain
@@ -3661,8 +3671,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Turn on Responder (RSPNDR) driver' is set to 'Disabled'', value must be 0 " + ";"
+$id = "LLTDIO" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Turn on Responder (RSPNDR) driver' is set to 'Disabled'', value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\LLTD"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\LLTD" |Select-Object AllowRspndrOnDomain
@@ -3695,8 +3705,8 @@ $chaine = $null
 $traitement = $null
 $exist = $null
 
-
-$chaine = "$indextest" + ";" + "Ensure 'Turn off Microsoft Peer-to-Peer Networking Services' is set to 'Enabled', value must be 1 " + ";"
+$id = "PPNS" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Turn off Microsoft Peer-to-Peer Networking Services' is set to 'Enabled', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Peernet" 
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Peernet" |Select-Object Disabled
@@ -3709,15 +3719,15 @@ $chaine += $traitement
 $chaine>> $nomfichier
 
 #Check Network Connections
-Write-Host "#########>BeginNetwork Connections audit<#########" -ForegroundColor DarkGreen
+Write-Host "#########>Begin Network Connections audit<#########" -ForegroundColor DarkGreen
 
 #Prohibit installation and configuration of Network Bridge on your DNS domain network
 $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Prohibit installation and configuration of Network Bridge on your DNS domain network' is set to 'Enabled', value must be 1 " + ";"
+$id = "NC" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Prohibit installation and configuration of Network Bridge on your DNS domain network' is set to 'Enabled', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Network Connections" 
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Network Connections" |Select-Object NC_AllowNetBridge_NLA
@@ -3736,8 +3746,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Prohibit use of Internet Connection Sharing on your DNS domain network' is set to 'Enabled', value must be 1 " + ";"
+$id = "NC" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Prohibit use of Internet Connection Sharing on your DNS domain network' is set to 'Enabled', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Network Connections"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Network Connections" |Select-Object NC_ShowSharedAccessUI
@@ -3754,8 +3764,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Require domain users to elevate when setting a network's location' is set to 'Enabled, value must be 1 " + ";"
+$id = "NC" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Require domain users to elevate when setting a network's location' is set to 'Enabled, value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Network Connections"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Network Connections" |Select-Object NC_StdDomainUserSetLocation
@@ -3773,8 +3783,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Hardened UNC Paths' is set to 'Enabled, with Require Mutual Authentication and Require Integrity set for all NETLOGON and SYSVOL shares', RequireMutualAuthentication=1, RequireIntegrity=1 " + ";"
+$id = "NC" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Hardened UNC Paths' is set to 'Enabled, with Require Mutual Authentication and Require Integrity set for all NETLOGON and SYSVOL shares', RequireMutualAuthentication=1, RequireIntegrity=1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\NetworkProvider"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\NetworkProvider" |Select-Object "\\*\NETLOGON"
@@ -3797,8 +3807,8 @@ $chaine = $null
 $traitement = $null
 $exist = $null
 
-
-$chaine = "$indextest" + ";" + "Disable IPv6 (Ensure TCPIP6 Parameter 'DisabledComponents' is set to '0xff (255)'), value must be 255 " + ";"
+$id = "NC" +  "$indextest"
+$chaine = "$id" + ";" + "Disable IPv6 (Ensure TCPIP6 Parameter 'DisabledComponents' is set to '0xff (255)'), value must be 255 " + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\TCPIP6\Parameters"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Services\TCPIP6\Parameters" |Select-Object disabledComponents
@@ -3815,8 +3825,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Configuration of wireless settings using Windows Connect Now' is set to 'Disabled, value must be 1 " + ";"
+$id = "NC" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Configuration of wireless settings using Windows Connect Now' is set to 'Disabled, value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WCN\Registrars"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WCN\Registrars" |Select-Object EnableRegistrars
@@ -3847,8 +3857,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Prohibit access of the Windows Connect Now wizards' is set to 'Enabled, value must be 1 " + ";"
+$id = "NC" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Prohibit access of the Windows Connect Now wizards' is set to 'Enabled, value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WCN\UI"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WCN\UI" |Select-Object DisableWcnUi
@@ -3867,8 +3877,8 @@ $chaine = $null
 $traitement = $null
 $exist = $null
 
-
-$chaine = "$indextest" + ";" + "Ensure 'Minimize the number of simultaneous connections to the Internet or a Windows Domain' is set to 'Enabled', value must be 1 " + ";"
+$id = "NC" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Minimize the number of simultaneous connections to the Internet or a Windows Domain' is set to 'Enabled', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WcmSvc\GroupPolicy"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WcmSvc\GroupPolicy" |Select-Object fMinimizeConnections
@@ -3886,8 +3896,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Prohibit connection to non-domain networks when connected to domain authenticated network' is set to 'Enabled'', value must be 1 " + ";"
+$id = "NC" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Prohibit connection to non-domain networks when connected to domain authenticated network' is set to 'Enabled'', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WcmSvc\GroupPolicy"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WcmSvc\GroupPolicy" |Select-Object fBlockNonDomain
@@ -3907,8 +3917,8 @@ Write-Host "#########>Begin SCM: Pass the Hash Mitigations audit<#########" -For
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Apply UAC restrictions to local accounts on network logons' is set to 'Enabled, value must be 1 " + ";"
+$id = "SCM" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Apply UAC restrictions to local accounts on network logons' is set to 'Enabled, value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest"
 if ( $exist -eq $true) {
 $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" |Select-Object LocalAccountTokenFilterPolicy
@@ -3926,8 +3936,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'WDigest Authentication' is set to 'Disabled', value must be 0 " + ";"
+$id = "SCM" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'WDigest Authentication' is set to 'Disabled', value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest" |Select-Object UseLogonCredential
@@ -3949,8 +3959,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Include command line in process creation events' is set to 'Disabled', value must be 0 " + ";"
+$id = "APC" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Include command line in process creation events' is set to 'Disabled', value must be 0 " + ";"
 $exist = Test-Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\Audit" |Select-Object ProcessCreationIncludeCmdLine_Enabled
@@ -3971,8 +3981,8 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Boot-Start Driver Initialization Policy' is set to 'Enabled: Good, unknown and bad but critical, value must be 3 " + ";"
+$id = "ELA" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Boot-Start Driver Initialization Policy' is set to 'Enabled: Good, unknown and bad but critical, value must be 3 " + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Policies\EarlyLaunch"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Policies\EarlyLaunch" |Select-Object driverLoadPolicy
@@ -3993,8 +4003,8 @@ Write-Host "#########>Begin Logging and tracing audit<#########" -ForegroundColo
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Configure registry policy processing: Do not apply during periodic background processing' is set to 'Enabled: FALSE', value must be 1 " + ";"
+$id = "LT" +  "$indextest"
+$chaine = "$id" + ";" + "Configure registry policy processing: Do not apply during periodic background processing' is set to 'Enabled: FALSE', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Group Policy\{35378EAC-683F-11D2-A89A-00C04FBBCFA2}"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Group Policy\{35378EAC-683F-11D2-A89A-00C04FBBCFA2}" |Select-Object NoBackgroundPolicy
@@ -4011,8 +4021,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Configure registry policy processing: Process even if the Group Policy objects have not changed' is set to 'Enabled: TRUE', value must be 1 " + ";"
+$id = "LT" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Configure registry policy processing: Process even if the Group Policy objects have not changed' is set to 'Enabled: TRUE', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Group Policy\{35378EAC-683F-11D2-A89A-00C04FBBCFA2}"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Group Policy\{35378EAC-683F-11D2-A89A-00C04FBBCFA2}" |Select-Object NoGPOListChanges
@@ -4028,8 +4038,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Continue experiences on this device' is set to 'Disabled, value must be 0 " + ";"
+$id = "LT" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Continue experiences on this device' is set to 'Disabled, value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System" |Select-Object EnableCdp
@@ -4045,8 +4055,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Turn off background refresh of Group Policy' is set to 'Disabled', value must be 0 " + ";"
+$id = "LT" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Turn off background refresh of Group Policy' is set to 'Disabled', value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" 
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" |Select-Object DisableBkGndGroupPolicy
@@ -4065,8 +4075,8 @@ Write-Host "#########>Begin Internet Communication Management audit<#########" -
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure Turn off access to the Store is set to Enabled, value must be 1 " + ";"
+$id = "ICS" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure Turn off access to the Store is set to Enabled, value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Explorer" 
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Explorer" |Select-Object NoUseStoreOpenWith
@@ -4082,8 +4092,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure Turn off downloading of print drivers over HTTP, value must be 1 " + ";"
+$id = "ICS" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure Turn off downloading of print drivers over HTTP, value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Printers" 
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Printers" |Select-Object DisableWebPnPDownload
@@ -4099,8 +4109,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure Turn off handwriting personalization data sharing is set to Enabled, value must be 1 " + ";"
+$id = "ICS" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure Turn off handwriting personalization data sharing is set to Enabled, value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\TabletPC"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\TabletPC" |Select-Object PreventHandwritingDataSharing
@@ -4116,8 +4126,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure Turn off handwriting recognition error reporting is set to Enabled, value must be 1 " + ";"
+$id = "ICS" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure Turn off handwriting recognition error reporting is set to Enabled, value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\HandwritingErrorReports"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\HandwritingErrorReports" |Select-Object PreventHandwritingErrorReports
@@ -4134,8 +4144,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Turn off Internet Connection Wizard if URL connection is referring to Microsoft.com is set to Enabled, value must be 1 " + ";"
+$id = "ICS" +  "$indextest"
+$chaine = "$id" + ";" + "Turn off Internet Connection Wizard if URL connection is referring to Microsoft.com is set to Enabled, value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Internet Connection Wizard"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Internet Connection Wizard" |Select-Object ExitOnMSICW
@@ -4153,8 +4163,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure Turn off Internet download for Web publishing and online ordering wizards, value must be 1 " + ";"
+$id = "ICS" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure Turn off Internet download for Web publishing and online ordering wizards, value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" |Select-Object NoWebServices
@@ -4171,8 +4181,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure Turn off printing over HTTP is set to Enabled, value must be 1 " + ";"
+$id = "ICS" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure Turn off printing over HTTP is set to Enabled, value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Printers"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Printers" |Select-Object DisableHTTPPrinting
@@ -4188,8 +4198,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure Turn off Registration if URL connection is referring to Microsoft.com is set to Enabled, value must be 1 " + ";"
+$id = "ICS" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure Turn off Registration if URL connection is referring to Microsoft.com is set to Enabled, value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Registration Wizard Control"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Registration Wizard Control" |Select-Object NoRegistration
@@ -4206,8 +4216,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure Turn off Search Companion content file updates is set to Enabled, value must be 1 " + ";"
+$id = "ICS" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure Turn off Search Companion content file updates is set to Enabled, value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\SearchCompanion" 
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\SearchCompanion" |Select-Object DisableContentFileUpdates
@@ -4224,8 +4234,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure Turn off the Order Prints picture task is set to Enabled, value must be 1 " + ";"
+$id = "ICS" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure Turn off the Order Prints picture task is set to Enabled, value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" |Select-Object NoOnlinePrintsWizard
@@ -4241,8 +4251,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Turn off the Publish to Web task for files and folders is set to Enabled, value must be 1 " + ";"
+$id = "ICS" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Turn off the Publish to Web task for files and folders is set to Enabled, value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" |Select-Object NoPublishingWizard
@@ -4259,8 +4269,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure Turn off the Windows Messenger Customer Experience Improvement Program is set to Enabled, value must be 1 " + ";"
+$id = "ICS" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure Turn off the Windows Messenger Customer Experience Improvement Program is set to Enabled, value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Messenger\Client"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Messenger\Client" |Select-Object CEIP
@@ -4277,8 +4287,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure Turn off Windows Customer Experience Improvement Program is set to Enabled, value must be 1 " + ";"
+$id = "ICS" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure Turn off Windows Customer Experience Improvement Program is set to Enabled, value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\SQMClient\Windows"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\SQMClient\Windows" |Select-Object CEIPEnable
@@ -4294,8 +4304,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure Turn off Windows Error Reporting is set to Enabled, value must be 1 " + ";"
+$id = "ICS" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure Turn off Windows Error Reporting is set to Enabled, value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Error Reporting" 
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Error Reporting" |Select-Object Disabled
@@ -4314,8 +4324,8 @@ Write-Host "#########>Begin Kerberos audit<#########" -ForegroundColor DarkGreen
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Support device authentication using certificate' is set to 'Enabled: Automatic, value must be 1 " + ";"
+$id = "ICS" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Support device authentication using certificate' is set to 'Enabled: Automatic, value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\kerberos\parameters"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\kerberos\parameters" |Select-Object DevicePKInitBehavior
@@ -4341,8 +4351,8 @@ Write-Host "#########>Begin Locale Services audit<#########" -ForegroundColor Da
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure Disallow copying of user input methods to the system account for sign-in is set to Enabled, value must be 1 " + ";"
+$id = "LSA" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure Disallow copying of user input methods to the system account for sign-in is set to Enabled, value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Control Panel\International"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Control Panel\International" |Select-Object BlockUserInputMethodsForSignIn
@@ -4363,8 +4373,8 @@ Write-Host "#########>Begin Logon audit<#########" -ForegroundColor DarkGreen
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure Block user from showing account details on sign-in is set to Enabled, value must be 1 " + ";"
+$id = "LOGON" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure Block user from showing account details on sign-in is set to Enabled, value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System" |Select-Object BlockUserFromShowingAccountDetailsOnSignin
@@ -4380,8 +4390,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure Do not display network selection UI is set to Enabled, value must be 1 " + ";"
+$id = "LOGON" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure Do not display network selection UI is set to Enabled, value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System" |Select-Object DontDisplayNetworkSelectionUI
@@ -4397,8 +4407,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure Do not enumerate connected users on domain-joined computers is set to Enabled, value must be 1 " + ";"
+$id = "LOGON" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure Do not enumerate connected users on domain-joined computers is set to Enabled, value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System" |Select-Object DontEnumerateConnectedUsers
@@ -4415,8 +4425,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Enumerate local users on domain-joined computers' is set to 'Disabled', value must be 0 " + ";"
+$id = "LOGON" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Enumerate local users on domain-joined computers' is set to 'Disabled', value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System" |Select-Object EnumerateLocalUsers
@@ -4435,8 +4445,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure Turn off app notifications on the lock screen is set to Enabled, value must be 1 " + ";"
+$id = "LOGON" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure Turn off app notifications on the lock screen is set to Enabled, value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System" 
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System" |Select-Object DisableLockScreenAppNotifications
@@ -4453,8 +4463,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Turn on convenience PIN sign-in' is set to 'Disabled', value must be 0 " + ";"
+$id = "LOGON" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Turn on convenience PIN sign-in' is set to 'Disabled', value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System" 
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System" |Select-Object AllowDomainPINLogon
@@ -4474,8 +4484,8 @@ Write-Host "#########>Begin Mitigation Options audit<#########" -ForegroundColor
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Untrusted Font Blocking' is set to 'Enabled: Block untrusted fonts and log events', value must be  1000000000000 " + ";"
+$id = "MO" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Untrusted Font Blocking' is set to 'Enabled: Block untrusted fonts and log events', value must be  1000000000000 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\MitigationOptions" 
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\MitigationOptions" |Select-Object MitigationOptions_FontBocking
@@ -4494,8 +4504,8 @@ Write-Host "#########>Begin Sleep Settings audit<#########" -ForegroundColor Dar
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Allow network connectivity during connected-standby (on battery)' is set to 'Disabled', value must be 0 " + ";"
+$id = "SLEEP" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Allow network connectivity during connected-standby (on battery)' is set to 'Disabled', value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Power\PowerSettings\f15576e8-98b7-4186-b944-eafa664402d9"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Power\PowerSettings\f15576e8-98b7-4186-b944-eafa664402d9" |Select-Object DCSettingIndex
@@ -4513,8 +4523,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Allow network connectivity during connected-standby (plugged in)' is set to 'Disabled', value must be 0 " + ";"
+$id = "SLEEP" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Allow network connectivity during connected-standby (plugged in)' is set to 'Disabled', value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Power\PowerSettings\f15576e8-98b7-4186-b944-eafa664402d9"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Power\PowerSettings\f15576e8-98b7-4186-b944-eafa664402d9" |Select-Object ACSettingIndex
@@ -4530,8 +4540,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure Require a password when a computer wakes (on battery) is set to Enabled, value must be 1 " + ";"
+$id = "SLEEP" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure Require a password when a computer wakes (on battery) is set to Enabled, value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Power\PowerSettings\0e796bdb-100d-47d6-a2d5-f7d2daa51f5"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Power\PowerSettings\0e796bdb-100d-47d6-a2d5-f7d2daa51f5" |Select-Object DCSettingIndex
@@ -4547,8 +4557,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Require a password when a computer wakes (plugged in)' is set to Enabled, value must be 1 " + ";"
+$id = "SLEEP" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Require a password when a computer wakes (plugged in)' is set to Enabled, value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Power\PowerSettings\0e796bdb-100d-47d6-a2d5-f7d2daa51f51"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Power\PowerSettings\0e796bdb-100d-47d6-a2d5-f7d2daa51f51" |Select-Object ACSettingIndex
@@ -4568,8 +4578,8 @@ Write-Host "#########>Begin Remote Assistance audit<#########" -ForegroundColor 
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Configure Offer Remote Assistance' is set to 'Disabled, value must be 0 " + ";"
+$id = "RA" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Configure Offer Remote Assistance' is set to 'Disabled, value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" |Select-Object fAllowUnsolicited
@@ -4585,8 +4595,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Configure Solicited Remote Assistance' is set to 'Disabled', value must be 0 " + ";"
+$id = "RA" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Configure Solicited Remote Assistance' is set to 'Disabled', value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" |Select-Object fAllowToGetHelp
@@ -4599,14 +4609,14 @@ $chaine += $traitement
 $chaine>> $nomfichier
 
 #Remote Procedure Call
-Write-Host "#########>Begin Remote Assistance audit<#########" -ForegroundColor DarkGreen
+Write-Host "#########>Begin Remote Procedure Call audit<#########" -ForegroundColor DarkGreen
 
 #Enable RPC Endpoint Mapper Client Authentication'
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Enable RPC Endpoint Mapper Client Authentication' is set to 'Enabled, value must be 1 " + ";"
+$id = "RPC" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Enable RPC Endpoint Mapper Client Authentication' is set to 'Enabled, value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Rpc"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Rpc" |Select-Object EnableAuthEpResolution
@@ -4623,8 +4633,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Restrict Unauthenticated RPC clients' is set to 'Enabled: Authenticated', value must be 1 " + ";"
+$id = "RPC" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Restrict Unauthenticated RPC clients' is set to 'Enabled: Authenticated', value must be 1 " + ";"
 $exist = Test-Path  "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Rpc" 
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Rpc" |Select-Object RestrictRemoteClients
@@ -4644,8 +4654,8 @@ Write-Host "#########>Begin Microsoft Support Diagnostic Tool audit<#########" -
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Microsoft Support Diagnostic Tool: Turn on MSDT interactive communication with support provider' is set to 'Disabled, value must be 0 " + ";"
+$id = "MSDT" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Microsoft Support Diagnostic Tool: Turn on MSDT interactive communication with support provider' is set to 'Disabled, value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\ScriptedDiagnosticsProvider\Policy" 
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\ScriptedDiagnosticsProvider\Policy" |Select-Object DisableQueryRemoteServer
@@ -4667,8 +4677,8 @@ Write-Host "#########>Begin Windows Performance PerfTrack audit<#########" -Fore
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Enable/Disable PerfTrack' is set to 'Disabled', value must be 0 " + ";"
+$id = "WPP" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Enable/Disable PerfTrack' is set to 'Disabled', value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WDI\{9c5a40da-b965-4fc3-8781-88dd50a6299d}"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WDI\{9c5a40da-b965-4fc3-8781-88dd50a6299d}" |Select-Object ScenarioExecutionEnabled
@@ -4689,8 +4699,8 @@ Write-Host "#########>Begin User Profiles audit<#########" -ForegroundColor Dark
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Turn off the advertising ID' is set to 'Enabled', value must be 1 " + ";"
+$id = "UP" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Turn off the advertising ID' is set to 'Enabled', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\policies\Microsoft\Windows\AdvertisingInfo" 
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\policies\Microsoft\Windows\AdvertisingInfo" |Select-Object DisabledByGroupPolicy
@@ -4711,8 +4721,8 @@ Write-Host "#########>Begin Time Providers audit<#########" -ForegroundColor Dar
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Enable Windows NTP Client' is set to 'Enabled', value must be 1 " + ";"
+$id = "TP" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Enable Windows NTP Client' is set to 'Enabled', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\W32Time\TimeProviders\NtpClient"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\W32Time\TimeProviders\NtpClient" |Select-Object Enabled
@@ -4728,8 +4738,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Enable Windows NTP Server' is set to 'Disabled', value must be 0 " + ";"
+$id = "TP" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Enable Windows NTP Server' is set to 'Disabled', value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\W32Time\TimeProviders\NtpServer"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\W32Time\TimeProviders\NtpServer" |Select-Object Enabled
@@ -4750,8 +4760,8 @@ Write-Host "#########>Begin App Package Deployment audit<#########" -ForegroundC
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure Allow a Windows app to share application data between users, value must be 0 " + ";"
+$id = "APD" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure Allow a Windows app to share application data between users, value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\CurrentVersion\AppModel\StateManager"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\CurrentVersion\AppModel\StateManager" |Select-Object AllowSharedLocalAppData
@@ -4772,8 +4782,8 @@ Write-Host "#########>Begin App Privacy   audit<#########" -ForegroundColor Dark
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Let Windows apps *' is set to 'Enabled: Force Deny's, value must be 0 " + ";"
+$id = "APP" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Let Windows apps *' is set to 'Enabled: Force Deny's, value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\AppPrivacy"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\AppPrivacy" |Select-Object LetAppsAccessAccountInfo
@@ -4838,8 +4848,8 @@ Write-Host "#########>Begin App runtime audit<#########" -ForegroundColor DarkGr
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Allow Microsoft accounts to be optional' is set to 'Enabled', value must be 1 " + ";"
+$id = "APR" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Allow Microsoft accounts to be optional' is set to 'Enabled', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" |Select-Object MSAOptional
@@ -4855,8 +4865,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Block launching Windows Store apps with Windows Runtime API access from hosted content.' is set to 'Enabled', value must be 1 " + ";"
+$id = "APR" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Block launching Windows Store apps with Windows Runtime API access from hosted content.' is set to 'Enabled', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" 
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" |Select-Object BlockHostedAppAccessWinRT
@@ -4877,8 +4887,8 @@ Write-Host "#########>Begin AutoPlay Policies audit<#########" -ForegroundColor 
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Disallow Autoplay for non-volume devices' is set to 'Enabled', value must be 1 " + ";"
+$id = "AP" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Disallow Autoplay for non-volume devices' is set to 'Enabled', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Explorer"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Explorer" |Select-Object NoAutoplayfornonVolume
@@ -4894,8 +4904,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Set the default behavior for AutoRun' is set to 'Enabled: Do not execute any autorun commands', value must be 1 " + ";"
+$id = "AP" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Set the default behavior for AutoRun' is set to 'Enabled: Do not execute any autorun commands', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" |Select-Object NoAutorun
@@ -4912,8 +4922,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Turn off Autoplay' is set to 'Enabled: All drives'', value must be B5 " + ";"
+$id = "AP" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Turn off Autoplay' is set to 'Enabled: All drives'', value must be B5 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" |Select-Object NoDriveTypeAutoRun
@@ -4933,8 +4943,8 @@ Write-Host "#########>Begin Facial Features audit<#########" -ForegroundColor Da
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Use enhanced anti-spoofing when available' is set to 'Enabled', value must be 1 " + ";"
+$id = "FF" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Use enhanced anti-spoofing when available' is set to 'Enabled', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Biometrics\FacialFeatures"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Biometrics\FacialFeatures" |Select-Object EnhancedAntiSpoofing
@@ -4954,8 +4964,8 @@ Write-Host "#########>Begin Camera audit<#########" -ForegroundColor DarkGreen
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Allow Use of Camera' is set to 'Disabled', value must be 0 " + ";"
+$id = "CAM" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Allow Use of Camera' is set to 'Disabled', value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Camera"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Camera" |Select-Object AllowCamera
@@ -4977,8 +4987,8 @@ Write-Host "#########>Begin Cloud Content audit<#########" -ForegroundColor Dark
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure Turn off Microsoft consumer experiences is set to Enabled, value must be 1 " + ";"
+$id = "Cloud" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure Turn off Microsoft consumer experiences is set to Enabled, value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\CloudContent"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\CloudContent" |Select-Object DisableWindowsConsumerFeatures
@@ -5000,8 +5010,8 @@ Write-Host "#########>Begin Connect audit<#########" -ForegroundColor DarkGreen
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure Require pin for pairing is set to Enabled, value must be 1 " + ";"
+$id = "CONNECT" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure Require pin for pairing is set to Enabled, value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Connect"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Connect" |Select-Object RequirePinForPairing
@@ -5023,8 +5033,8 @@ Write-Host "#########>Begin Credential User Interface audit<#########" -Foregrou
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure Require pin for pairing is set to Enabled, value must be 1 " + ";"
+$id = "CUI" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure Require pin for pairing is set to Enabled, value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\CredUI" 
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\CredUI" |Select-Object DisablePasswordReveal
@@ -5042,8 +5052,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Enumerate administrator accounts on elevation' is set to 'Disabled', value must be 0 " + ";"
+$id = "CUI" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Enumerate administrator accounts on elevation' is set to 'Disabled', value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\CredUI"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\CredUI" |Select-Object EnumerateAdministrators
@@ -5060,8 +5070,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Allow Telemetry' is set to 'Enabled: 0 - Security [Enterprise Only]', value must be 0 " + ";"
+$id = "CUI" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Allow Telemetry' is set to 'Enabled: 0 - Security [Enterprise Only]', value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DataCollection"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DataCollection" |Select-Object AllowTelemetry
@@ -5078,8 +5088,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Disable pre-release features or settings' is set to 'Disabled', value must be 0 " + ";"
+$id = "CUI" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Disable pre-release features or settings' is set to 'Disabled', value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\PreviewBuilds"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\PreviewBuilds" |Select-Object EnableConfigFlighting
@@ -5096,8 +5106,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Do not show feedback notifications' is set to 'Enabled, value must be 0 " + ";"
+$id = "CUI" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Do not show feedback notifications' is set to 'Enabled, value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DataCollection"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DataCollection" |Select-Object DoNotShowFeedbackNotifications
@@ -5114,8 +5124,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Toggle user control over Insider builds' is set to 'Disabled', value must be 0 " + ";"
+$id = "CUI" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Toggle user control over Insider builds' is set to 'Disabled', value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\PreviewBuilds"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\PreviewBuilds" |Select-Object AllowBuildPreview
@@ -5137,8 +5147,8 @@ Write-Host "#########>Begin Application Log audit<#########" -ForegroundColor Da
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Application: Control Event Log behavior when the log file reaches its maximum size' is set to 'Disabled', value must be 0 " + ";"
+$id = "APP" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Application: Control Event Log behavior when the log file reaches its maximum size' is set to 'Disabled', value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\EventLog\Application"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\EventLog\Application" |Select-Object Retention
@@ -5154,8 +5164,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Application: Specify the maximum log file size (KB)' is set to 'Enabled: 32,768 or greater', value must be 32,768 or greater " + ";"
+$id = "APP" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Application: Specify the maximum log file size (KB)' is set to 'Enabled: 32,768 or greater', value must be 32,768 or greater " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\EventLog\Application"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\EventLog\Application" |Select-Object MaxSize
@@ -5178,8 +5188,8 @@ Write-Host "#########>Begin Security  Log audit<#########" -ForegroundColor Dark
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Security: Control Event Log behavior when the log file reaches its maximum size' is set to 'Disabled', value must be 0 " + ";"
+$id = "SECL" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Security: Control Event Log behavior when the log file reaches its maximum size' is set to 'Disabled', value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\EventLog\Security" 
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\EventLog\Security" |Select-Object Retention
@@ -5196,8 +5206,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Security: Specify the maximum log file size (KB)' is set to 'Enabled: 196,608 or greater', value must be 196,608 or greater " + ";"
+$id = "SECL" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Security: Specify the maximum log file size (KB)' is set to 'Enabled: 196,608 or greater', value must be 196,608 or greater " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\EventLog\Security"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\EventLog\Security" |Select-Object MaxSize
@@ -5219,8 +5229,8 @@ Write-Host "#########>Begin Setup Log audit<#########" -ForegroundColor DarkGree
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Setup: Control Event Log behavior when the log file reaches its maximum size' is set to 'Disabled, value must be 0 " + ";"
+$id = "SECL" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Setup: Control Event Log behavior when the log file reaches its maximum size' is set to 'Disabled, value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\EventLog\Setup"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\EventLog\Setup" |Select-Object Retention
@@ -5237,8 +5247,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Setup: Specify the maximum log file size (KB)' is set to 'Enabled: 32,768 or greater', value must be 32,768 or greater " + ";"
+$id = "SECL" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Setup: Specify the maximum log file size (KB)' is set to 'Enabled: 32,768 or greater', value must be 32,768 or greater " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\EventLog\Setup" 
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\EventLog\Setup" |Select-Object MaxSize
@@ -5261,8 +5271,8 @@ Write-Host "#########>Begin System Log audit<#########" -ForegroundColor DarkGre
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'System: Control Event Log behavior when the log file reaches its maximum size' is set to 'Disabled', value must be 0 " + ";"
+$id = "SYSL" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'System: Control Event Log behavior when the log file reaches its maximum size' is set to 'Disabled', value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\EventLog\System"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\EventLog\System" |Select-Object Retention
@@ -5279,8 +5289,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'System: Specify the maximum log file size (KB)' is set to 'Enabled: 32,768 or greater', value must be 32,768 or greater " + ";"
+$id = "SYSL" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'System: Specify the maximum log file size (KB)' is set to 'Enabled: 32,768 or greater', value must be 32,768 or greater " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\EventLog\System"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\EventLog\System" |Select-Object MaxSize
@@ -5302,8 +5312,8 @@ Write-Host "#########>Begin Previous Versions audit<#########" -ForegroundColor 
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Configure Windows SmartScreen' is set to 'Enabled', value must be 1 " + ";"
+$id = "PV" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Configure Windows SmartScreen' is set to 'Enabled', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System" |Select-Object EnableSmartScreen
@@ -5320,8 +5330,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Turn off Data Execution Prevention for Explorer' is set to 'Disabled', value must be 0 " + ";"
+$id = "PV" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Turn off Data Execution Prevention for Explorer' is set to 'Disabled', value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Explorer" 
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Explorer" |Select-Object NoDataExecutionPrevention
@@ -5338,8 +5348,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Turn off heap termination on corruption' is set to 'Disabled', value must be 0 " + ";"
+$id = "PV" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Turn off heap termination on corruption' is set to 'Disabled', value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Explorer"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Explorer" |Select-Object NoHeapTerminationOnCorruption
@@ -5355,8 +5365,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Turn off shell protocol protected mode' is set to 'Disabled', value must be 0 " + ";"
+$id = "PV" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Turn off shell protocol protected mode' is set to 'Disabled', value must be 0 " + ";"
 $exist = Test-Path  "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" |Select-Object PreXPSP2ShellProtocolBehavior
@@ -5378,8 +5388,8 @@ Write-Host "#########>Begin Windows Location Provider audit<#########" -Foregrou
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Turn off location' is set to 'Enabled'', value must be 1 " + ";"
+$id = "WLP" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Turn off location' is set to 'Enabled'', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\LocationAndSensors" 
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\LocationAndSensors" |Select-Object DisableLocation
@@ -5402,8 +5412,8 @@ Write-Host "#########>Begin Microsoft Edge audit<#########" -ForegroundColor Dar
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Allow Extensions' is set to 'Disabled', value must be 0 " + ";"
+$id = "ME" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Allow Extensions' is set to 'Disabled', value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\MicrosoftEdge\Extensions"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\MicrosoftEdge\Extensions" |Select-Object ExtensionsEnabled
@@ -5419,8 +5429,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Allow InPrivate Browsing' is set to 'Disabled', value must be 0 " + ";"
+$id = "ME" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Allow InPrivate Browsing' is set to 'Disabled', value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\MicrosoftEdge\Main"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\MicrosoftEdge\Main" |Select-Object AllowInPrivate
@@ -5436,8 +5446,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Configure cookies' is set to 'Enabled: Block only 3rd-party cookies' or higher', value must be 0 " + ";"
+$id = "ME" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Configure cookies' is set to 'Enabled: Block only 3rd-party cookies' or higher', value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\MicrosoftEdge\Main"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\MicrosoftEdge\Main" |Select-Object Cookies
@@ -5454,8 +5464,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Configure Password Manager' is set to 'Disabled', value must be 0 " + ";"
+$id = "ME" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Configure Password Manager' is set to 'Disabled', value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\MicrosoftEdge\Main"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\MicrosoftEdge\Main" |Select-Object FormSuggestPasswords
@@ -5473,8 +5483,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Configure Pop-up Blocker' is set to 'Enabled', value must be 1 " + ";"
+$id = "ME" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Configure Pop-up Blocker' is set to 'Enabled', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\MicrosoftEdge\Main"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\MicrosoftEdge\Main" |Select-Object AllowPopups
@@ -5492,8 +5502,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Configure search suggestions in Address bar' is set to 'Disabled', value must be 0 " + ";"
+$id = "ME" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Configure search suggestions in Address bar' is set to 'Disabled', value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\MicrosoftEdge\SearchScopes"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\MicrosoftEdge\SearchScopes" |Select-Object ShowSearchSuggestionsGlobal
@@ -5509,8 +5519,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Configure SmartScreen Filter' is set to 'Enabled', value must be 1 " + ";"
+$id = "ME" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Configure SmartScreen Filter' is set to 'Enabled', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\MicrosoftEdge\PhishingFilter"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\MicrosoftEdge\PhishingFilter" |Select-Object EnabledV9
@@ -5527,8 +5537,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Prevent access to the about:flags page in Microsoft Edge' is set to 'Enabled', value must be 1 " + ";"
+$id = "ME" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Prevent access to the about:flags page in Microsoft Edge' is set to 'Enabled', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\MicrosoftEdge\Main"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\MicrosoftEdge\Main" |Select-Object PreventAccessToAboutFlagsInMicrosoftEdge
@@ -5545,8 +5555,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + " Ensure Prevent bypassing Windows Defender SmartScreen prompts for files' is set to 'Enabled, value must be 1 " + ";"
+$id = "ME" +  "$indextest"
+$chaine = "$id" + ";" + " Ensure Prevent bypassing Windows Defender SmartScreen prompts for files' is set to 'Enabled, value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\MicrosoftEdge\PhishingFilter" 
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\MicrosoftEdge\PhishingFilter" |Select-Object PreventOverrideAppRepUnknown
@@ -5563,8 +5573,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Prevent bypassing SmartScreen prompts for sites' is set to 'Enabled', value must be 1 " + ";"
+$id = "ME" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Prevent bypassing SmartScreen prompts for sites' is set to 'Enabled', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\MicrosoftEdge\PhishingFilter"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\MicrosoftEdge\PhishingFilter" |Select-Object PreventOverride
@@ -5582,8 +5592,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Prevent using Localhost IP address for WebRTC' is set to 'Enabled', value must be 1 " + ";"
+$id = "ME" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Prevent using Localhost IP address for WebRTC' is set to 'Enabled', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\MicrosoftEdge\Main"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\MicrosoftEdge\Main" |Select-Object HideLocalHostIP
@@ -5605,8 +5615,8 @@ Write-Host "#########>Begin OneDrive audit<#########" -ForegroundColor DarkGreen
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Prevent the usage of OneDrive for file storage' is set to 'Enabled'', value must be 1 " + ";"
+$id = "OD" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Prevent the usage of OneDrive for file storage' is set to 'Enabled'', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\OneDrive"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\OneDrive" |Select-Object DisableFileSyncNGSC
@@ -5628,8 +5638,8 @@ Write-Host "#########>Begin Remote Desktop Connection Client audit<#########" -F
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Do not allow passwords to be saved' is set to 'Enabled', value must be 1 " + ";"
+$id = "RDCC" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Do not allow passwords to be saved' is set to 'Enabled', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" |Select-Object DisablePasswordSaving
@@ -5646,8 +5656,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Restrict Remote Desktop Services users to a single Remote Desktop Services session' is set to 'Enabled', value must be 1 " + ";"
+$id = "RDCC" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Restrict Remote Desktop Services users to a single Remote Desktop Services session' is set to 'Enabled', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" |Select-Object fSingleSessionPerUser
@@ -5663,8 +5673,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Do not allow COM port redirection' is set to 'Enabled', value must be 1 " + ";"
+$id = "RDCC" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Do not allow COM port redirection' is set to 'Enabled', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" 
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" |Select-Object fDisableCcm
@@ -5682,8 +5692,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Do not allow drive redirection' is set to 'Enabled', value must be 1 " + ";"
+$id = "RDCC" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Do not allow drive redirection' is set to 'Enabled', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" 
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" |Select-Object fDisableCdm
@@ -5699,8 +5709,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Do not allow LPT port redirection' is set to 'Enabled'', value must be 1 " + ";"
+$id = "RDCC" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Do not allow LPT port redirection' is set to 'Enabled'', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" |Select-Object fDisableLPT
@@ -5716,8 +5726,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Do not allow supported Plug and Play device redirection' is set to 'Enabled'', value must be 1 " + ";"
+$id = "RDCC" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Do not allow supported Plug and Play device redirection' is set to 'Enabled'', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" |Select-Object fDisablePNPRedir
@@ -5735,8 +5745,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Always prompt for password upon connection' is set to 'Enabled', value must be 1 " + ";"
+$id = "RDCC" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Always prompt for password upon connection' is set to 'Enabled', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" |Select-Object fPromptForPassword
@@ -5753,8 +5763,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Require secure RPC communication' is set to 'Enabled', value must be 1 " + ";"
+$id = "RDCC" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Require secure RPC communication' is set to 'Enabled', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" 
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" |Select-Object fEncryptRPCTraffic
@@ -5771,8 +5781,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Set client connection encryption level' is set to 'Enabled: High Level', value must be 3 " + ";"
+$id = "RDCC" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Set client connection encryption level' is set to 'Enabled: High Level', value must be 3 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" 
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services"  |Select-Object  MinEncryptionLevel
@@ -5790,8 +5800,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Set time limit for active but idle Remote Desktop Services sessions' is set to 'Enabled: 15 minutes or less', value must be 15 or less  " + ";"
+$id = "RDCC" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Set time limit for active but idle Remote Desktop Services sessions' is set to 'Enabled: 15 minutes or less', value must be 15 or less  " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" |Select-Object  MaxIdleTime
@@ -5808,8 +5818,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Set time limit for disconnected sessions' is set to 'Enabled: 1 minute', value must 1  " + ";"
+$id = "RDCC" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Set time limit for disconnected sessions' is set to 'Enabled: 1 minute', value must 1  " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" |Select-Object  MaxDisconnectionTime
@@ -5826,8 +5836,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Do not delete temp folders upon exit' is set to 'Disabled', value must 0  " + ";"
+$id = "RDCC" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Do not delete temp folders upon exit' is set to 'Disabled', value must 0  " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" |Select-Object  DeleteTempDirsOnExit
@@ -5843,8 +5853,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Do not use temporary folders per session' is set to 'Disabled' (Scored), value must 0  " + ";"
+$id = "RDCC" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Do not use temporary folders per session' is set to 'Disabled' (Scored), value must 0  " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" |Select-Object  PerSessionTempDir
@@ -5865,8 +5875,8 @@ Write-Host "#########>Begin RSS Feeds audit<#########" -ForegroundColor DarkGree
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Prevent downloading of enclosures' is set to 'Enabled', value must be 1 " + ";"
+$id = "RDCC" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Prevent downloading of enclosures' is set to 'Enabled', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Internet Explorer\Feeds"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Internet Explorer\Feeds" |Select-Object  DisableEnclosureDownload
@@ -5888,8 +5898,8 @@ Write-Host "#########>Begin OCR audit<#########" -ForegroundColor DarkGreen
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Allow Cortana' is set to 'Disabled', value must be 0 " + ";"
+$id = "OCR" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Allow Cortana' is set to 'Disabled', value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Search"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Search" |Select-Object  AllowCortana
@@ -5905,8 +5915,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Allow Cortana above lock screen' is set to 'Disabled', value must be 0 " + ";"
+$id = "OCR" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Allow Cortana above lock screen' is set to 'Disabled', value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Search" 
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Search" |Select-Object  AllowCortanaAboveLock
@@ -5922,8 +5932,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Allow indexing of encrypted files' is set to 'Disabled', value must be 0 " + ";"
+$id = "OCR" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Allow indexing of encrypted files' is set to 'Disabled', value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Search"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Search" |Select-Object  AllowIndexingEncryptedStoresOrItems
@@ -5939,8 +5949,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Allow search and Cortana to use location' is set to 'Disabled', value must be 0 " + ";"
+$id = "OCR" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Allow search and Cortana to use location' is set to 'Disabled', value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Search"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Search" |Select-Object  AllowSearchToUseLocation
@@ -5960,8 +5970,8 @@ Write-Host "#########>Begin Software Protection Platform audit<#########" -Foreg
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Turn off KMS Client Online AVS Validation' is set to 'Enabled', value must be 1 " + ";"
+$id = "SPP" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Turn off KMS Client Online AVS Validation' is set to 'Enabled', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\CurrentVersion\Software Protection Platform" 
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\CurrentVersion\Software Protection Platform" |Select-Object  NoGenTicket
@@ -5982,8 +5992,8 @@ Write-Host "#########>Begin Store audit<#########" -ForegroundColor DarkGreen
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Disable all apps from Windows Store' is set to 'Enabled', value must be 1 " + ";"
+$id = "STORE" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Disable all apps from Windows Store' is set to 'Enabled', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\WindowsStore"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\WindowsStore" |Select-Object  DisableStoreApps
@@ -6000,8 +6010,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Turn off Automatic Download and Install of updates' is set to 'Disabled', value must be 0 " + ";"
+$id = "STORE" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Turn off Automatic Download and Install of updates' is set to 'Disabled', value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\WindowsStore" 
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\WindowsStore" |Select-Object  AutoDownload
@@ -6018,8 +6028,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Turn off the offer to update to the latest version of Windows' is set to 'Enabled, value must be 1 " + ";"
+$id = "STORE" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Turn off the offer to update to the latest version of Windows' is set to 'Enabled, value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\WindowsStore"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\WindowsStore" |Select-Object  DisableOSUpgrade
@@ -6035,8 +6045,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Turn off the Store application' is set to 'Enabled', value must be 1 " + ";"
+$id = "STORE" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Turn off the Store application' is set to 'Enabled', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\WindowsStore"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\WindowsStore" |Select-Object  RemoveWindowsStore
@@ -6057,8 +6067,8 @@ Write-Host "#########>Begin Windows Defender audit<#########" -ForegroundColor D
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Join Microsoft MAPS' is set to 'Disabled', value must be 0 " + ";"
+$id = "WDEF" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Join Microsoft MAPS' is set to 'Disabled', value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Spynet"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Spynet" |Select-Object  SpynetReporting
@@ -6074,8 +6084,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Configure Watson events' is set to 'Disabled, value must be 0 " + ";"
+$id = "WDEF" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Configure Watson events' is set to 'Disabled, value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Reporting"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Reporting" |Select-Object  DisableGenericRePorts
@@ -6096,8 +6106,8 @@ Write-Host "#########>Begin Windows Ink Workspace audit<#########" -ForegroundCo
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Allow suggested apps in Windows Ink Workspace' is set to 'Disabled, value must be 0 " + ";"
+$id = "WIW" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Allow suggested apps in Windows Ink Workspace' is set to 'Disabled, value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\WindowsInkWorkspace"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\WindowsInkWorkspace" |Select-Object  AllowSuggestedAppsInWindowsInkWorkspace
@@ -6114,8 +6124,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Allow Windows Ink Workspace' is set to 'Enabled: On, but disallow access above lock' OR 'Disabled' but not 'Enabled: On', value must be 0 or 1 but not 2" + ";"
+$id = "WIW" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Allow Windows Ink Workspace' is set to 'Enabled: On, but disallow access above lock' OR 'Disabled' but not 'Enabled: On', value must be 0 or 1 but not 2" + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\WindowsInkWorkspace"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\WindowsInkWorkspace" |Select-Object  AllowWindowsInkWorkspace
@@ -6137,8 +6147,8 @@ Write-Host "#########>Begin Windows Installer audit<#########" -ForegroundColor 
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Allow user control over installs' is set to 'Disabled', value must be 0 " + ";"
+$id = "WI" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Allow user control over installs' is set to 'Disabled', value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Installer" 
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Installer" |Select-Object  EnableUserControl
@@ -6155,8 +6165,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Always install with elevated privileges' is set to 'Disabled', value must be 0 " + ";"
+$id = "WI" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Always install with elevated privileges' is set to 'Disabled', value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Installer" 
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Installer" |Select-Object AlwaysInstallElevated
@@ -6172,8 +6182,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Prevent Internet Explorer security prompt for Windows Installer scripts' is set to 'Disabled', value must be 0 " + ";"
+$id = "WI" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Prevent Internet Explorer security prompt for Windows Installer scripts' is set to 'Disabled', value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Installer" 
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Installer" |Select-Object SafeForScripting
@@ -6193,8 +6203,8 @@ Write-Host "#########>Begin Windows Logon Options audit<#########" -ForegroundCo
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Sign-in last interactive user automatically after a system-initiated restart' is set to 'Disabled', value must be 1 " + ";"
+$id = "WLO" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Sign-in last interactive user automatically after a system-initiated restart' is set to 'Disabled', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" |Select-Object DisableAutomaticRestartSignOn
@@ -6215,8 +6225,8 @@ Write-Host "#########>Begin Windows PowerShell audit<#########" -ForegroundColor
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Turn on PowerShell Script Block Logging' is set to 'Disabled', value must be 0  but microsof recommending to 1 " + ";"
+$id = "WP" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Turn on PowerShell Script Block Logging' is set to 'Disabled', value must be 0  but microsof recommending to 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging" |Select-Object EnableScriptBlockLogging
@@ -6232,8 +6242,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Turn on PowerShell Transcription' is set to 'Disabled, value must be 0  " + ";"
+$id = "WP" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Turn on PowerShell Transcription' is set to 'Disabled, value must be 0 but microsof recommending to 1  " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\Transcription"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\Transcription" |Select-Object EnableTranscripting
@@ -6253,8 +6263,8 @@ Write-Host "#########>Begin Windows Remote Management audit<#########" -Foregrou
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Allow Basic authentication' is set to 'Disabled', value must be 0" + ";"
+$id = "WRR" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Allow Basic authentication' is set to 'Disabled', value must be 0" + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WinRM\Client"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WinRM\Client" |Select-Object AllowBasic
@@ -6270,8 +6280,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Allow unencrypted traffic' is set to 'Disabled', value must be 0" + ";"
+$id = "WRR" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Allow unencrypted traffic' is set to 'Disabled', value must be 0" + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WinRM\Client"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WinRM\Client" |Select-Object AllowUnencryptedTraffic
@@ -6287,8 +6297,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Disallow Digest authentication' is set to 'Enabled', value must be 0" + ";"
+$id = "WRR" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Disallow Digest authentication' is set to 'Enabled', value must be 0" + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WinRM\Client"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WinRM\Client" |Select-Object AllowDigest
@@ -6305,8 +6315,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Allow Basic authentication' is set to 'Disabled', value must be 0" + ";"
+$id = "WRR" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Allow Basic authentication' is set to 'Disabled', value must be 0" + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WinRM\Service" 
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WinRM\Service" |Select-Object AllowBasic
@@ -6323,8 +6333,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Allow remote server management through WinRM' is set to 'Disabled', value must be 0" + ";"
+$id = "WRR" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Allow remote server management through WinRM' is set to 'Disabled', value must be 0" + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WinRM\Service"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WinRM\Service" |Select-Object AllowAutoConfig
@@ -6340,8 +6350,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Allow unencrypted traffic' is set to 'Disabled', value must be 0" + ";"
+$id = "WRR" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Allow unencrypted traffic' is set to 'Disabled', value must be 0" + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WinRM\Service" 
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WinRM\Service" |Select-Object AllowUnencryptedTraffic
@@ -6358,8 +6368,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Disallow WinRM from storing RunAs credentials' is set to 'Enabled', value must be 1" + ";"
+$id = "WRR" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Disallow WinRM from storing RunAs credentials' is set to 'Enabled', value must be 1" + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WinRM\Service" 
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WinRM\Service" |Select-Object DisableRunAs
@@ -6379,8 +6389,8 @@ Write-Host "#########>Begin Windows Remote Shell audit<#########" -ForegroundCol
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Allow Remote Shell Access' is set to 'Disabled, value must be 0" + ";"
+$id = "WRS" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Allow Remote Shell Access' is set to 'Disabled, value must be 0" + ";"
 $exist = Test-Path  "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WinRM\Service\WinRS" 
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WinRM\Service\WinRS" |Select-Object AllowRemoteShellAccess
@@ -6402,8 +6412,8 @@ Write-Host "#########>Begin Windows Update audit<#########" -ForegroundColor Dar
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Select when Feature Updates are received' is set to 'Enabled: Current Branch for Business, 180 days' " + ";"
+$id = "WU" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Select when Feature Updates are received' is set to 'Enabled: Current Branch for Business, 180 days' " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" |Select-Object DeferFeatureUpdates
@@ -6427,8 +6437,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Select when Quality Updates are received' is set to 'Enabled: 0 days''' " + ";"
+$id = "WU" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Select when Quality Updates are received' is set to 'Enabled: 0 days''' " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" 
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" |Select-Object DeferQualityUpdates
@@ -6448,8 +6458,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Configure Automatic Updates' is set to 'Enabled', value must be 0" + ";"
+$id = "WU" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Configure Automatic Updates' is set to 'Enabled', value must be 0" + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" |Select-Object NoAutoUpdate
@@ -6465,8 +6475,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Configure Automatic Updates: Scheduled install day' is set to '0 - Every day'', value must be 0" + ";"
+$id = "WU" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Configure Automatic Updates: Scheduled install day' is set to '0 - Every day'', value must be 0" + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" |Select-Object ScheduledInstallDay
@@ -6483,8 +6493,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'No auto-restart with logged on users for scheduled automatic updates installations' is set to 'Disabled', value must be 0" + ";"
+$id = "WU" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'No auto-restart with logged on users for scheduled automatic updates installations' is set to 'Disabled', value must be 0" + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" |Select-Object NoAutoRebootWithLoggedOnUsers
@@ -6505,8 +6515,8 @@ Write-Host "#########>Begin Personalization audit<#########" -ForegroundColor Da
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Enable screen saver' is set to 'Enabled' (, value must be 1" + ";"
+$id = "PERSO" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Enable screen saver' is set to 'Enabled' (, value must be 1" + ";"
 $exist = Test-Path "HKCU:\SOFTWARE\Policies\Microsoft\Windows\Control Panel\Desktop"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKCU:\SOFTWARE\Policies\Microsoft\Windows\Control Panel\Desktop" |Select-Object ScreenSaveActive
@@ -6522,8 +6532,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Force specific screen saver: Screen saver executable name' is set to 'Enabled: scrnsave.scr', value must be 0" + ";"
+$id = "PERSO" +  "$indextest"
+$chaine = "$id" + ";" + "Force specific screen saver: Screen saver executable name' is set to 'Enabled: scrnsave.scr', value must be 0" + ";"
 $exist = Test-Path "HKCU:\SOFTWARE\Policies\Microsoft\Windows\Control Panel\Desktop"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKCU:\SOFTWARE\Policies\Microsoft\Windows\Control Panel\Desktop" |Select-Object SCRNSAVE.EXE
@@ -6539,8 +6549,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Password protect the screen saver' is set to 'Enabled', value must be 1" + ";"
+$id = "PERSO" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Password protect the screen saver' is set to 'Enabled', value must be 1" + ";"
 $exist = Test-Path "HKCU:\SOFTWARE\Policies\Microsoft\Windows\Control Panel\Desktop"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKCU:\SOFTWARE\Policies\Microsoft\Windows\Control Panel\Desktop" |Select-Object ScreenSaverIsSecure
@@ -6557,8 +6567,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Screen saver timeout' is set to 'Enabled: 900 seconds or fewer, but not 0', value must be 900 or less but not 0" + ";"
+$id = "PERSO" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Screen saver timeout' is set to 'Enabled: 900 seconds or fewer, but not 0', value must be 900 or less but not 0" + ";"
 $exist = Test-Path "HKCU:\SOFTWARE\Policies\Microsoft\Windows\Control Panel\Desktop"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKCU:\SOFTWARE\Policies\Microsoft\Windows\Control Panel\Desktop" |Select-Object ScreenSaveTimeOut
@@ -6578,8 +6588,8 @@ Write-Host "#########>Begin Notifications audit<#########" -ForegroundColor Dark
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Turn off toast notifications on the lock screen' is set to 'Enabled, value must be 1" + ";"
+$id = "NOTIF" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Turn off toast notifications on the lock screen' is set to 'Enabled, value must be 1" + ";"
 $exist = Test-Path "HKCU:\SOFTWARE\Policies\Microsoft\Windows\CurrentVersion\PushNotifications"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKCU:\SOFTWARE\Policies\Microsoft\Windows\CurrentVersion\PushNotifications" |Select-Object NoToastApplicationNotificationOnLockScreen
@@ -6599,8 +6609,8 @@ Write-Host "#########>Begin Internet Communication Management audit<#########" -
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Turn off Help Experience Improvement Program' is set to 'Enabled', value must be 1" + ";"
+$id = "ICC" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Turn off Help Experience Improvement Program' is set to 'Enabled', value must be 1" + ";"
 $exist = Test-Path "HKCU:\SOFTWARE\Policies\Microsoft\Assistance\Client\1.0" 
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKCU:\SOFTWARE\Policies\Microsoft\Assistance\Client\1.0" |Select-Object NoImplicitFeedback
@@ -6621,8 +6631,8 @@ Write-Host "#########>Begin Attachment Manager audit<#########" -ForegroundColor
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Do not preserve zone information in file attachments' is set to 'Disabled', value must be 0" + ";"
+$id = "ATTM" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Do not preserve zone information in file attachments' is set to 'Disabled', value must be 0" + ";"
 $exist = Test-Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Attachments"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Attachments" |Select-Object SaveZoneInformation
@@ -6638,8 +6648,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Notify antivirus programs when opening attachments' is set to 'Enabled', value must be 1" + ";"
+$id = "ATTM" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Notify antivirus programs when opening attachments' is set to 'Enabled', value must be 1" + ";"
 $exist = Test-Path  "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Attachments" 
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Attachments" |Select-Object ScanWithAntiVirus
@@ -6660,8 +6670,8 @@ Write-Host "#########>Begin Cloud Content audit<#########" -ForegroundColor Dark
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Configure Windows spotlight on lock screen' is set to Disabled, value must be 0" + ";"
+$id = "CLOUDC" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Configure Windows spotlight on lock screen' is set to Disabled, value must be 0" + ";"
 $exist = Test-Path "HKCU:\Software\Policies\Microsoft\Windows\CloudContent"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKCU:\Software\Policies\Microsoft\Windows\CloudContent" |Select-Object ConfigureWindowsSpotlight
@@ -6677,8 +6687,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Do not suggest third-party content in Windows spotlight' is set to 'Enabled', value must be 1" + ";"
+$id = "CLOUDC" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Do not suggest third-party content in Windows spotlight' is set to 'Enabled', value must be 1" + ";"
 $exist = Test-Path "HKCU:\Software\Policies\Microsoft\Windows\CloudContent"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKCU:\Software\Policies\Microsoft\Windows\CloudContent" |Select-Object DisableThirdPartySuggestions
@@ -6694,8 +6704,8 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Turn off all Windows spotlight features' is set to 'Enabled', value must be 1" + ";"
+$id = "CLOUDC" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Turn off all Windows spotlight features' is set to 'Enabled', value must be 1" + ";"
 $exist = Test-Path "HKCU:\Software\Policies\Microsoft\Windows\CloudContent" 
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKCU:\Software\Policies\Microsoft\Windows\CloudContent" |Select-Object DisableWindowsSpotlightFeatures
@@ -6716,8 +6726,8 @@ Write-Host "#########>Begin Network Sharing audit<#########" -ForegroundColor Da
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Prevent users from sharing files within their profile.' is set to 'Enabled', value must be 1" + ";"
+$id = "NSHARE" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Prevent users from sharing files within their profile.' is set to 'Enabled', value must be 1" + ";"
 $exist = Test-Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" |Select-Object NoInplaceSharing
@@ -6739,8 +6749,8 @@ Write-Host "#########>Begin  User Windows Installer audit<#########" -Foreground
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Always install with elevated privileges' is set to 'Disabled', value must be 0" + ";"
+$id = "UWI" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Always install with elevated privileges' is set to 'Disabled', value must be 0" + ";"
 $exist = Test-Path "HKCU:\SOFTWARE\Policies\Microsoft\Windows\Installer"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKCU:\SOFTWARE\Policies\Microsoft\Windows\Installer" |Select-Object AlwaysInstallElevated
@@ -6761,8 +6771,8 @@ Write-Host "#########>Begin  Playback audit<#########" -ForegroundColor DarkGree
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Prevent Codec Download' is set to 'Enabled', value must be 1" + ";"
+$id = "PLB" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Prevent Codec Download' is set to 'Enabled', value must be 1" + ";"
 $exist = Test-Path "HKCU:\SOFTWARE\Policies\Microsoft\WindowsMediaPlayer"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKCU:\SOFTWARE\Policies\Microsoft\WindowsMediaPlayer" |Select-Object PreventCodecDownload

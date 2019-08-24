@@ -384,7 +384,10 @@ foreach ($tache in $tabletache) {
     "##############################################`r" >> $nomfichierttache 
 }
 
+#check net accounts intel
 
+$nomfichierNetAccount = "./AccountsPolicy- " + "$OSName" + ".txt"
+net accounts > $nomfichierNetAccount
 
 #Check listen port 
 Write-Host "#########>Take  Port listening  Information<#########" -ForegroundColor DarkGreen
@@ -530,7 +533,7 @@ $traitement = $null
 $id = "ALP" +  "$indextest"
 
 $chaine = "$id" + ";" + "Account lockout duration is set to 15 or more minute(s)" + ";"
-$traitement = "Check $gpofile OR ask to see the AD configuration"
+$traitement = Get-Content $nomfichierNetAccount |Select-String -pattern '(Durée du verrouillage)|(Lockout duration)'
 
 
 $chaine += $traitement
@@ -542,8 +545,8 @@ $traitement = $null
 $id = "ALP" +  "$indextest"
 
 $chaine = "$id" + ";" + "Ensure Account lockout threshold is set to 10 or fewer invalid logon attempt(s), but not 0" + ";"
-$traitement = "Check $gpofile OR ask to see the AD configuration"
-#to improve 
+$traitement = Get-Content $nomfichierNetAccount |Select-String -pattern '(Seuil de verrouillage)|(Lockout threshold)'
+
 
 
 $chaine += $traitement
@@ -555,8 +558,8 @@ $chaine = $null
 $traitement = $null
 $id = "ALP" +  "$indextest"
 $chaine = "$id" + ";" + "Reset account lockout counter after is set to 15 or more minute(s)" + ";"
-$traitement = "Check $gpofile OR ask to see the AD configuration"
-#to improve 
+$traitement = Get-Content $nomfichierNetAccount |Select-String -pattern "(Fenêtre d'observation du verrouillage)|(Lockout observation window)"
+
 
 $chaine += $traitement
 $chaine>> $nomfichier
@@ -1241,7 +1244,7 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-$id = "AA" +  "$indextest"
+$id = "APA" +  "$indextest"
 $chaine = "$id" + ";" + "Audit: Force audit policy subcategory settings (Windows Vista or later) to override audit policy category settings is set to Enabled, Value must be 1 " + ";"
 $exist = Test-Path HKLM:\SYSTEM\CurrentControlSet\Control\Lsa
 if ( $exist -eq $true) {
@@ -1260,7 +1263,7 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-$id = "AA" +  "$indextest"
+$id = "APA" +  "$indextest"
 $chaine = "$id" + ";" + "Audit: Shut down system immediately if unable to log security audits is set to Disabled, Value must be 0 " + ";"
 $exist = Test-Path HKLM:\SYSTEM\CurrentControlSet\Control\Lsa
 if ( $exist -eq $true) {
@@ -3660,7 +3663,7 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-$id = "WFPPRIP" +  "$indextest"
+$id = "WFPPUBP" +  "$indextest"
 $chaine = "$id" + ";" + "Windows Firewall: Public: Inbound connections' is set to 'Block , value must be Block" + ";"
 $traitement = Get-NetFirewallProfile -Name "Public" |Select-Object DefaultInboundAction
 $traitement = $traitement.DefaultInboundAction
@@ -3673,7 +3676,7 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-$id = "WFPPRIP" +  "$indextest"
+$id = "WFPPUBP" +  "$indextest"
 $chaine = "$id" + ";" + "Ensure 'Windows Firewall: Public: Outbound connections' is set to 'Allow (default), value must be Allow but if it's block it s fucking badass" + ";"
 $traitement = Get-NetFirewallProfile -Name "Public" |Select-Object DefaultOutboundAction
 $traitement = $traitement.DefaultOutboundAction
@@ -3685,7 +3688,7 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-$id = "WFPPRIP" +  "$indextest"
+$id = "WFPPUBP" +  "$indextest"
 $chaine = "$id" + ";" + "Ensure 'Windows Firewall: Public: Settings: Display a notification' is set to 'Yes, value must false " + ";"
 $traitement = Get-NetFirewallProfile -Name "Public" |Select-Object NotifyOnListen
 $traitement = $traitement.NotifyOnListen
@@ -3700,7 +3703,7 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-$id = "WFPPRIP" +  "$indextest"
+$id = "WFPPUBP" +  "$indextest"
 $chaine = "$id" + ";" + "Ensure 'Windows Firewall: Public: Settings: Apply local firewall rules' is set to 'No, value must 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\WindowsFirewall\PublicProfile"
 if ( $exist -eq $true) {
@@ -3721,7 +3724,7 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-$id = "WFPPRIP" +  "$indextest"
+$id = "WFPPUBP" +  "$indextest"
 $chaine = "$id" + ";" + "Ensure 'Windows Firewall: Public: Settings: Apply local connection security rules' is set to 'No', value must 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\WindowsFirewall\PublicProfile"
 if ( $exist -eq $true) {
@@ -3739,7 +3742,7 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-$id = "WFPPRIP" +  "$indextest"
+$id = "WFPPUBP" +  "$indextest"
 $chaine = "$id" + ";" + "Ensure 'Windows Firewall: Public: Logging: Name' is set to '%SYSTEMROOT%\System32\logfiles\firewall\publicfw.log" + ";"
 $traitement = Get-NetFirewallProfile -Name "Public" |Select-Object LogFileName
 $traitement = $traitement.LogFileName
@@ -3751,7 +3754,7 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-$id = "WFPPRIP" +  "$indextest"
+$id = "WFPPUBP" +  "$indextest"
 $chaine = "$id" + ";" + "Ensure 'Windows Firewall: Public: Logging: Size limit (KB)' is set to '16,384 KB or greater" + ";"
 $traitement = Get-NetFirewallProfile -Name "Public" |Select-Object LogMaxSizeKilobytes
 $traitement = $traitement.LogMaxSizeKilobytes
@@ -3763,7 +3766,7 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-$id = "WFPPRIP" +  "$indextest"
+$id = "WFPPUBP" +  "$indextest"
 $chaine = "$id" + ";" + "Ensure 'Windows Firewall: Public: Logging: Log dropped packets' is set to 'Yes',value must be true " + ";"
 $traitement = Get-NetFirewallProfile -Name "Public" |Select-Object LogBlocked
 $traitement = $traitement.LogBlocked
@@ -3775,7 +3778,7 @@ $chaine>> $nomfichier
 $indextest += 1
 $chaine = $null
 $traitement = $null
-$id = "WFPPRIP" +  "$indextest"
+$id = "WFPPUBP" +  "$indextest"
 $chaine = "$id" + ";" + "Ensure 'Windows Firewall: Public: Logging: Log successful connections' is set to 'Yes',value must be true " + ";"
 $traitement = Get-NetFirewallProfile -Name "Public" |Select-Object LogAllowed
 $traitement = $traitement.LogAllowed
@@ -4794,7 +4797,7 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-$id = "LW" +  "$indextest"
+$id = "LLTDIO" +  "$indextest"
 $chaine = "$id" + ";" + "Ensure 'Turn on Mapper I/O (LLTDIO) driver' is set to 'Disabled', value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\LLTD"
 if ( $exist -eq $true) {
@@ -4824,7 +4827,7 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
-$id = "LW" +  "$indextest"
+$id = "LLTDIO" +  "$indextest"
 $chaine = "$id" + ";" + "Ensure 'Turn on Responder (RSPNDR) driver' is set to 'Disabled'', value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\LLTD"
 if ( $exist -eq $true) {
@@ -6044,8 +6047,8 @@ Write-Host "#########>Begin Mitigation Options audit<#########" -ForegroundColor
 $indextest += 1
 $chaine = $null
 $traitement = $null
-
-$chaine = "$indextest" + ";" + "Ensure 'Untrusted Font Blocking' is set to 'Enabled: Block untrusted fonts and log events', value must be  1000000000000 " + ";"
+$id = "MO" +  "$indextest"
+$chaine = "$id" + ";" + "Ensure 'Untrusted Font Blocking' is set to 'Enabled: Block untrusted fonts and log events', value must be  1000000000000 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\MitigationOptions" 
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\MitigationOptions" |Select-Object MitigationOptions_FontBocking
@@ -6097,7 +6100,7 @@ $chaine += $traitement
 $chaine>> $nomfichier
 
 #Remote Procedure Call
-Write-Host "#########>Begin Remote Assistance audit<#########" -ForegroundColor DarkGreen
+Write-Host "#########>Begin Remote Procedure Call audit<#########" -ForegroundColor DarkGreen
 
 #Enable RPC Endpoint Mapper Client Authentication'
 $indextest += 1
@@ -9006,7 +9009,7 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $id = "WP" +  "$indextest"
-$chaine = "$id" + ";" + "Ensure 'Turn on PowerShell Transcription' is set to 'Disabled, value must be 0  " + ";"
+$chaine = "$id" + ";" + "Ensure 'Turn on PowerShell Transcription' is set to 'Disabled, value must be 0 but microsof recommending to 1  " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\Transcription"
 if ( $exist -eq $true) {
     $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\Transcription" |Select-Object EnableTranscripting
@@ -9533,7 +9536,7 @@ Write-Host "#########>Begin Network Sharing audit<#########" -ForegroundColor Da
 $indextest += 1
 $chaine = $null
 $traitement = $null
-$id = "NS" +  "$indextest"
+$id = "NSHARE" +  "$indextest"
 $chaine = "$id" + ";" + "Ensure 'Prevent users from sharing files within their profile.' is set to 'Enabled', value must be 1" + ";"
 $exist = Test-Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer"
 if ( $exist -eq $true) {
