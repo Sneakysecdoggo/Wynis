@@ -161,6 +161,14 @@ $auditconfigfile = "./auditpolicy" + "-" + "$OSName" + ".txt"
 auditpol.exe /get /Category:* > $auditconfigfile
 
 
+#Dump some Windows registry 
+Write-Host "#########>Dump Windows Registry <#########" -ForegroundColor DarkGreen
+$auditregHKLM= "./auditregistry-HKLMicrosoft" + "-" + "$OSName" + ".txt"
+reg export "HKLM\SOFTWARE\Microsoft\" "$auditregHKLM"
+$auditregHKLM= "./auditregistry-HKLMCUrrentControlSet" + "-" + "$OSName" + ".txt"
+reg export "HKLM\SYSTEM\CurrentControlSet" "$auditregHKLM"
+$auditregHKLM= "./auditregistry-HKLMPolicies" + "-" + "$OSName" + ".txt"
+reg export "HKLM\SOFTWARE\Policies" "$auditregHKLM"
 
 
 

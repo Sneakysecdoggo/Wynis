@@ -156,11 +156,39 @@ $auditconfigfile = "./auditpolicy" + "-" + "$OSName" + ".txt"
 
 auditpol.exe /get /Category:* > $auditconfigfile
 
+#Take Protection software information 
+Write-Host "#########>Take Antivirus Information<#########" -ForegroundColor DarkGreen
+
+$testAntivirus = Get-WmiObject -Namespace "root\SecurityCenter" -Query "SELECT * FROM AntiVirusProduct" |Select-Object displayName, pathToSignedProductExe, pathToSignedReportingExe, timestamp
 
 
 
 
+if ($null -eq $testAntivirus ) {
 
+
+
+ $testAntivirus = Get-WmiObject -Namespace "root\SecurityCenter2" -Query "SELECT * FROM AntiVirusProduct" |Select-Object displayName, pathToSignedProductExe, pathToSignedReportingExe, timestamp
+
+ if ( $null -eq $testAntivirus) {
+  Write-Host "Antivirus software not detected , please check manualy" -ForegroundColor Red
+ }
+} 
+
+$CSVFileAntivirus = "./Antivirus-" + "$OSName" + ".csv"
+$testAntivirus | ConvertTo-CSV -NoTypeInformation -Delimiter ";" | Set-Content $CSVFileAntivirus
+
+
+#Dump some Windows registry 
+Write-Host "#########>Dump Windows Registry <#########" -ForegroundColor DarkGreen
+$auditregHKLM= "./auditregistry-HKLMicrosoft" + "-" + "$OSName" + ".txt"
+reg export "HKLM\SOFTWARE\Microsoft\" "$auditregHKLM"
+$auditregHKLM= "./auditregistry-HKLMCUrrentControlSet" + "-" + "$OSName" + ".txt"
+reg export "HKLM\SYSTEM\CurrentControlSet" "$auditregHKLM"
+$auditregHKLM= "./auditregistry-HKLMPolicies" + "-" + "$OSName" + ".txt"
+reg export "HKLM\SOFTWARE\Policies" "$auditregHKLM"
+
+#Take Firewall Configuration
 Write-Host "#########>Take local Firewall Rules Information<#########" -ForegroundColor DarkGreen
 $CSVFile = "./firewall-rules-" + "$OSName" + ".csv"
 # read firewall rules
