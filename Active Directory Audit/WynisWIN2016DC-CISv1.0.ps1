@@ -48,6 +48,12 @@ Write-Host "  \ \  /\  / / (___    ) | | | || |/ /_"  -ForegroundColor Black
 Write-Host "   \ \/  \/ / \___ \  / /| | | || | '_ \"  -ForegroundColor Black 
 Write-Host "    \  /\  /  ____) |/ /_| |_| || | (_) | "  -ForegroundColor Black 
 Write-Host "     \/  \/  |_____/|____|\___/ |_|\___/ "  -ForegroundColor Black 
+Write-Host "  _____   _____ "-ForegroundColor Black
+Write-Host " |  __ \ / ____|"-ForegroundColor Black
+Write-Host " | |  | | |     "-ForegroundColor Black
+Write-Host " | |  | | |     "-ForegroundColor Black
+Write-Host " | |__| | |____ "-ForegroundColor Black
+Write-Host " |_____/ \_____|"-ForegroundColor Black
 #FUNCTION 
 
 $reverveCommand=Get-Command | Where-Object { $_.name -match "Get-WSManInstance"}
@@ -613,7 +619,7 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $id = "URA" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Access this computer from the network, Only Administrators, Authenticated Users. " + ";"
+$chaine = "$id" + ";" + "(L1)Access this computer from the network, Only Administrators, Authenticated Users, ENTERPRISE DOMAIN CONTROLLERS" + ";"
 $chaineSID = Get-Content $seceditfile |Select-String "SeNetworkLogonRight" 
 $chaineSID = $chaineSID.line
 $traitement = "SeNetworkLogonRight" + ":"
@@ -637,6 +643,24 @@ $traitement += Reverse-SID $test
 
 $chaine += $traitement
 $chaine>> $nomfichier
+
+
+
+#Ensure 'Add workstations to domain' is set to 'Administrators'
+$indextest += 1
+$chaine = $null
+$traitement = $null
+$id = "URA" + "$indextest"
+$chaine = "$id" + ";" + "(L1)Ensure 'Add workstations to domain' is set to 'Administrators', Must be Administrators " + ";"
+$test = Get-Content $seceditfile |Select-String "SeMachineAccountPrivilege"
+$chaineSID = $chaineSID.line
+$traitement = "SeMachineAccountPrivilege" + ":"
+
+$traitement += Reverse-SID $test
+
+$chaine += $traitement
+$chaine>> $nomfichier
+
 
 #Check Adjust memory quotas for a process
 $indextest += 1
@@ -668,7 +692,7 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $id = "URA" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Allow log on locally', Only Administrators, Remote Desktop Users. If Remote Apps or CItrix authentificated users" + ";"
+$chaine = "$id" + ";" + "(L1)Allow log on locally', Only Administrators" + ";"
 $chaineSID = Get-Content $seceditfile |Select-String "SeRemoteInteractiveLogonRight" 
 $chaineSID = $chaineSID.line
 $traitement = "SeRemoteInteractiveLogonRight" + ":"
@@ -794,7 +818,7 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $id = "URA" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Create symbolic links, Administrator and for Hyper V NT VIRTUAL MACHINE\Virtual Machines. " + ";"
+$chaine = "$id" + ";" + "(L1)Create symbolic links, Administrator" + ";"
 $chaineSID = Get-Content $seceditfile |Select-String "SeCreateSymbolicLinkPrivilege" 
 $chaineSID = $chaineSID.line
 $traitement = "SeCreateSymbolicLinkPrivilege" + ":"
@@ -809,7 +833,7 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $id = "URA" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Ensure Debug programs is set to Administrators " + ";"
+$chaine = "$id" + ";" + "(L1)Ensure Debug programs is set to Administrators, If you can dont use it so empty is best " + ";"
 $chaineSID = Get-Content $seceditfile |Select-String "SeDebugPrivilege" 
 $chaineSID = $chaineSID.line
 $traitement = "SeDebugPrivilege" + ":"
@@ -825,7 +849,7 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $id = "URA" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Deny access to this computer from the network,Guest Local Account and member of Domain admin " + ";"
+$chaine = "$id" + ";" + "(L1)Deny access to this computer from the network,Guest" + ";"
 $chaineSID = Get-Content $seceditfile |Select-String "SeDenyNetworkLogonRight" 
 $chaineSID = $chaineSID.line
 $traitement = "SeDenyNetworkLogonRight" + ":"
@@ -841,7 +865,7 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $id = "URA" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Deny log on as a batch job, Include Guest " + ";"
+$chaine = "$id" + ";" + "(L1)Deny log on as a batch job,Include Guest " + ";"
 $chaineSID = Get-Content $seceditfile |Select-String "SeDenyBatchLogonRight" 
 $chaineSID = $chaineSID.line
 $traitement = "SeDenyBatchLogonRight" + ":"
@@ -856,7 +880,7 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $id = "URA" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Deny log on as a service,Include Guest " + ";"
+$chaine = "$id" + ";" + "(L1)Deny log on as a service, Include Guest " + ";"
 $chaineSID = Get-Content $seceditfile |Select-String "SeDenyServiceLogonRight" 
 $chaineSID = $chaineSID.line
 $traitement = "SeDenyServiceLogonRight" + ":"
@@ -871,7 +895,7 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $id = "URA" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Deny log on locally, Include Guest " + ";"
+$chaine = "$id" + ";" + "(L1)Deny log on locally, Guest " + ";"
 $chaineSID = Get-Content $seceditfile |Select-String "SeDenyInteractiveLogonRight" 
 $chaineSID = $chaineSID.line
 $traitement = "SeDenyInteractiveLogonRight" + ":"
@@ -886,7 +910,7 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $id = "URA" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Deny log on through Remote Desktop Services, Include Guest and Local account' " + ";"
+$chaine = "$id" + ";" + "(L1)Deny log on through Remote Desktop Services, Include  Guest ' " + ";"
 $chaineSID = Get-Content $seceditfile |Select-String "SeDenyRemoteInteractiveLogonRight" 
 $chaineSID = $chaineSID.line
 $traitement = "SeDenyRemoteInteractiveLogonRight" + ":"
@@ -901,7 +925,7 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $id = "URA" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Enable computer and user accounts to be trusted for delegation,No one " + ";"
+$chaine = "$id" + ";" + "(L1)Enable computer and user accounts to be trusted for delegation, Administrators" + ";"
 $chaineSID = Get-Content $seceditfile |Select-String "SeEnableDelegationPrivilege" 
 $chaineSID = $chaineSID.line
 $traitement = "SeEnableDelegationPrivilege" + ":"
@@ -944,7 +968,7 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $id = "URA" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Impersonate a client after authentication , Administrators, LOCAL SERVICE, NETWORK SERVICE, SERVICE and IIS_IUSRS if IIS" + ";"
+$chaine = "$id" + ";" + "(L1)Impersonate a client after authentication , Administrators, LOCAL SERVICE, NETWORK SERVICE, SERVICE'" + ";"
 $chaineSID = Get-Content $seceditfile |Select-String "SeImpersonatePrivilege" 
 $chaineSID = $chaineSID.line
 $traitement = "SeImpersonatePrivilege" + ":"
@@ -974,7 +998,7 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $id = "URA" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Load and unload device drivers' , only Administrator" + ";"
+$chaine = "$id" + ";" + "(L1)Load and unload device drivers', only Administrator" + ";"
 $chaineSID = Get-Content $seceditfile |Select-String "SeLoadDriverPrivilege" 
 $chaineSID = $chaineSID.line
 $traitement = "SeLoadDriverPrivilege" + ":"
@@ -1003,7 +1027,7 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $id = "URA" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Log on as a batch job',Administrators" + ";"
+$chaine = "$id" + ";" + "(L2)Log on as a batch job',Administrators" + ";"
 $chaineSID = Get-Content $seceditfile |Select-String "SeBatchLogonRight" 
 $chaineSID = $chaineSID.line
 $traitement = "SeBatchLogonRight" + ":"
@@ -1019,7 +1043,7 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $id = "URA" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Manage auditing and security log,Administrators" + ";"
+$chaine = "$id" + ";" + "(L1)Manage auditing and security log,Administrators and (when Exchange is running in the environment) 'Exchange Servers'" + ";"
 $chaineSID = Get-Content $seceditfile |Select-String "SeSecurityPrivilege" 
 $chaineSID = $chaineSID.line
 $traitement = "SeSecurityPrivilege" + ":"
@@ -1104,7 +1128,7 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $id = "URA" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Replace a process level token is set to LOCAL SERVICE, NETWORK SERVICE and for IIS server you may have IIS applications pools" + ";"
+$chaine = "$id" + ";" + "(L1)Replace a process level token is set to LOCAL SERVICE, NETWORK SERVICE " + ";"
 $chaineSID = Get-Content $seceditfile |Select-String "SeAssignPrimaryTokenPrivilege" 
 $chaineSID = $chaineSID.line
 $traitement = "SeAssignPrimaryTokenPrivilege" + ":"
@@ -1142,6 +1166,21 @@ $chaine += $traitement
 $chaine>> $nomfichier
 
 
+#Synchronize directory service data'
+$indextest += 1
+$chaine = $null
+$traitement = $null
+$id = "URA" + "$indextest"
+$chaine = "$id" + ";" + "(L1)Shut down the system is set to No One" + ";"
+$chaineSID = Get-Content $seceditfile |Select-String "SeSyncAgentPrivilege" 
+$chaineSID = $chaineSID.line
+$traitement = "SeSyncAgentPrivilege" + ":"
+$traitement += Reverse-SID $chaineSID
+
+$chaine += $traitement
+$chaine>> $nomfichier
+
+
 #Take ownership of files or other objects
 $indextest += 1
 $chaine = $null
@@ -1159,17 +1198,6 @@ $chaine>> $nomfichier
 
 #Checking Account
 Write-Host "#########>Begin Accounts audit<#########" -ForegroundColor DarkGreen
-
-#Ensure 'Accounts: Administrator account status' is set to 'Disabled
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "AA" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Accounts: Administrator account status is set to Disabled" + ";"
-$traitement = "Default admin Account:" + $nomcompteadmin + ",statut :$adminstate"
-
-$chaine += $traitement
-$chaine>> $nomfichier
 
 #Accounts: Block Microsoft accounts' is set to 'Users can't add or log on with Microsoft accounts
 $indextest += 1
@@ -1190,17 +1218,6 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
-#Ensure 'Accounts: Guest account status' is set to 'Disabled'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "AA" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Ensure Accounts: Guest account status is set to 'Disabled" + ";"
-$traitement = "Default guest Account:" + $nomcompteguest + ",statut : $gueststate"
-
-
-$chaine += $traitement
-$chaine>> $nomfichier
 
 #Accounts: Accounts: Limit local account use of blank passwords to console logon only' is set to 'Enabled
 $indextest += 1
@@ -1334,6 +1351,70 @@ $chaine>> $nomfichier
 
 
 #Checking Domain member Audit
+Write-Host "#########>Begin Domain Controler audit<#########" -ForegroundColor DarkGreen
+
+#Domain controller: Allow server operators to schedule tasks' is set to 'Disabled'
+$indextest += 1
+$chaine = $null
+$traitement = $null
+$exist = $null
+$id = "DMP" + "$indextest"
+$chaine = "$id" + ";" + "(L1)Domain controller: Allow server operators to schedule tasks' is set to 'Disabled', Value must be 0 " + ";"
+$exist = Test-Path HKLM:\SYSTEM\CurrentControlSet\Control\Lsa
+if ( $exist -eq $true) {
+  $traitement = Get-ItemProperty HKLM:\SYSTEM\CurrentControlSet\Control\Lsas |Select-Object SubmitControl
+  $traitement = $traitement.SubmitControl
+}
+else {
+  $traitement = "not configure"
+}
+
+
+$chaine += $traitement
+$chaine>> $nomfichier
+
+#Domain controller: LDAP server signing requirements' is set to 'Require signing'
+$indextest += 1
+$chaine = $null
+$traitement = $null
+$exist = $null
+$id = "DMP" + "$indextest"
+$chaine = "$id" + ";" + "(L1)Domain controller: LDAP server signing requirements' is set to 'Require signing', Value must be 2 " + ";"
+$exist = Test-Path HKLM:\SYSTEM\CurrentControlSet\Services\NTDS\Parameters
+if ( $exist -eq $true) {
+  $traitement = Get-ItemProperty HKLM:\SYSTEM\CurrentControlSet\Services\NTDS\Parameters |Select-Object LDAPServerIntegrity
+  $traitement = $traitement.LDAPServerIntegrity
+}
+else {
+  $traitement = "not configure"
+}
+
+
+$chaine += $traitement
+$chaine>> $nomfichier
+
+
+#Domain controller: Refuse machine account password change
+$indextest += 1
+$chaine = $null
+$traitement = $null
+$exist = $null
+$id = "DMP" + "$indextest"
+$chaine = "$id" + ";" + "(L1)Domain controller: Refuse machine account password changes' is set to 'Disabled', Value must be 0 " + ";"
+$exist = Test-Path HKLM:\SYSTEM\CurrentControlSet\Services\Netlogon\Parameters
+if ( $exist -eq $true) {
+	$traitement = Get-ItemProperty HKLM:\SYSTEM\CurrentControlSet\Services\Netlogon\Parameters |Select-Object RefusePasswordChange
+  $traitement = $traitement.RefusePasswordChange
+}
+else {
+  $traitement = "not configure"
+}
+
+$chaine += $traitement
+$chaine>> $nomfichier
+
+
+Checking Domain member Audit
 Write-Host "#########>Begin Domain member policy audit<#########" -ForegroundColor DarkGreen
 
 #Domain member: Digitally encrypt or sign secure channel data (always) is set to Enable
@@ -1376,7 +1457,6 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
-
 #Domain member: Disable machine account password changes
 $indextest += 1
 $chaine = $null
@@ -1395,7 +1475,6 @@ else {
 
 $chaine += $traitement
 $chaine>> $nomfichier
-
 
 #Domain member: Maximum machine account password age' is set to '30 or fewer days, but not 0
 $indextest += 1
@@ -1544,7 +1623,6 @@ $chaine>> $nomfichier
 
 
 
-
 #Ensure 'Interactive logon: Prompt user to change password before expiration
 
 $indextest += 1
@@ -1566,29 +1644,6 @@ else {
 
 $chaine += $traitement
 $chaine>> $nomfichier
-
-
-# Interactive logon: Require Domain Controller Authentication to unlock workstation'
-
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "IL" + "$indextest"
-$chaine = "$id" + ";" + "(L1) Ensure 'Interactive logon: Require Domain Controller Authentication to unlock workstation' is set to 'Enabled',value must be 1 (Lock Workstation) or 2 (Force Logoff) " + ";"
-$exist = Test-Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"
-if ( $exist -eq $true) {
-  $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" |Select-Object ForceUnlockLogon
-  $traitement = $traitement.ForceUnlockLogon
-}
-else {
-  $traitement = "not configure"
-}
-
-
-$chaine += $traitement
-$chaine>> $nomfichier
-
 
 
 # Ensure Interactive logon: Smart card removal behavior' is set to 'Lock Workstation' or higher
@@ -1758,25 +1813,6 @@ $chaine += $traitement
 $chaine>> $nomfichier
 
 
-# Microsoft network server: Server SPN target name validation level'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "MNS" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Microsoft network server: Server SPN target name validation level is set to Accept if provided by client or higher,must be 1 or highter " + ";"
-$exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanManServer\Parameters"
-if ( $exist -eq $true) {
-  $traitement = Get-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Services\LanManServer\Parameters" |Select-Object SMBServerNameHardeningLevel
-  $traitement = $traitement.SMBServerNameHardeningLevel
-}
-else {
-  $traitement = "not configure"
-}
-
-$chaine += $traitement
-$chaine>> $nomfichier
-
 
 #Checking Microsoft network server
 Write-Host "#########>Begin Network access audit<#########" -ForegroundColor DarkGreen
@@ -1801,16 +1837,6 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
-# Network access: Do not allow anonymous enumeration of SAM accounts'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "NA" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Ensure Network access: Do not allow anonymous enumeration of SAM accounts is set to Enabled,must be 1 " + ";"
-$traitement = Get-ItemProperty HKLM:\System\CurrentControlSet\Control\Lsa |Select-Object RestrictAnonymousSAM
-$traitement = $traitement.RestrictAnonymousSAM
-$chaine += $traitement
-$chaine>> $nomfichier
 
 # Network access: Do not allow storage of passwords and credentials for network authentication
 $indextest += 1
@@ -1857,7 +1883,7 @@ $chaine = $null
 $traitement = $null
 $exist = $null
 $id = "NA" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Configure Network access: Named Pipes that can be accessed anonymously,must be empty OR{} ,Remote Desktop service server may have HydraLSPipe & TermServLicensing" + ";"
+$chaine = "$id" + ";" + "(L1)Configure Network access: Named Pipes that can be accessed anonymously,must be LSARPC, NETLOGON, SAMR and may be BROWSER" + ";"
 $exist = Test-Path HKLM:\SYSTEM\CurrentControlSet\Services\LanManServer\Parameters
 if ( $exist -eq $true) {
   $traitement = Get-ItemProperty HKLM:\SYSTEM\CurrentControlSet\Services\LanManServer\Parameters |Select-Object NullSessionPipes
@@ -1931,24 +1957,7 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
-# Network access: Restrict clients allowed to make remote calls to SAM
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "NA" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Ensure Network access: Restrict clients allowed to make remote calls to SAM is set to Administrators: Remote Access: Allow" + ";"
-$exist = Test-Path HKLM:\SYSTEM\CurrentControlSet\Control\Lsa
-if ( $exist -eq $true) {
-  $traitement = Get-ItemProperty HKLM:\SYSTEM\CurrentControlSet\Control\Lsa |Select-Object restrictremotesam
-  $traitement = $traitement.restrictremotesam
-}
-else {
-  $traitement = "not configure"
-}
 
-$chaine += $traitement
-$chaine>> $nomfichier
 
 # Network access: Shares that can be accessed anonymously
 $indextest += 1
@@ -2885,8 +2894,30 @@ $chaine += $traitement
 $chaine>> $nomfichier
 
 
+#Audit Kerberos Authentication Service'
+$indextest += 1
+$chaine = $null
+$traitement = $null
+$id = "AAAPA" + "$indextest"
+$chaine = "$id" + ";" + "(L1) Ensure 'Audit Kerberos Authentication Service' is set to 'Success and Failure'" + ";"
+$traitement = Get-Content $auditconfigfile |Select-String -pattern "(authentification Kerberos)|(Kerberos Authentication Service)"
+$traitement = $traitement.line
+
+$chaine += $traitement
+$chaine>> $nomfichier
 
 
+#Audit Kerberos Service Ticket Operations'
+$indextest += 1
+$chaine = $null
+$traitement = $null
+$id = "AAAPA" + "$indextest"
+$chaine = "$id" + ";" + "(L1) (L1) Ensure 'Audit Kerberos Service Ticket Operations' is set to 'Success and Failure''" + ";"
+$traitement = Get-Content $auditconfigfile |Select-String -pattern "(Opérations de ticket du service Kerberos)|(Kerberos Service Ticket Operations)"
+$traitement = $traitement.line
+
+$chaine += $traitement
+$chaine>> $nomfichier
 
 #Audit Application Group Management
 $indextest += 1
@@ -2900,6 +2931,43 @@ $traitement = $traitement.line
 $chaine += $traitement
 $chaine>> $nomfichier
 
+
+#Audit Computer Account Management'
+$indextest += 1
+$chaine = $null
+$traitement = $null
+$id = "AAAPA" + "$indextest"
+$chaine = "$id" + ";" + "(L1) Ensure 'Audit Computer Account Management' is set to include 'Success'" + ";"
+$traitement = Get-Content $auditconfigfile |Select-String -pattern "(Gestion des comptes d'ordinateur)|(Audit Computer Account Management)"
+$traitement = $traitement.line
+
+$chaine += $traitement
+$chaine>> $nomfichier
+
+
+#Audit Distribution Group Management'
+$indextest += 1
+$chaine = $null
+$traitement = $null
+$id = "AAAPA" + "$indextest"
+$chaine = "$id" + ";" + "(L1) Ensure 'Audit Distribution Group Management' is set to include 'Success'" + ";"
+$traitement = Get-Content $auditconfigfile |Select-String -pattern "(Gestion des groupes de distribution)|(Audit Distribution Group Management)"
+$traitement = $traitement.line
+
+$chaine += $traitement
+$chaine>> $nomfichier
+
+
+#Audit Other Account Management Events
+$indextest += 1
+$chaine = $null
+$traitement = $null
+$id = "AAAPA" + "$indextest"
+$chaine = "$id" + ";" + "(L1)Ensure 'Audit Other Account Management Events' is set to 'Success and Failure" + ";"
+$traitement = Get-Content $auditconfigfile |Select-String -pattern "(Autres événements d'ouverture de session)|(Other Account Management Events)"
+$traitement = $traitement.line
+$chaine += $traitement
+$chaine>> $nomfichier
 
 
 #Audit Security Group Management
@@ -2949,6 +3017,33 @@ $traitement = $traitement.line
 
 $chaine += $traitement
 $chaine>> $nomfichier
+
+
+#Audit Directory Service Access'
+$indextest += 1
+$chaine = $null
+$traitement = $null
+$id = "AAAPA" + "$indextest"
+$chaine = "$id" + ";" + "(L1)Ensure 'Audit Directory Service Access' is set to include 'Failure'" + ";"
+$traitement = Get-Content $auditconfigfile |Select-String -pattern "(Accès au service d'annuaire)|(Audit Directory Service Access)"
+$traitement = $traitement.line
+
+$chaine += $traitement
+$chaine>> $nomfichier
+
+#Audit Directory Service Changes'
+$indextest += 1
+$chaine = $null
+$traitement = $null
+$id = "AAAPA" + "$indextest"
+$chaine = "$id" + ";" + "(L1)Ensure 'Audit Directory Service Changes' is set to include 'Success" + ";"
+$traitement = Get-Content $auditconfigfile |Select-String -pattern "(Modification du service d'annuaire)|(Audit Directory Service Changes)"
+$traitement = $traitement.line
+
+$chaine += $traitement
+$chaine>> $nomfichier
+
+
 
 #'Audit Account Lockout
 $indextest += 1
@@ -3013,6 +3108,19 @@ $traitement = $traitement.line
 $chaine += $traitement
 $chaine>> $nomfichier
 
+
+#Audit Special Logon
+$indextest += 1
+$chaine = $null
+$traitement = $null
+$id = "AAAPA" + "$indextest"
+$chaine = "$id" + ";" + "(L1)Ensure 'Audit Special Logon' is set to 'Success'" + ";"
+$traitement = Get-Content $auditconfigfile |Select-String -pattern "(Ouverture de session spéciale)|(Special Logon)"
+$traitement = $traitement.line 
+
+$chaine += $traitement
+$chaine>> $nomfichier
+
 #Audit Detailed File Share'
 $indextest += 1
 $chaine = $null
@@ -3024,7 +3132,6 @@ $traitement = $traitement.line
 
 $chaine += $traitement
 $chaine>> $nomfichier
-
 
 
 #Audit File Share
@@ -3039,17 +3146,7 @@ $traitement = $traitement.line
 $chaine += $traitement
 $chaine>> $nomfichier
 
-#Audit Special Logon
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "AAAPA" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Ensure 'Audit Special Logon' is set to 'Success'" + ";"
-$traitement = Get-Content $auditconfigfile |Select-String -pattern "(Ouverture de session spéciale)|(Special Logon)"
-$traitement = $traitement.line 
 
-$chaine += $traitement
-$chaine>> $nomfichier
 
 #Audit Other Object Access Events
 $indextest += 1
@@ -3080,7 +3177,7 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $id = "AAAPA" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Ensure 'Audit Audit Policy Change' is set to 'Success and Failure'" + ";"
+$chaine = "$id" + ";" + "(L1)Ensure 'Audit Audit Policy Change' is set to 'Success" + ";"
 $traitement = Get-Content $auditconfigfile |Select-String -pattern "(Modification de la stratégie d'audit)|(Audit Policy Change)"
 $traitement = $traitement.line 
 
@@ -3193,7 +3290,7 @@ $indextest += 1
 $chaine = $null
 $traitement = $null
 $id = "AAAPA" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Ensure 'Audit Security System Extension' is set to 'Success and Failure" + ";"
+$chaine = "$id" + ";" + "(L1)Ensure 'Audit Security System Extension' is set to include 'Success'" + ";"
 $traitement = Get-Content $auditconfigfile |Select-String -pattern "(Extension systéme de sécurité)|(Security System Extension)"
 $traitement = $traitement.line 
 
@@ -3259,24 +3356,6 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
-#Allow Input Personalization
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "PA" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Ensure 'Allow Input Personalization' is set to 'Disabled', value must 0 " + ";"
-$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\InputPersonalization"
-if ( $exist -eq $true) {
-  $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\InputPersonalization"|Select-Object AllowInputPersonalization
-  $traitement = $traitement.AllowInputPersonalization
-}
-else {
-  $traitement = "not configure"
-}
-$chaine += $traitement
-$chaine>> $nomfichier
-
 
 #Allow users to enable online speech recognition services
 $indextest += 1
@@ -3316,154 +3395,10 @@ $chaine += $traitement
 $chaine>> $nomfichier
 
 
-#Checking LAPS audit
-Write-Host "#########>Begin LAPS audit<#########" -ForegroundColor DarkGreen
-
-#LAPS AdmPwd GPO Extension / CSE is installed
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "LAPS" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Ensure LAPS AdmPwd GPO Extension / CSE is installed, value must true " + ";"
-$exist = Test-Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon\GPExtensions\{D76B9641-3288-4f75-942D-087DE603E3EA}"
-if ( $exist -eq $true) {
-  $traitement = Test-Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon\GPExtensions\{D76B9641-3288-4f75-942D-087DE603E3EA}"|Select-Object DllName
-  $traitement = $traitement.DllName
-}
-else {
-  $traitement = "not configure"
-}
-
-$chaine += $traitement
-$chaine>> $nomfichier
-
-
-
-#Do not allow password expiration time longer than required by policy'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-
-$id = "LAPS" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Ensure 'Do not allow password expiration time longer than required by policy' is set to 'Enabled, value must 1 " + ";"
-$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft Services\AdmPwd"
-if ( $exist -eq $true) {
-  $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft Services\AdmPwd"|Select-Object PwdExpirationProtectionEnabled
-  $traitement = $traitement.PwdExpirationProtectionEnabled
-}
-else {
-  $traitement = "not configure"
-}
-
-$chaine += $traitement
-$chaine>> $nomfichier
-
-
-#Enable Local Admin Password Management
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "LAPS" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Ensure 'Enable Local Admin Password Management' is set to 'Enabled', value must 1 " + ";"
-$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft Services\AdmPwd"
-if ( $exist -eq $true) {
-  $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft Services\AdmPwd"|Select-Object AdmPwdEnabled
-  $traitement = $traitement.AdmPwdEnabled
-}
-else {
-  $traitement = "not configure"
-}
-
-$chaine += $traitement
-$chaine>> $nomfichier
-
-#Password Settings: Password Complexity' is set to 'Enabled: Large letters + small letters + numbers + special characters'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "LAPS" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Ensure 'Password Settings: Password Complexity' is set to 'Enabled: Large letters + small letters + numbers + special characters, value must 1 " + ";"
-$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft Services\AdmPwd"
-if ( $exist -eq $true) {
-  $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft Services\AdmPwd"|Select-Object PasswordComplexity
-  $traitement = $traitement.PasswordComplexity
-}
-else {
-  $traitement = "not configure"
-}
-
-$chaine += $traitement
-$chaine>> $nomfichier
-
-
-#Password Settings: Password Length
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "LAPS" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Ensure 'Password Settings: Password Length' is set to 'Enabled: 15 or more, value must greater than 15 " + ";"
-$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft Services\AdmPwd"
-if ( $exist -eq $true) {
-  $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft Services\AdmPwd"|Select-Object PasswordLength
-  $traitement = $traitement.PasswordLength
-}
-else {
-  $traitement = "not configure"
-}
-
-$chaine += $traitement
-$chaine>> $nomfichier
-
-#Password Settings: Password Age (Days)'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-
-$id = "LAPS" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Ensure 'Password Settings: Password Age (Days)' is set to 'Enabled: 30 or fewer', value must less than 30 " + ";"
-$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft Services\AdmPwd"
-if ( $exist -eq $true) {
-  $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft Services\AdmPwd"|Select-Object PasswordAgeDays
-  $traitement = $traitement.PasswordAgeDays
-}
-else {
-  $traitement = "not configure"
-}
-
-$chaine += $traitement
-$chaine>> $nomfichier
-
-
-
-#Checking MS Security Guide
+#CheckingMS Security Guide
 Write-Host "#########>Begin MS Security Guide audit<#########" -ForegroundColor DarkGreen
 
 
-
-#Apply UAC restrictions to local accounts on network logons
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-
-$id = "MSSG" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Ensure 'Apply UAC restrictions to local accounts on network logons' is set to 'Enabled', value must be 1" + ";"
-$exist = Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System"
-if ( $exist -eq $true) {
-  $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System"|Select-Object LocalAccountTokenFilterPolicy
-  $traitement = $traitement.LocalAccountTokenFilterPolicy
-}
-else {
-  $traitement = "not configure"
-}
-
-$chaine += $traitement
-$chaine>> $nomfichier
 
 #Configure SMB v1 client driver'
 $indextest += 1
@@ -3525,6 +3460,30 @@ else {
 
 $chaine += $traitement
 $chaine>> $nomfichier
+
+
+
+#Extended Protection for LDAP Authentication (Domain Controllers only)' is set to 'Enabled: Enabled
+$indextest += 1
+$chaine = $null
+$traitement = $null
+$exist = $null
+
+$id = "MSSG" + "$indextest"
+$chaine = "$id" + ";" + "(L1)Ensure 'Extended Protection for LDAP Authentication (Domain Controllers only)' is set to 'Enabled: Enabled, always (recommended)', value must be 0" + ";"
+$exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\NTDS\Parameters"
+if ( $exist -eq $true) {
+  $traitement = Get-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Services\NTDS\Parameters"|Select-Object LdapEnforceChannelBinding
+  $traitement = $traitement.LdapEnforceChannelBinding
+}
+else {
+  $traitement = "not configure"
+}
+
+$chaine += $traitement
+$chaine>> $nomfichier
+
+
 
 #Ensure 'NetBT NodeType configuration' is set to 'Enabled: P-node (recommended)
 $indextest += 1
@@ -4116,25 +4075,6 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
-#Prohibit connection to non-domain networks when connected to domain authenticated network'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "NC" + "$indextest"
-$chaine = "$id" + ";" + "(L2)Ensure 'Prohibit connection to non-domain networks when connected to domain authenticated network' is set to 'Enabled'', value must be 1 " + ";"
-$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WcmSvc\GroupPolicy"
-if ( $exist -eq $true) {
-  $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WcmSvc\GroupPolicy" |Select-Object fBlockNonDomain
-  $traitement = $traitement.fBlockNonDomain
-}
-else {
-  $traitement = "not configure"
-}
-
-$chaine += $traitement
-$chaine>> $nomfichier
-
 
 
 #Turn off notifications network usage
@@ -4299,13 +4239,13 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
-#Turn On Virtualization Based Security: Credential Guard Configuration' is set to 'Enabled with UEFI lock'
+#Turn On Virtualization Based Security: Credential Guard Configuration' is set to 'Disabled
 $indextest += 1
 $chaine = $null
 $traitement = $null
 $exist = $null
 $id = "DG" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Ensure 'Turn On Virtualization Based Security: Credential Guard Configuration' is set to 'Enabled with UEFI lock', value must be 1 " + ";"
+$chaine = "$id" + ";" + "(L1)Ensure 'Turn On Virtualization Based Security: Credential Guard Configuration' is set to 'Disabled' (DC Only)', value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DeviceGuard"
 if ( $exist -eq $true) {
   $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DeviceGuard" |Select-Object LsaCfgFlags
@@ -4318,8 +4258,7 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
-
-#Turn On Virtualization Based Security: Secure Launch Configuration
+##Turn On Virtualization Based Security: Secure Launch Configuration
 $indextest += 1
 $chaine = $null
 $traitement = $null
@@ -4770,23 +4709,6 @@ $chaine += $traitement
 $chaine>> $nomfichier
 
 
-#Enumerate local users on domain-joined computers'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "LOGON" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Ensure 'Enumerate local users on domain-joined computers' is set to 'Disabled', value must be 0 " + ";"
-$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System"
-if ( $exist -eq $true) {
-  $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System" |Select-Object EnumerateLocalUsers
-  $traitement = $traitement.EnumerateLocalUsers
-}
-else {
-  $traitement = "not configure"
-}
-$chaine += $traitement
-$chaine>> $nomfichier
-
 
 
 
@@ -4954,43 +4876,7 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
-#Remote Procedure Call
-Write-Host "#########>Begin Remote Procedure Call audit<#########" -ForegroundColor DarkGreen
 
-#Enable RPC Endpoint Mapper Client Authentication'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "RPC" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Ensure 'Enable RPC Endpoint Mapper Client Authentication' is set to 'Enabled, value must be 1 " + ";"
-$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Rpc"
-if ( $exist -eq $true) {
-  $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Rpc" |Select-Object EnableAuthEpResolution
-  $traitement = $traitement.EnableAuthEpResolution
-}
-else {
-  $traitement = "not configure"
-}
-$chaine += $traitement
-$chaine>> $nomfichier
-
-
-#Restrict Unauthenticated RPC clients
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "RPC" + "$indextest"
-$chaine = "$id" + ";" + "(L2)Ensure 'Restrict Unauthenticated RPC clients' is set to 'Enabled: Authenticated', value must be 1 " + ";"
-$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Rpc" 
-if ( $exist -eq $true) {
-  $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Rpc" |Select-Object RestrictRemoteClients
-  $traitement = $traitement.RestrictRemoteClients
-}
-else {
-  $traitement = "not configure"
-}
-$chaine += $traitement
-$chaine>> $nomfichier
 
 #Microsoft Support Diagnostic Tool
 Write-Host "#########>Begin Microsoft Support Diagnostic Tool audit<#########" -ForegroundColor DarkGreen
@@ -5072,23 +4958,6 @@ $chaine = "$id" + ";" + "(L2)Ensure 'Enable Windows NTP Client' is set to 'Enabl
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\W32Time\TimeProviders\NtpClient"
 if ( $exist -eq $true) {
   $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\W32Time\TimeProviders\NtpClient" |Select-Object Enabled
-  $traitement = $traitement.Enabled
-}
-else {
-  $traitement = "not configure"
-}
-$chaine += $traitement
-$chaine>> $nomfichier
-
-#Enable Windows NTP Server'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "TP" + "$indextest"
-$chaine = "$id" + ";" + "(L2)Ensure 'Enable Windows NTP Server' is set to 'Disabled', value must be 0 " + ";"
-$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\W32Time\TimeProviders\NtpServer"
-if ( $exist -eq $true) {
-  $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\W32Time\TimeProviders\NtpServer" |Select-Object Enabled
   $traitement = $traitement.Enabled
 }
 else {
@@ -5666,6 +5535,7 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+
 
 
 
