@@ -1,10 +1,13 @@
 # Wynis
 Just a powershell scripts for auditing security with BEST Practices Windows env
-You just need to run the script, it will create a directory named : AUDIT_CONF_%DATE%
+You just need to run the script, it will create a directory named : AUDIT_CONF_%MACHINENAME_%DATE%
+
+
 ![W1](../master/Exemples/W1-ScriptOverView.png)
 
 
 Actualy, the script are : 
+
 -WynisWIN2016DC-CISv1.0 : Auditing DC 2016 with CIS
 
 -Wynis-AD-STIG : Auditing Domain Security with STIG and other security Best Practice (Work In Progress)
@@ -21,7 +24,7 @@ Actualy, the script are :
 Before running the script either you : 
 
     -'Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope CurrentUser' before running the script in your powerhell console
-    
+
     - Sign Wynis with your PKi https://devblogs.microsoft.com/scripting/hey-scripting-guy-how-can-i-sign-windows-powershell-scripts-with-an-enterprise-windows-pki-part-2-of-2/
 
 
