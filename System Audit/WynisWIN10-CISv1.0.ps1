@@ -64,33 +64,47 @@ if($reverveCommand -ne $null){
 # Function to reverse SID from SecPol
 Function Reverse-SID ($chaineSID) {
 
+
  $chaineSID = $chaineSID -creplace '^[^\\]*=', ''
  $chaineSID = $chaineSID.replace("*", "")
  $chaineSID = $chaineSID.replace(" ", "")
+ if ( $chaineSID -ne $null){
  $tableau = @()
  $tableau = $chaineSID.Split(",") 
+
+
  ForEach ($ligne in $tableau) { 
   $sid = $null
   if ($ligne -like "S-*") {
    if($reverseCommandExist -eq $true){
    $sid = Get-WSManInstance -ResourceURI "wmicimv2/Win32_SID" -SelectorSet @{SID="$ligne"}|Select-Object AccountName
    $sid = $sid.AccountName
-   }else{
+   }
+if ( $sid -eq $null) {
     $objSID = New-Object System.Security.Principal.SecurityIdentifier ("$ligne")
     $objUser = $objSID.Translate( [System.Security.Principal.NTAccount])
     $sid=$objUser.Value
-   }
+    if ( $sid -eq $null){
+    $objUser = New-Object System.Security.Principal.NTAccount("$ligne") 
+    $strSID = $objUser.Translate([System.Security.Principal.SecurityIdentifier])
+    $sid=$strSID.Value
+}
    $outpuReverseSid += $sid + "|"
+
   }else{
    $outpuReverseSid += $ligne + "|"
   }
  }
-
  
-
+ }
+ return $outpuReverseSid
+}else {
+$outpuReverseSid += No One 
  return $outpuReverseSid
 
 }
+}
+
 
 
 # convert Stringarray to comma separated list
@@ -107,23 +121,6 @@ function StringArrayToList($StringArray) {
   return ""
  }
 }
-
-
-#Get the date
-$Date = Get-Date -U %d%m%Y
-
-
-$nomfichier = "audit" + $date + ".txt"
-
-Write-Host "#########>Create Audit directory<#########" -ForegroundColor DarkGreen
-
-$nomdossier = "Audit_CONF_" + $date
-
-
-New-Item -ItemType Directory -Name $nomdossier
-
-Set-Location $nomdossier
-
 #Get Intel On the machine
 
 $OSInfo = Get-WmiObject Win32_OperatingSystem | Select-Object Caption, Version, ServicePackMajorVersion, OSArchitecture, CSName, WindowsDirectory, NumberOfUsers, BootDevice
@@ -132,6 +129,22 @@ $OSInfo = Get-WmiObject Win32_OperatingSystem | Select-Object Caption, Version, 
 $OSversion = $OSInfo.Caption
 $OSName = $OSInfo.CSName
 $OSArchi = $OSInfo.OSArchitecture
+
+
+#Get the date
+$Date = Get-Date -U %d%m%Y
+
+$nomfichier = "audit" + $date + "-" + $OSName +".txt"
+
+Write-Host "#########>Create Audit directory<#########" -ForegroundColor DarkGreen
+
+$nomdossier = "Audit_CONF_" + $OSName + "_" + $date
+
+
+New-Item -ItemType Directory -Name $nomdossier
+
+Set-Location $nomdossier
+
 
 #Insert result in audit file
 Write-Host "#########>Take Server Information<#########" -ForegroundColor DarkGreen
@@ -304,36 +317,56 @@ $tableauShare | ConvertTo-CSV -NoTypeInformation -Delimiter ";" | Set-Content $n
 #Audit Appdata 
 Write-Host "#########>Take Appdata Information<#########" -ForegroundColor DarkGreen
 $cheminProfils = (Get-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows' 'NT\CurrentVersion\ProfileList\).ProfilesDirectory
- 
- 
+  
+  
 $profilpresent = Get-ChildItem $cheminProfils 
- 
- 
-$nomfichierAPP = "./APPDATA" + "$OSName" + ".txt"
- 
- 
+  
+$resultAPP = @()
+$nomfichierAPP = "./APPDATA" + "$OSName" + ".csv"
+  
+  
 foreach ( $profil in $profilpresent) {
- 
- $verifAppdata = Test-Path $cheminProfils\$profil\Appdata
- 
- if ($verifAppdata -eq $true) {
- 
-  $resultat = Get-ChildItem $cheminProfils\$profil\Appdata -Recurse -Include *.bat, *.exe, *.ps1, *.msi, *.py | Select-Object Name, Directory | Format-Table -AutoSize
- 
- 
-  $resulatCount = $resultat |Measure-Object 
-  $resulatCount = $resulatCount.Count
- 
- 
- 
-  if ( $resulatCount -gt 0) {
-   " $profil `r" >> ./$nomfichierAPP
- 
-   $resultat >> ./$nomfichierAPP
+  
+  $verifAppdata = Test-Path $cheminProfils\$profil\Appdata
+  
+  if ($verifAppdata -eq $true) {
+  
+    $resultat = Get-ChildItem $cheminProfils\$profil\Appdata -Recurse -Include *.bat, *.exe, *.ps1, *.ps1xml, *.PS2, *.PS2XML, *.psc1, *.PSC2, *.msi, *.py, *.pif, *.MSP , *.COM, *.SCR, *.hta, *.CPL, *.MSC, *.JAR, *.VB, *.VBS, *.VBE, *.JS, *.JSE, *.WS, *.wsf, *.wsc, *.wsh, *.msh, *.MSH1, *.MSH2, *.MSHXML, *.MSH1XML, *.MSH2XML, *.scf, *.REG, *.INF   | Select-Object Name, Directory, Fullname 
+  
+  foreach ($riskyfile in $resultat) {
+
+$signature = Get-FileHash -Algorithm SHA256 $riskyfile.Fullname -ErrorAction SilentlyContinue
+
+
+
+  $resultApptemp = [PSCustomObject]@{
+                            Name  = $riskyfile.Name
+                            Directory = $riskyfile.Directory
+                            Path = $riskyfile.Fullname
+							              Signature = $signature.Hash
+                            Profil= $profil.name
+							
+                        }
+
+$resultAPP +=$resultApptemp
+
+
   }
- 
- }
+  }
 }
+ 
+    $resulatCount = $resultAPP |Measure-Object 
+    $resulatCount = $resulatCount.Count
+  
+  
+  
+    if ( $resulatCount -gt 0) {
+      $resultAPP | Export-Csv -NoTypeInformation $nomfichierAPP
+  
+      
+    }
+  
+
  
 #Check feature and optionnal who are installed 
 Write-Host "#########>Take Feature and Optionnal Feature Information<#########" -ForegroundColor DarkGreen
@@ -374,24 +407,36 @@ Get-WmiObject win32_service | Select-Object Name, DisplayName, State, StartName,
 
 #Check Scheduled task
 Write-Host "#########>Take Scheduled task Information<#########" -ForegroundColor DarkGreen
-$nomfichierttache = "./Scheduled-task- " + "$OSName" + ".txt"
+$nomfichierttache = "./Scheduled-task- " + "$OSName" + ".csv"
 $tabletache = Get-ScheduledTask |Select-Object -Property *
+$resultTask= @()
 foreach ($tache in $tabletache) {
+$taskactions = Get-ScheduledTask $tache.Taskname |Select-Object -ExpandProperty Actions
 
- "Task name : " + $tache.Taskname + "`r" >> $nomfichierttache 
- "Task state : " + $tache.State + "`r" >> $nomfichierttache 
- "Task Author : " + $tache.Author + "`r" >> $nomfichierttache 
- "Task Description : " + $tache.Description + "`r" >> $nomfichierttache 
- $taskactions = Get-ScheduledTask $tache.Taskname |Select-Object -ExpandProperty Actions
- "Task action : `r" >> $nomfichierttache
  foreach ( $taskaction in $taskactions ) {
-  "Task action Argument :" + $taskaction.Arguments + "`r" >> $nomfichierttache
-  "Task action : " + $taskaction.Execute + "`r" >> $nomfichierttache 
-  "Task Action WorkingDirectory : " + $taskaction.WorkingDirectory + "`r" >> $nomfichierttache 
-  "---------------------------------------------------`r" >> $nomfichierttache 
+
+
+$resultTasktemp = [PSCustomObject]@{
+                            Task_name = $tache.Taskname
+                            Task_URI = $tache.URI
+                            Task_state = $tache.State
+                            Task_Author = $tache.Author
+							Task_Description = $tache.Description
+                            Task_action = $taskaction.Execute 
+                            Task_action_Argument = $taskaction.Arguments
+                            Task_Action_WorkingDirectory = $taskaction.WorkingDirectory
+							
+                        }
+
+$resultTask += $resultTasktemp
+
  }
- "##############################################`r" >> $nomfichierttache 
-}
+  }
+  
+
+
+
+$resultTask | Export-Csv -NoTypeInformation $nomfichierttache
 
 #check net accounts intel
 Write-Host "#########>Take Accounts Policy Information<#########" -ForegroundColor DarkGreen

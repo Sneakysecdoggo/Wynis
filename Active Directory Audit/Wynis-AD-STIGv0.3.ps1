@@ -56,6 +56,7 @@ Write-Host"|/     \|(______/ " -ForegroundColor Black
 #reference
 Write-Host "This tools will use the compliance framework below :"
 Write-Host "-https://stigviewer.com/stig/windows_server_20122012_r2_domain_controller/2019-01-16/"
+Write-Host "https://www.cert.ssi.gouv.fr/uploads/guide-ad.html"
 
 
 # convert Stringarray to comma separated liste (String)
@@ -277,7 +278,7 @@ foreach ( $profil in $profilpresent) {
     
     if ($verifAppdata -eq $true) {
     
-        $resultat = Get-ChildItem $cheminProfils\$profil\Appdata -Recurse -Include *.bat, *.exe, *.ps1, *.msi, *.py | Select-Object Name, Directory | Format-Table -AutoSize
+        $resultat = Get-ChildItem $cheminProfils\$profil\Appdata -Recurse -Include *.bat, *.exe, *.ps1, *.msi, *.py | Select-Object Name, Directory 
     
     
         $resulatCount = $resultat |Measure-Object 
@@ -417,6 +418,35 @@ Get-ItemProperty "HKCU:\Software\Microsoft\Windows NT\CurrentVersion\Windows" |S
 Get-ItemProperty "HKLM:\Software\Microsoft\Windows\CurrentVersion\Run" |Select-Object * -exclude PSPath,PSParentPath, PSChildName, PSProvider, PSDrive >> $nomfichierStartup
 "HKLM:\Software\Microsoft\Windows\CurrentVersion\RunOnce" >> $nomfichierStartup
 Get-ItemProperty "HKLM:\Software\Microsoft\Windows\CurrentVersion\RunOnce" |Select-Object * -exclude PSPath,PSParentPath, PSChildName, PSProvider, PSDrive >> $nomfichierStartup
+
+
+Write-Host "#########>Begin Active Directory audit<#########" -ForegroundColor Green
+
+#List user with never expired password & last set 
+$chaine = $null
+$traitement = $null
+$exist = $null
+$id = "AD-NeverExpiredAccount "
+$chaine = "$id" + ";" + "List of acount with no passwordexpiration date, Normalys should be none " + ";"
+$userneverexpired = get-aduser -filter * -IncludeAllProperties | where { $_.passwordNeverExpires -eq "true" } | where {$_.enabled -eq "true"}  | Select Name, PasswordNeverExpires, adminCount, passwordLastSet
+
+$userneverexpired|ConvertTo-CSV -NoTypeInformation -Delimiter ";" | Set-Content  ./userneverexpired.csv
+$chaine += "Check userneverexpired.csv"
+$chaine>> $nomfichier
+
+
+#List user with last set password  month or more
+$chaine = $null
+$traitement = $null
+$exist = $null
+$id = "AD-Lastpassword6Month "
+$chaine = "$id" + ";" + "List of acount with no passworc change for more than 6 mont, Normalys should be none " + ";"
+$userpwdset6 = get-aduser -filter * -IncludeAllProperties | where { $_.passwordNeverExpires -eq "true" } | where {$_.enabled -eq "true"}  | Select Name, PasswordNeverExpires, adminCount, passwordLastSet
+
+$userpwdset6 |ConvertTo-CSV -NoTypeInformation -Delimiter ";" | Set-Content  ./userlastset6.csv
+$chaine += "Check ./userlastset6.csv"
+$chaine>> $nomfichier
+
 
 Write-Host "#########>Begin STIG audit<#########" -ForegroundColor Green
 #Check Critical
