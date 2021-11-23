@@ -62,12 +62,15 @@ The directory output will contain the files belows:
 
 -gpo-%COMPUTERNAME% : Gpresult for applied GPO
 
+![W10](../master/Exemples/W12-GPRESULT.jpg)
+
+
 -Installed-Software-%COMPUTERNAME% : List installed software
 
 ![W6](../master/Exemples/W6-InstalledSoftware.jpg)
 
 -Listen-port-%COMPUTERNAME% : netstat with associate executable
-
+![W11](../master/Exemples/W11-netsat.jpg)
 -localuser-%COMPUTERNAME% : list all local users
 
 -OptionnalFeature-%COMPUTERNAME% :List all enabled optional feature
