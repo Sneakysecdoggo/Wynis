@@ -806,7 +806,7 @@ $chaine = $null
 $traitement = $null
 $id = "URA" + "$indextest"
 $chaine = "$id" + ";" + "(L1)Ensure Create permanent shared objects, No one,value must empty" + ";"
-$chaineSID = Get-Content $seceditfile |Select-String "SeCreateGlobalPrivilege" 
+$chaineSID = Get-Content $seceditfile |Select-String "SeCreatePermanentPrivilege" 
 $chaineSID = $chaineSID.line
 $traitement = "SeCreatePermanentPrivilege" + ":"
 $traitement += Reverse-SID $chaineSID
@@ -4660,7 +4660,7 @@ $chaine = $null
 $traitement = $null
 $exist = $null
 $id = "MSSL" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Ensure 'MSS: (NoNameReleaseOnDemand) Allow the computer to ignore NetBIOS name release requests except from WINS servers' is set to 'Enabled, value must be 300000" + ";"
+$chaine = "$id" + ";" + "(L1)Ensure 'MSS: (NoNameReleaseOnDemand) Allow the computer to ignore NetBIOS name release requests except from WINS servers' is set to 'Enabled, value must be 1" + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\NetBT\\Parameters"
 if ( $exist -eq $true) {
  $traitement = Get-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Services\NetBT\Parameters" |Select-Object NoNameReleaseOnDemand
