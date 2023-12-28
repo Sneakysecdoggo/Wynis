@@ -5,7 +5,6 @@
 #This script must be run with admin rights 
 #Check Windows Security Best Practice CIS 
 #https://github.com/Sneakysecdoggo/
-#https://twitter.com/SneakyWafWaf
 #Script Server Version
 #MIT License
 

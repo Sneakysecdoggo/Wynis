@@ -5,7 +5,7 @@
 #This script must be run with admin rights 
 #Check Windows Security Best Practice CIS 
 #https://github.com/Sneakysecdoggo/
-#Script WIN10 Version
+#Script WIN11 Version
 
 #Copyright (c) [2019] [Sneakysecdoggo]
 
@@ -44,12 +44,12 @@ Write-Host "    \  /\  /| |_| | | | | \__ \ "  -ForegroundColor Cyan
 Write-Host "     \/  \/  \__, |_| |_|_|___/ "  -ForegroundColor Cyan 
 Write-Host "              __/ |             "  -ForegroundColor Cyan 
 Write-Host "             |___/              "  -ForegroundColor Cyan 
-Write-Host " __          ____  ___ "  -ForegroundColor Black 
-Write-Host " \ \        / /_ |/ _ \"  -ForegroundColor Black 
-Write-Host "  \ \  /\  / / | | | | |"  -ForegroundColor Black  
-Write-Host "   \ \/  \/ /  | | | | |"  -ForegroundColor Black 
-Write-Host "    \  /\  /   | | |_| | "  -ForegroundColor Black 
-Write-Host "     \/  \/    |_|\___/ "  -ForegroundColor Black 
+Write-Host " __          ____   _ "  -ForegroundColor Black 
+Write-Host " \ \        / /_ |/_ |"  -ForegroundColor Black 
+Write-Host "  \ \  /\  / / | | | |"  -ForegroundColor Black  
+Write-Host "   \ \/  \/ /  | | | |"  -ForegroundColor Black 
+Write-Host "    \  /\  /   | | | | "  -ForegroundColor Black 
+Write-Host "     \/  \/    |_| | |"  -ForegroundColor Black 
 
 #FUNCTION 
 
@@ -59,6 +59,16 @@ if($reverveCommand -ne $null){
 }else{
  $reverseCommandExist= $false
 }
+
+
+Function Clean-Value($variable) {
+
+$variable = $null 
+
+return variable
+
+}
+
 
 # Function to reverse SID from SecPol
 Function Reverse-SID ($chaineSID) {
@@ -163,8 +173,29 @@ Write-Host "#########>Take File to analyse<#########" -ForegroundColor DarkGreen
 $seceditfile = "./secpol" + "-" + "$OSName" + ".cfg"
 secedit /export /cfg $seceditfile 
 #Second command in case of emergency
-$gpofile = "./gpo" + "-" + "$OSName" + ".txt"
+
 gpresult /r /V > $gpofile
+
+$PCUser = (Get-WMIObject -Classname Win32_ComputerSystem).Username 
+$PSUser = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name 
+
+if ($PCUser -Like $PSUser) { 
+  $gpofile = "./gpo" + "-" + "$OSName" + "-" + $PCUser + ".txt"
+	gpresult /r /V > $gpofile
+} else {
+	$gpofile = "./gpo" + "-" + "$OSName" + "-" + $PCUser + ".txt"
+	gpresult /r /V /user $PCUSER > $gpofile 
+}
+
+$gpofile = "./gpo" + "-" + "$OSName" + "-" + $PCUser + ".html"
+if ($PCUser -Like $PSUser) { 
+   
+	gpresult /h $gpofile /f | out-null
+} else {
+	
+	gpresult /h $gpofile /f /user $PCUSER | out-null 
+}
+
 $gpofile = "./gpo" + "-" + "$OSName" + ".html"
 gpresult /h $gpofile /f | out-null
 
@@ -175,12 +206,17 @@ auditpol.exe /get /Category:* > $auditconfigfile
 
 #Dump some Windows registry 
 Write-Host "#########>Dump Windows Registry <#########" -ForegroundColor DarkGreen
+$registrydumping = $(Write-Host "Woud you like to dump registry in order to deep dive some other value, this may cause EDR to kill Wynis (Y/N)?" -ForegroundColor Red ; Read-Host)
+
+If( $registrydumping -like "Y"){
+
 $auditregHKLM= "./auditregistry-HKLMicrosoft" + "-" + "$OSName" + ".txt"
 reg export "HKLM\SOFTWARE\Microsoft\" "$auditregHKLM"
 $auditregHKLM= "./auditregistry-HKLMCUrrentControlSet" + "-" + "$OSName" + ".txt"
 reg export "HKLM\SYSTEM\CurrentControlSet" "$auditregHKLM"
 $auditregHKLM= "./auditregistry-HKLMPolicies" + "-" + "$OSName" + ".txt"
 reg export "HKLM\SOFTWARE\Policies" "$auditregHKLM"
+}
 
 
 
@@ -369,16 +405,10 @@ $resultAPP +=$resultApptemp
  
 #Check feature and optionnal who are installed 
 Write-Host "#########>Take Feature and Optionnal Feature Information<#########" -ForegroundColor DarkGreen
-$nomfichierFeature = "./Feature-" + "$OSName" + ".txt"
-$nomfichierOptionnalFeature = "./OptionnalFeature-" + "$OSName" + ".txt" 
-if ( $OSversion -match "Server") {
- #Import serverManger
- import-module servermanager
- 
- Get-WindowsFeature | where-object {$_.Installed -eq $True} |Format-Table * -Autosize >> ./$nomfichierFeature 
- 
-}
-Get-WindowsOptionalFeature -Online | where-object {$_.State -eq "Enabled"} |Format-Table * -Autosize >> $nomfichierOptionnalFeature
+
+$nomfichierOptionnalFeature = "./OptionnalFeature-" + "$OSName" + ".csv" 
+
+Get-WindowsOptionalFeature -Online | where-object {$_.State -eq "Enabled"} | Export-Csv -NoTypeInformation $nomfichierOptionnalFeature
 #Check installed software
 Write-Host "#########>Take Software Information<#########" -ForegroundColor DarkGreen
 $nomfichierInstall = "./Installed-software- " + "$OSName" + ".csv"
@@ -446,7 +476,7 @@ net accounts > $nomfichierNetAccount
 Write-Host "#########>Take Port listening Information<#########" -ForegroundColor DarkGreen
 $nomfichierPort = "./Listen-port- " + "$OSName" + ".csv"
 $listport = Get-NetTCPConnection | Select-Object LocalAddress, LocalPort, State, OwningProcess
-"LocalAddress;LocalPort;State;OwningProcess;Path" > $nomfichierPort
+Write-Host "LocalAddress;LocalPort;State;OwningProcess;Path" > $nomfichierPort
 
 foreach ($port in $listport) {
  $exepath = Get-Process -PID $port.OwningProcess |Select-Object Path
@@ -490,17 +520,19 @@ $listlocaluser > "localuser-$OSName.txt"
 
 #Check Startup registry key
 Write-Host "#########>Take Startup Registry Information<#########" -ForegroundColor DarkGreen
-$nomfichierStartup = "./Startup- " + "$OSName" + ".txt"
+
 "HKCU:\Software\Microsoft\Windows\CurrentVersion\Run" >> $nomfichierStartup
-Get-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\Run" |Select-Object * -exclude PSPath,PSParentPath, PSChildName, PSProvider, PSDrive >> $nomfichierStartup
-"HKCU:\Software\Microsoft\Windows\CurrentVersion\RunOnce" >> $nomfichierStartup
-Get-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\RunOnce" |Select-Object * -exclude PSPath,PSParentPath, PSChildName, PSProvider, PSDrive >> $nomfichierStartup
-"HKCU:\Software\Microsoft\Windows NT\CurrentVersion\Windows" >> $nomfichierStartup
-Get-ItemProperty "HKCU:\Software\Microsoft\Windows NT\CurrentVersion\Windows" |Select-Object * -exclude PSPath,PSParentPath, PSChildName, PSProvider, PSDrive >> $nomfichierStartup
-"HKLM:\Software\Microsoft\Windows\CurrentVersion\Run" >> $nomfichierStartup
-Get-ItemProperty "HKLM:\Software\Microsoft\Windows\CurrentVersion\Run" |Select-Object * -exclude PSPath,PSParentPath, PSChildName, PSProvider, PSDrive >> $nomfichierStartup
-"HKLM:\Software\Microsoft\Windows\CurrentVersion\RunOnce" >> $nomfichierStartup
-Get-ItemProperty "HKLM:\Software\Microsoft\Windows\CurrentVersion\RunOnce" |Select-Object * -exclude PSPath,PSParentPath, PSChildName, PSProvider, PSDrive >> $nomfichierStartup
+
+$nomfichierStartup = "./Startup- " + "$OSName" + "HKCU-RUN" + ".csv"
+Get-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\Run" |Select-Object * -exclude PSPath,PSParentPath, PSChildName, PSProvider, PSDrive | Export-Csv -NoTypeInformation $nomfichierStartup
+$nomfichierStartup = "./Startup- " + "$OSName" + "HKCU-RUNONCE" + ".csv"
+Get-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\RunOnce" |Select-Object * -exclude PSPath,PSParentPath, PSChildName, PSProvider, PSDrive | Export-Csv -NoTypeInformation $nomfichierStartup
+$nomfichierStartup = "./Startup- " + "$OSName" + "HKCU-Windows" + ".csv"
+Get-ItemProperty "HKCU:\Software\Microsoft\Windows NT\CurrentVersion\Windows" |Select-Object * -exclude PSPath,PSParentPath, PSChildName, PSProvider, PSDrive | Export-Csv -NoTypeInformation $nomfichierStartup
+$nomfichierStartup = "./Startup- " + "$OSName" + "HKLM-RUN" + ".csv"
+Get-ItemProperty "HKLM:\Software\Microsoft\Windows\CurrentVersion\Run" |Select-Object * -exclude PSPath,PSParentPath, PSChildName, PSProvider, PSDrive | Export-Csv -NoTypeInformation $nomfichierStartup
+$nomfichierStartup = "./Startup- " + "$OSName" + "HKLM-RUN" + ".csv"
+Get-ItemProperty "HKLM:\Software\Microsoft\Windows\CurrentVersion\RunOnce" |Select-Object * -exclude PSPath,PSParentPath, PSChildName, PSProvider, PSDrive | Export-Csv -NoTypeInformation $nomfichierStartup
 
 
 
@@ -511,79 +543,110 @@ Write-Host "#########>Begin password policy audit<#########" -ForegroundColor Da
 
 
 #Check Enforce password history
-$id = "PP" + "$indextest"
-$chaine = $id + ";" + "(L1)Ensure 'Enforce password history' is set to '24 or more password(s)" + ";"
+$id = "PP-" + "1.1.1"
+$chaine = $id + ";" + "(L1)Ensure 'Enforce password history' is set to '24 or more password(s), value must be 24 or More" + ";"
 $traitement = Get-Content $seceditfile |Select-String "PasswordHistorySize"
 
 $chaine += $traitement
-
 $chaine>> $nomfichier
-#Check Maximum password age 
-$indextest += 1
-$id = "PP" + "$indextest"
-$chaine = $null
-$traitement = $null
 
-$chaine = "$id" + ";" + "(L1)Maximum password age is set to 60 or fewer days, but not 0" + ";"
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+#Check Maximum password age 
+
+$id = "PP-" + "1.1.2"
+$chaine = "$id" + ";" + "(L1)Maximum password age is set to 365 or fewer days, value must be 365 or less but not 0" + ";"
 $traitement = Get-Content $seceditfile |Select-String "MaximumPasswordAge" |select-object -First 1
 
 $chaine += $traitement
 $chaine>> $nomfichier
 
-#Check Minimum password age
-$indextest += 1
-$id = "PP" + "$indextest"
-$chaine = $null
-$traitement = $null
+Clean-Value($chaine)
+Clean-Value($traitement)
 
-$chaine = "$id" + ";" + "(L1)Minimum password age is set to 1 or more day(s)" + ";"
+#Check Minimum password age
+
+$id = "PP-" + "1.1.3"
+$chaine = "$id" + ";" + "(L1)Minimum password age is set to 1 or more day(s), value must be 1 or more but not 0" + ";"
 $traitement = Get-Content $seceditfile |Select-String "MinimumPasswordAge"
 
 $chaine += $traitement
 $chaine>> $nomfichier
 
-# Check Minimum password length
-$indextest += 1
-$id = "PP" + "$indextest"
-$chaine = $null
-$traitement = $null
+Clean-Value($chaine)
+Clean-Value($traitement)
 
-$chaine = "$id" + ";" + "(L1)Minimum password length is set to 14 or more character(s)" + ";"
+# Check Minimum password length
+
+$id = "PP-" + "1.1.4"
+
+$chaine = "$id" + ";" + "(L1)Minimum password length is set to 14 or more character(s), value must be 14 or more" + ";"
 $traitement = Get-Content $seceditfile |Select-String "MinimumPasswordLength"
 
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 #Check Password must meet complexity requirements
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "PP" + "$indextest"
-$chaine = "$indextest" + ";" + "(L1)Password must meet complexity requirements is set to Enabled, value must be 1" + ";"
+
+
+$id = "PP-" + "1.1.5"
+$chaine = "$id" + ";" + "(L1)Password must meet complexity requirements is set to Enabled, value must be 1" + ";"
 $traitement = Get-Content $seceditfile |Select-String "PasswordComplexity"
 
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+#Relax minimum password length limits'
+
+
+$id = "PP-" + "1.1.6"
+$chaine = "$id" + ";" + "(L1)Relax minimum password length limits' is set to Enabled, value must be 1 (Warning this may cause compatibility issues)" + ";"
+$exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Control\SAM"
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Control\SAM" | Select-Object RelaxMinimumPasswordLengthLimits
+ $traitement = $traitement.RelaxMinimumPasswordLengthLimits
+
+if ( $traitement -eq $null) {
+$traitement = "not configure"
+}
+
+}
+else {
+ $traitement = "not configure"
+}
+
+$chaine += $traitement
+$chaine>> $nomfichier
+
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 #Check Store passwords using reversible encryption
 $indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "PP" + "$indextest"
+
+$id = "PP-" + "1.1.7"
 $chaine = "$id" + ";" + "(L1)Store passwords using reversible encryption is set to Disabled, value must be 0" + ";"
 $traitement = Get-Content $seceditfile |Select-String "ClearTextPassword"
 
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 #Check lock out policy
 Write-Host "#########>Begin account lockout policy audit<#########" -ForegroundColor DarkGreen
 
 #Check Account lockout duration
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "ALP" + "$indextest"
+
+$id = "ALP-" + "1.2.1"
 
 $chaine = "$id" + ";" + "(L1)Account lockout duration is set to 15 or more minute(s)" + ";"
 $traitement = Get-Content $nomfichierNetAccount |Select-String -pattern '(Durée du verrouillage)|(Lockout duration)'
@@ -591,25 +654,41 @@ $traitement = Get-Content $nomfichierNetAccount |Select-String -pattern '(Durée
 
 $chaine += $traitement
 $chaine>> $nomfichier
+
+
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 #Check Account lockout threshold
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "ALP" + "$indextest"
 
-$chaine = "$id" + ";" + "(L1)Ensure Account lockout threshold is set to 10 or fewer invalid logon attempt(s), but not 0" + ";"
+$id = "ALP-" + "1.2.2"
+
+$chaine = "$id" + ";" + "(L1)Ensure Account lockout threshold is set to 5 or fewer invalid logon attempt(s), but not 0" + ";"
 $traitement = Get-Content $nomfichierNetAccount |Select-String -pattern '(Seuil de verrouillage)|(Lockout threshold)'
-
-
 
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
+#Check Account lockout threshold
+
+$id = "ALP-" + "1.2.3"
+
+$chaine = "$id" + ";" + "(L1)Allow Administrator account lockout is set to Enabled, value must be 1" + ";"
+$traitement = Get-Content $seceditfile |Select-String "AllowAdministratorLockout"
+
+$chaine += $traitement
+$chaine>> $nomfichier
+
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 #Check Reset account lockout 
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "ALP" + "$indextest"
+
+$id = "ALP-" + "1.2.4"
 $chaine = "$id" + ";" + "(L1)Reset account lockout counter after is set to 15 or more minute(s)" + ";"
 $traitement = Get-Content $nomfichierNetAccount |Select-String -pattern "(Fenêtre d'observation du verrouillage)|(Lockout observation window)"
 
@@ -617,26 +696,27 @@ $traitement = Get-Content $nomfichierNetAccount |Select-String -pattern "(Fenêt
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Check user rights assignment
 Write-Host "#########>Begin user rights assignment audit<#########" -ForegroundColor DarkGreen
 
 #Check Access Credential Manager 
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "URA" + "$indextest"
+
+$id = "URA-" + "2.2.1"
 $chaine = "$id" + ";" + "(L1)Acess Credential Manager as a trusted caller is set to No One , value must be empty" + ";"
 $traitement = Get-Content $seceditfile |Select-String "SeTrustedCredManAccessPrivilege"
 
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 #Check Access this computer from the network
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "URA" + "$indextest"
+
+$id = "URA-" + "2.2.2"
 $chaine = "$id" + ";" + "(L1)Access this computer from the network, Only Administrators, Remote Desktop Users " + ";"
 $chaineSID = Get-Content $seceditfile |Select-String "SeNetworkLogonRight" 
 $chaineSID = $chaineSID.line
@@ -647,11 +727,12 @@ $chaine += $traitement
 $chaine>> $nomfichier
 
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 #Check Act as part of the operating system
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "URA" + "$indextest"
+
+$id = "URA-" + "2.2.3"
 $chaine = "$id" + ";" + "(L1)Act as part of the operating system' , Must be empty " + ";"
 $test = Get-Content $seceditfile |Select-String "SeTcbPrivilege"
 $chaineSID = $chaineSID.line
@@ -662,22 +743,28 @@ $traitement += Reverse-SID $test
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 #Check Adjust memory quotas for a process
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "URA" + "$indextest"
+
+$id = "URA-" + "2.2.4"
 $chaine = "$id" + ";" + "(L1)Adjust memory quotas for a process , Administrators, LOCAL SERVICE, NETWORK SERVICE " + ";"
-$traitement = "Check $gpofile OR ask to see the AD configuration"
+$chaineSID = Get-Content $seceditfile |Select-String "SeIncreaseQuotaPrivilege" 
+$chaineSID = $chaineSID.line
+$traitement = "SeIncreaseQuotaPrivilege" + ":"
+$traitement += Reverse-SID $chaineSID
 
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
 #Allow log on locally
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "URA" + "$indextest"
+
+$id = "URA-" + "2.2.5"
 
 $chaine = "$id" + ";" + "(L1)Allow log on locally, Administrators, Users" + ";"
 $chaineSID = Get-Content $seceditfile |Select-String "SeInteractiveLogonRight" 
@@ -689,11 +776,13 @@ $chaine += $traitement
 $chaine>> $nomfichier
 
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
 #Allow log on through Remote Desktop Services
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "URA" + "$indextest"
+
+$id = "URA-" + "2.2.6"
 $chaine = "$id" + ";" + "(L1)Allow log on through Remote Desktop Services, Only Administrators, Remote Desktop Users. If Remote Apps or CItrix authentificated users" + ";"
 $chaineSID = Get-Content $seceditfile |Select-String "SeRemoteInteractiveLogonRight" 
 $chaineSID = $chaineSID.line
@@ -703,13 +792,12 @@ $traitement += Reverse-SID $chaineSID
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 #Ensure Back up files and directories
 
-
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "URA" + "$indextest"
+$id = "URA-" + "2.2.7"
 $chaine = "$id" + ";" + "(L1)Ensure Back up files and directories, Only Administrators," + ";"
 $chaineSID = Get-Content $seceditfile |Select-String "SeBackupPrivilege" 
 $chaineSID = $chaineSID.line
@@ -719,13 +807,13 @@ $traitement += Reverse-SID $chaineSID
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
 #Change the system time'
 
-
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "URA" + "$indextest"
+$id = "URA-" + "2.2.8"
 $chaine = "$id" + ";" + "(L1)Change the system time, Only Administrators and local service" + ";"
 $chaineSID = Get-Content $seceditfile |Select-String "SeSystemtimePrivilege" 
 $chaineSID = $chaineSID.line
@@ -735,14 +823,12 @@ $traitement += Reverse-SID $chaineSID
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Change the time zone
 
-
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "URA" + "$indextest"
+$id = "URA-" + "2.2.9"
 $chaine = "$id" + ";" + "(L1)Change the time zone', Only Administrators ,local service and users" + ";"
 $chaineSID = Get-Content $seceditfile |Select-String "SeTimeZonePrivilege" 
 $chaineSID = $chaineSID.line
@@ -752,13 +838,13 @@ $traitement += Reverse-SID $chaineSID
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 #Create a pagefile
 
 
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "URA" + "$indextest"
+$id = "URA-" + "2.2.10"
 $chaine = "$id" + ";" + "(L1)Create a pagefile, Only Administrators " + ";"
 $chaineSID = Get-Content $seceditfile |Select-String "SeCreatePagefilePrivilege" 
 $chaineSID = $chaineSID.line
@@ -768,12 +854,14 @@ $traitement += Reverse-SID $chaineSID
 $chaine += $traitement
 $chaine>> $nomfichier
 
+
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
 #Create a token object'
 
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "URA" + "$indextest"
+$id = "URA-" + "2.2.11"
 $chaine = "$id" + ";" + "(L1)Create a token object, No one " + ";"
 $chaineSID = Get-Content $seceditfile |Select-String "SeCreateTokenPrivilege" 
 $chaineSID = $chaineSID.line
@@ -783,12 +871,13 @@ $traitement += Reverse-SID $chaineSID
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
 #Create global objects
 
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "URA" + "$indextest"
+$id = "URA-" + "2.2.12"
 $chaine = "$id" + ";" + "(L1)Ensure Create global objects is set to Administrators, LOCAL SERVICE, NETWORK SERVICE, SERVICE" + ";"
 $chaineSID = Get-Content $seceditfile |Select-String "SeCreateGlobalPrivilege" 
 $chaineSID = $chaineSID.line
@@ -798,12 +887,12 @@ $traitement += Reverse-SID $chaineSID
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
 #Create permanent shared objects'
 
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "URA" + "$indextest"
+
+$id = "URA" + "2.2.13"
 $chaine = "$id" + ";" + "(L1)Ensure Create permanent shared objects, No one,value must empty" + ";"
 $chaineSID = Get-Content $seceditfile |Select-String "SeCreatePermanentPrivilege" 
 $chaineSID = $chaineSID.line
@@ -812,13 +901,12 @@ $traitement += Reverse-SID $chaineSID
 
 $chaine += $traitement
 $chaine>> $nomfichier
-
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Create symbolic links
 
-$indextest += 1
-$chaine = $null
-$traitement = $null
+$id = "URA" + "2.2.14"
 $id = "URA" + "$indextest"
 $chaine = "$id" + ";" + "(L1)Create symbolic links, Administrator and for Hyper V NT VIRTUAL MACHINE\Virtual Machines. " + ";"
 $chaineSID = Get-Content $seceditfile |Select-String "SeCreateSymbolicLinkPrivilege" 
@@ -828,14 +916,13 @@ $traitement += Reverse-SID $chaineSID
 
 $chaine += $traitement
 $chaine>> $nomfichier
-
+Clean-Value($chaine)
+Clean-Value($traitement)
 #Debug programs
 
-$indextest += 1
-$chaine = $null
-$traitement = $null
+$id = "URA" + "2.2.15"
 $id = "URA" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Ensure Debug programs is set to Administrators " + ";"
+$chaine = "$id" + ";" + "(L1)Ensure Debug programs is set to Administrators or no one" + ";"
 $chaineSID = Get-Content $seceditfile |Select-String "SeDebugPrivilege" 
 $chaineSID = $chaineSID.line
 $traitement = "SeDebugPrivilege" + ":"
@@ -844,13 +931,12 @@ $traitement += Reverse-SID $chaineSID
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Deny access to this computer from the network
 
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "URA" + "$indextest"
+$id = "URA" + "2.2.16"
 $chaine = "$id" + ";" + "(L1)Deny access to this computer from the network,Guest Local Account and member of Domain admin " + ";"
 $chaineSID = Get-Content $seceditfile |Select-String "SeDenyNetworkLogonRight" 
 $chaineSID = $chaineSID.line
@@ -860,12 +946,11 @@ $traitement += Reverse-SID $chaineSID
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Deny log on as a batch job
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "URA" + "$indextest"
+$id = "URA" + "2.2.17"
 $chaine = "$id" + ";" + "(L1)Deny log on as a batch job, Guest " + ";"
 $chaineSID = Get-Content $seceditfile |Select-String "SeDenyBatchLogonRight" 
 $chaineSID = $chaineSID.line
@@ -875,12 +960,11 @@ $traitement += Reverse-SID $chaineSID
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Deny log on as a service'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "URA" + "$indextest"
+$id = "URA" + "2.2.18"
 $chaine = "$id" + ";" + "(L1)Deny log on as a service, Guest " + ";"
 $chaineSID = Get-Content $seceditfile |Select-String "SeDenyServiceLogonRight" 
 $chaineSID = $chaineSID.line
@@ -889,13 +973,11 @@ $traitement += Reverse-SID $chaineSID
 
 $chaine += $traitement
 $chaine>> $nomfichier
-
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Deny log on locally
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "URA" + "$indextest"
+$id = "URA" + "2.2.19"
 $chaine = "$id" + ";" + "(L1)Deny log on locally, Guest and member of Domain admin " + ";"
 $chaineSID = Get-Content $seceditfile |Select-String "SeDenyInteractiveLogonRight" 
 $chaineSID = $chaineSID.line
@@ -905,12 +987,11 @@ $traitement += Reverse-SID $chaineSID
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Deny log on through Remote Desktop Services'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "URA" + "$indextest"
+$id = "URA" + "2.2.20"
 $chaine = "$id" + ";" + "(L1)Deny log on through Remote Desktop Services, Guest, Local account and member of Domain admin' " + ";"
 $chaineSID = Get-Content $seceditfile |Select-String "SeDenyRemoteInteractiveLogonRight" 
 $chaineSID = $chaineSID.line
@@ -920,12 +1001,11 @@ $traitement += Reverse-SID $chaineSID
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Enable computer and user accounts to be trusted for delegation
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "URA" + "$indextest"
+$id = "URA" + "2.2.21"
 $chaine = "$id" + ";" + "(L1)Enable computer and user accounts to be trusted for delegation,No one " + ";"
 $chaineSID = Get-Content $seceditfile |Select-String "SeEnableDelegationPrivilege" 
 $chaineSID = $chaineSID.line
@@ -934,13 +1014,11 @@ $traitement += Reverse-SID $chaineSID
 
 $chaine += $traitement
 $chaine>> $nomfichier
-
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Force shutdown from a remote system
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "URA" + "$indextest"
+$id = "URA" + "2.2.22"
 $chaine = "$id" + ";" + "(L1)Force shutdown from a remote system, Only administrators " + ";"
 $chaineSID = Get-Content $seceditfile |Select-String "SeRemoteShutdownPrivilege" 
 $chaineSID = $chaineSID.line
@@ -950,11 +1028,11 @@ $traitement += Reverse-SID $chaineSID
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 #Generate security audits'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "URA" + "$indextest"
+$id = "URA" + "2.2.23"
 $chaine = "$id" + ";" + "(L1)Generate security audits is set to LOCAL SERVICE, NETWORK SERVICE " + ";"
 $chaineSID = Get-Content $seceditfile |Select-String "SeAuditPrivilege" 
 $chaineSID = $chaineSID.line
@@ -964,11 +1042,12 @@ $traitement += Reverse-SID $chaineSID
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
 #Impersonate a client after authentication
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "URA" + "$indextest"
+$id = "URA" + "2.2.24"
 $chaine = "$id" + ";" + "(L1)Impersonate a client after authentication , Administrators, LOCAL SERVICE, NETWORK SERVICE, SERVICE " + ";"
 $chaineSID = Get-Content $seceditfile |Select-String "SeImpersonatePrivilege" 
 $chaineSID = $chaineSID.line
@@ -977,13 +1056,12 @@ $traitement += Reverse-SID $chaineSID
 
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 
 #Increase scheduling priority
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "URA" + "$indextest"
+$id = "URA" + "2.2.25"
 $chaine = "$id" + ";" + "(L1)Increase scheduling priority , only Administrator and Window Manager\Window Manager Group" + ";"
 $chaineSID = Get-Content $seceditfile |Select-String "SeIncreaseBasePriorityPrivilege" 
 $chaineSID = $chaineSID.line
@@ -993,12 +1071,11 @@ $traitement += Reverse-SID $chaineSID
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Load and unload device drivers'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "URA" + "$indextest"
+$id = "URA" + "2.2.26"
 $chaine = "$id" + ";" + "(L1)Load and unload device drivers' , only Administrator" + ";"
 $chaineSID = Get-Content $seceditfile |Select-String "SeLoadDriverPrivilege" 
 $chaineSID = $chaineSID.line
@@ -1008,11 +1085,11 @@ $traitement += Reverse-SID $chaineSID
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 #Lock pages in memory'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "URA" + "$indextest"
+$id = "URA" + "2.2.27"
 $chaine = "$id" + ";" + "(L1)Lock pages in memory, No one" + ";"
 $chaineSID = Get-Content $seceditfile |Select-String "SeLockMemoryPrivilege" 
 $chaineSID = $chaineSID.line
@@ -1023,11 +1100,12 @@ $chaine += $traitement
 $chaine>> $nomfichier
 
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
 #Log on as a batch job'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "URA" + "$indextest"
+$id = "URA" + "2.2.28"
 $chaine = "$id" + ";" + "(L2)Log on as a batch job',Administrators and very specific account" + ";"
 $chaineSID = Get-Content $seceditfile |Select-String "SeBatchLogonRight" 
 $chaineSID = $chaineSID.line
@@ -1037,11 +1115,11 @@ $traitement += Reverse-SID $chaineSID
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 #Log on as a service
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "URA" + "$indextest"
+$id = "URA" + "2.2.29"
 $chaine = "$id" + ";" + "(L2)Ensure Log on as a service is set to No One and NT VIRTUAL MACHINE\Virtual Machine( When HyperV is installed)" + ";"
 $chaineSID = Get-Content $seceditfile |Select-String "SeServiceLogonRight" 
 $chaineSID = $chaineSID.line
@@ -1051,13 +1129,12 @@ $traitement += Reverse-SID $chaineSID
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 
 #Manage auditing and security log
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "URA" + "$indextest"
+$id = "URA" + "2.2.30"
 $chaine = "$id" + ";" + "(L1)Manage auditing and security log,Administrators" + ";"
 $chaineSID = Get-Content $seceditfile |Select-String "SeSecurityPrivilege" 
 $chaineSID = $chaineSID.line
@@ -1067,11 +1144,11 @@ $traitement += Reverse-SID $chaineSID
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 #Modify an object label'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "URA" + "$indextest"
+$id = "URA" + "2.2.31"
 $chaine = "$id" + ";" + "(L1)Modify an object label, No one" + ";"
 $chaineSID = Get-Content $seceditfile |Select-String "SeRelabelPrivilege" 
 $chaineSID = $chaineSID.line
@@ -1081,11 +1158,11 @@ $traitement += Reverse-SID $chaineSID
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 #Modify firmware environment values'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "URA" + "$indextest"
+$id = "URA" + "2.2.32"
 $chaine = "$id" + ";" + "(L1)Modify firmware environment values is set to Administrators" + ";"
 $chaineSID = Get-Content $seceditfile |Select-String "SeSystemEnvironmentPrivilege" 
 $chaineSID = $chaineSID.line
@@ -1095,11 +1172,11 @@ $traitement += Reverse-SID $chaineSID
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 #Perform volume maintenance tasks
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "URA" + "$indextest"
+$id = "URA" + "2.2.33"
 $chaine = "$id" + ";" + "(L1)Perform volume maintenance tasks is set to Administrators" + ";"
 $chaineSID = Get-Content $seceditfile |Select-String "SeManageVolumePrivilege" 
 $chaineSID = $chaineSID.line
@@ -1109,11 +1186,12 @@ $traitement += Reverse-SID $chaineSID
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
 #Profile single process'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "URA" + "$indextest"
+$id = "URA" + "2.2.34"
 $chaine = "$id" + ";" + "(L1)Profile single process is set to Administrators" + ";"
 $chaineSID = Get-Content $seceditfile |Select-String "SeProfileSingleProcessPrivilege" 
 $chaineSID = $chaineSID.line
@@ -1123,12 +1201,11 @@ $traitement += Reverse-SID $chaineSID
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Profile system performance
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "URA" + "$indextest"
+$id = "URA" + "2.2.35"
 $chaine = "$id" + ";" + "(L1)Profile system performance is set to Administrators, NT SERVICE\WdiServiceHost" + ";"
 $chaineSID = Get-Content $seceditfile |Select-String "SeSystemProfilePrivilege" 
 $chaineSID = $chaineSID.line
@@ -1138,11 +1215,11 @@ $traitement += Reverse-SID $chaineSID
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 #Replace a process level token
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "URA" + "$indextest"
+$id = "URA" + "2.2.36"
 $chaine = "$id" + ";" + "(L1)Replace a process level token is set to LOCAL SERVICE, NETWORK SERVICE and for IIS server you may have IIS applications pools" + ";"
 $chaineSID = Get-Content $seceditfile |Select-String "SeAssignPrimaryTokenPrivilege" 
 $chaineSID = $chaineSID.line
@@ -1152,11 +1229,13 @@ $traitement += Reverse-SID $chaineSID
 $chaine += $traitement
 $chaine>> $nomfichier
 
+
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
 #Restore files and directories'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "URA" + "$indextest"
+$id = "URA" + "2.2.37"
 $chaine = "$id" + ";" + "(L1)Restore files and directories is set to Administrators" + ";"
 $chaineSID = Get-Content $seceditfile |Select-String "SeRestorePrivilege" 
 $chaineSID = $chaineSID.line
@@ -1166,11 +1245,11 @@ $traitement += Reverse-SID $chaineSID
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 #Shut down the system
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "URA" + "$indextest"
+$id = "URA" + "2.2.38"
 $chaine = "$id" + ";" + "(L1)Shut down the system is set to Administrators, Users" + ";"
 $chaineSID = Get-Content $seceditfile |Select-String "SeShutdownPrivilege" 
 $chaineSID = $chaineSID.line
@@ -1180,12 +1259,11 @@ $traitement += Reverse-SID $chaineSID
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Take ownership of files or other objects
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "URA" + "$indextest"
+$id = "URA" + "2.2.39"
 $chaine = "$id" + ";" + "(L1)Take ownership of files or other objects is set to Administrators" + ";"
 $chaineSID = Get-Content $seceditfile |Select-String "SeTakeOwnershipPrivilege" 
 $chaineSID = $chaineSID.line
@@ -1194,29 +1272,16 @@ $traitement += Reverse-SID $chaineSID
 
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 
 #Checking Account
 Write-Host "#########>Begin Accounts audit<#########" -ForegroundColor DarkGreen
 
-#Ensure 'Accounts: Administrator account status' is set to 'Disabled
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "AA" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Accounts: Administrator account status is set to Disabled" + ";"
-$traitement = "Default admin Account:" + $nomcompteadmin + ",statut :$adminstate"
-
-$chaine += $traitement
-$chaine>> $nomfichier
-
 #Accounts: Block Microsoft accounts' is set to 'Users can't add or log on with Microsoft accounts
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "AA" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Accounts: Block Microsoft accounts is set to Users cant add or log on with Microsoft accounts Value must be 3 " + ";"
+$id = "AA" + "2.3.1.1"
+$chaine = "$id" + ";" + "(L1)Accounts: Block Microsoft accounts is set to Users cannot add or log on with Microsoft accounts Value must be 3 " + ";"
 $exist = Test-Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System
 if ( $exist -eq $true) {
  $traitement = Get-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System | Select-Object NoConnectedUser
@@ -1229,24 +1294,27 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
+
 #Ensure 'Accounts: Guest account status' is set to 'Disabled'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "AA" + "$indextest"
+$id = "AA" + "2.3.1.2"
 $chaine = "$id" + ";" + "(L1)Ensure Accounts: Guest account status is set to 'Disabled" + ";"
 $traitement = "Default guest Account:" + $nomcompteguest + ",statut : $gueststate"
+
 
 
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
 #Accounts: Accounts: Limit local account use of blank passwords to console logon only' is set to 'Enabled
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "AA" + "$indextest"
+$id = "AA" + "2.3.1.3"
 $chaine = "$id" + ";" + "(L1)Accounts: Limit local account use of blank passwords to console logon only is set to Enabled, Value must be 1 " + ";"
 $exist = Test-Path HKLM:\SYSTEM\CurrentControlSet\Control\Lsa
 if ( $exist -eq $true) {
@@ -1260,13 +1328,13 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 #Configure 'Accounts: Rename administrator account' (Scored)
 
-
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "AA" + "$indextest"
+$id = "AA" + "2.3.1.4"
 $chaine = "$id" + ";" + "(L1)Accounts: Rename administrator account" + ";"
 $traitement = "Default local admin Account:" + $nomcompteadmin 
 
@@ -1275,29 +1343,28 @@ $chaine += $traitement
 $chaine>> $nomfichier
 
 
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Configure 'Accounts: Rename guest account'' (Scored)
 
 
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "AA" + "$indextest"
+$id = "AA" + "2.3.1.5"
 $chaine = "$id" + ";" + "(L1)Accounts: Rename guest account" + ";"
 $traitement = "Default guest Account:" + $nomcompteguest
 
 $chaine += $traitement
 $chaine>> $nomfichier
+
+Clean-Value($chaine)
+Clean-Value($traitement)
 #Checking Audit
 Write-Host "#########>Begin audit policy audit<#########" -ForegroundColor DarkGreen
 
 
 #Audit: Force audit policy subcategory settings (Windows Vista or later) to override audit policy category settings
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "APA" + "$indextest"
+
+$id = "APA" + "2.3.2.1"
 $chaine = "$id" + ";" + "(L1)Audit: Force audit policy subcategory settings (Windows Vista or later) to override audit policy category settings is set to Enabled, Value must be 1 " + ";"
 $exist = Test-Path HKLM:\SYSTEM\CurrentControlSet\Control\Lsa
 if ( $exist -eq $true) {
@@ -1311,12 +1378,12 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
 #Audit: Shut down system immediately if unable to log security audits' is set to 'Disabled
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "APA" + "$indextest"
+$id = "APA" + "2.3.2.2"
 $chaine = "$id" + ";" + "(L1)Audit: Shut down system immediately if unable to log security audits is set to Disabled, Value must be 0 " + ";"
 $exist = Test-Path HKLM:\SYSTEM\CurrentControlSet\Control\Lsa
 if ( $exist -eq $true) {
@@ -1330,15 +1397,15 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 #Checking devices
 Write-Host "#########>Begin devices policy audit<#########" -ForegroundColor DarkGreen
 
 #Ensure 'Devices: Allowed to format and eject removable media' is set to 'Administrators
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "DEV" + "$indextest"
+
+$id = "DEVP" + "2.3.4.1"
 $chaine = "$id" + ";" + "(L1)Ensure Devices: Allowed to format and eject removable media is set to Administrators and Interactive Users' " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"
 if ( $exist -eq $true) {
@@ -1353,12 +1420,11 @@ $chaine += $traitement
 $chaine>> $nomfichier
 
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 #Devices: Prevent users from installing printer drivers' is set to 'Enabled
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "DEV" + "$indextest"
+$id = "DEVP" + "2.3.4.1"
 $chaine = "$id" + ";" + "(L2)Devices: Prevent users from installing printer drivers is set to Enabled, Value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Control\Print\Providers\LanMan Print Services\Servers"
 if ( $exist -eq $true) {
@@ -1372,16 +1438,16 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 
 #Checking Domain member Audit
 Write-Host "#########>Begin Domain member policy audit<#########" -ForegroundColor DarkGreen
 
 #Domain member: Digitally encrypt or sign secure channel data (always) is set to Enable
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "DMP" + "$indextest"
+
+$id = "DMP" + "2.3.6.1"
 $chaine = "$id" + ";" + "(L1)Domain member: Digitally encrypt or sign secure channel data (always) is set to Enabled, Value must be 1 " + ";"
 $exist = Test-Path HKLM:\SYSTEM\CurrentControlSet\Services\Netlogon\Parameters
 if ( $exist -eq $true) {
@@ -1392,16 +1458,11 @@ else {
  $traitement = "not configure"
 }
 
+Clean-Value($chaine)
+Clean-Value($traitement)
 
-$chaine += $traitement
-$chaine>> $nomfichier
-
-#Domain member: Digitally encrypt or sign secure channel data (always) is set to Enable
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "DMP" + "$indextest"
+#Domain member:  Digitally encrypt secure channel data (when possible) is set to Enabled,
+$id = "DMP" + "2.3.6.2"
 $chaine = "$id" + ";" + "(L1)Domain member: Digitally encrypt secure channel data (when possible) is set to Enabled, Value must be 1 " + ";"
 $exist = Test-Path HKLM:\SYSTEM\CurrentControlSet\Services\Netlogon\Parameters
 if ( $exist -eq $true) {
@@ -1415,14 +1476,31 @@ else {
 
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+#Domain member: Domain member: Digitally sign secure channel data (when possible)' is set to 'Enabled'
+$id = "DMP" + "2.3.6.3"
+$chaine = "$id" + ";" + "(L1)Domain member: Domain member: Digitally sign secure channel data (when possible) is set to Enabled, Value must be 1 " + ";"
+$exist = Test-Path HKLM:\SYSTEM\CurrentControlSet\Services\Netlogon\Parameters
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty HKLM:\SYSTEM\CurrentControlSet\Services\Netlogon\Parameters |Select-Object SignSecureChannel
+ $traitement = $traitement.SealSecureChannel
+}
+else {
+ $traitement = "not configure"
+}
+
+
+$chaine += $traitement
+$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 
 
 #Domain member: Disable machine account password changes
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "DMP" + "$indextest"
+$id = "DMP" + "2.3.6.4"
 $chaine = "$id" + ";" + "(L1)Domain member: Disable machine account password changes is set to Disabled, Value must be 0 " + ";"
 $exist = Test-Path HKLM:\SYSTEM\CurrentControlSet\Services\Netlogon\Parameters
 if ( $exist -eq $true) {
@@ -1435,14 +1513,11 @@ else {
 
 $chaine += $traitement
 $chaine>> $nomfichier
-
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Domain member: Maximum machine account password age' is set to '30 or fewer days, but not 0
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "DMP" + "$indextest"
+$id = "DMP" + "2.3.6.5"
 $chaine = "$id" + ";" + "(L1)Domain member: Maximum machine account password age is set to 30 or fewer days, but not 0 " + ";"
 $exist = Test-Path HKLM:\SYSTEM\CurrentControlSet\Services\Netlogon\Parameters
 if ( $exist -eq $true) {
@@ -1456,13 +1531,12 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 
 #'Domain member: Require strong (Windows 2000 or later) session key' is set to 'Enabled
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "DMP" + "$indextest"
+$id = "DMP" + "2.3.6.6"
 $chaine = "$id" + ";" + "(L1)Domain member: Require strong (Windows 2000 or later) session key' is set to 'Enabled,value must 1 " + ";"
 $exist = Test-Path HKLM:\SYSTEM\CurrentControlSet\Services\Netlogon\Parameters
 if ( $exist -eq $true) {
@@ -1476,37 +1550,15 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 #Checking Interactive logon
 Write-Host "#########>Begin Interactive logon audit<#########" -ForegroundColor DarkGreen
 
-#Ensure Interactive logon: Do not display last user name is set to Enabled
-
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "IL" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Ensure Interactive logon: Do not display last user name is set to Enabled,value must 1 " + ";"
-$exist = Test-Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System
-if ( $exist -eq $true) {
- $traitement = Get-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System |Select-Object DontDisplayLastUserName
- $traitement = $traitement.DontDisplayLastUserName
-}
-else {
- $traitement = "not configure"
-}
-
-$chaine += $traitement
-$chaine>> $nomfichier
-
-
 #Ensure 'Interactive logon: Do not require CTRL+ALT+DEL' is set to 'Disabled'
 
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "IL" + "$indextest"
+$id = "IL" + "2.3.7.1"
 $chaine = "$id" + ";" + "(L1)Ensure Interactive logon: Do not require CTRL+ALT+DEL' is set to Disabled,value must 0 " + ";"
 $exist = Test-Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System
 if ( $exist -eq $true) {
@@ -1521,14 +1573,38 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
+
+#Ensure Interactive logon: Do not display last user name is set to Enabled
+
+
+$id = "IL" + "2.3.7.2"
+$chaine = "$id" + ";" + "(L1)Ensure Interactive logon: Do not display last user name is set to Enabled,value must 1 " + ";"
+$exist = Test-Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System |Select-Object DontDisplayLastUserName
+ $traitement = $traitement.DontDisplayLastUserName
+}
+else {
+ $traitement = "not configure"
+}
+
+$chaine += $traitement
+$chaine>> $nomfichier
+
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
+
 
 #Ensure Interactive logon: Machine account lockout threshold' is set to '10 or fewer invalid logon attempts, but not 0'
 
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "IL" + "$indextest"
+
+$id = "IL" + "2.3.7.3"
 $chaine = "$id" + ";" + "(L1)Ensure Interactive logon: Machine account lockout threshold' is set to '10 or fewer invalid logon attempts, but not 0',value must 0 " + ";"
 $exist = Test-Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System
 if ( $exist -eq $true) {
@@ -1543,15 +1619,14 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 
 
 #Interactive logon: Machine inactivity limit'
 
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "IL" + "$indextest"
+$id = "IL" + "2.3.7.4"
 $chaine = "$id" + ";" + "(L1)Ensure Interactive logon: Machine inactivity limit' is set to 900 or fewer second(s), but not 0 " + ";"
 $exist = Test-Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System
 if ( $exist -eq $true) {
@@ -1565,13 +1640,14 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
+
 #Configure 'Interactive logon: Message text for users attempting to log on
 
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "IL" + "$indextest"
+$id = "IL" + "2.3.7.5"
 $chaine = "$id" + ";" + "(L1)Configure 'Interactive logon: Message text for users attempting to log on, but not empty " + ";"
 $exist = Test-Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System
 if ( $exist -eq $true) {
@@ -1582,17 +1658,13 @@ else {
  $traitement = "not configure"
 }
 
-$chaine += $traitement
-$chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Configure 'Interactive logon: Message title for users attempting to log on
 
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "IL" + "$indextest"
+$id = "IL" + "2.3.7.6"
 $chaine = "$id" + ";" + "(L1)Configure Interactive logon: Message title for users attempting to log on, but not empty " + ";"
 $exist = Test-Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System
 if ( $exist -eq $true) {
@@ -1603,16 +1675,13 @@ else {
  $traitement = "not configure"
 }
 
-$chaine += $traitement
-$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 
 #Configure Interactive logon: Number of previous logons to cache
 
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "IL" + "$indextest"
+$id = "IL" + "2.3.7.7"
 $chaine = "$id" + ";" + "(L2)Ensure interactive logon: Number of previous logons to cache (in case domain controller is not available) is set to 4 or fewer logon(s) " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"
 if ( $exist -eq $true) {
@@ -1627,14 +1696,12 @@ $chaine += $traitement
 $chaine>> $nomfichier
 
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 #Ensure 'Interactive logon: Prompt user to change password before expiration
 
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-
-$id = "IL" + "$indextest"
+$id = "IL" + "2.3.7.8"
 $chaine = "$id" + ";" + "(L1)Ensure Interactive logon: Prompt user to change password before expiration is set to between 5 and 14 days " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"
 if ( $exist -eq $true) {
@@ -1649,14 +1716,14 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
 
 # Ensure Interactive logon: Smart card removal behavior' is set to 'Lock Workstation' or higher
 
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "IL" + "$indextest"
+$id = "IL" + "2.3.7.9"
 $chaine = "$id" + ";" + "(L1)Ensure Interactive logon: Smart card removal behavior is set to Lock Workstation or higher,value must be 1 (Lock Workstation) or 2 (Force Logoff) " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"
 if ( $exist -eq $true) {
@@ -1671,16 +1738,17 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 #Checking Interactive logon
 Write-Host "#########>Begin Microsoft network client audit<#########" -ForegroundColor DarkGreen
 
 #Microsoft network client: Digitally sign communications (always)
 
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "MNC" + "$indextest"
+
+$id = "MNC" + "2.3.8.1"
 $chaine = "$id" + ";" + "(L1)Ensure Microsoft network client: Digitally sign communications (always) is set to Enabled,value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanWorkstation\Parameters"
 if ( $exist -eq $true) {
@@ -1694,13 +1762,14 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
+
 #'Microsoft network client: Digitally sign communications (if server agrees
 
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "MNC" + "$indextest"
+$id = "MNC" + "2.3.8.2"
 $chaine = "$id" + ";" + "(L1)Ensure Microsoft network client: Digitally sign communications (if server agrees) is set to Enabled,value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanWorkstation\Parameters"
 if ( $exist -eq $true) {
@@ -1714,13 +1783,13 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
 #Microsoft network client: Send unencrypted password to third-party SMB servers
 
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "MNC" + "$indextest"
+$id = "MNC" + "2.3.8.3"
 $chaine = "$id" + ";" + "(L1)Ensure Microsoft network client: Send unencrypted password to third-party SMB servers is set to Disabled,value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanWorkstation\Parameters"
 if ( $exist -eq $true) {
@@ -1734,6 +1803,9 @@ else {
 
 $chaine += $traitement
 $chaine>> $nomfichier
+
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Checking Microsoft network server 
 Write-Host "#########>Begin Microsoft network server audit<#########" -ForegroundColor DarkGreen
