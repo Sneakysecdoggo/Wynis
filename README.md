@@ -10,11 +10,14 @@ Actualy, the script are :
 
 -WynisWIN2016DC-CISv1.0 : Auditing DC 2016 with CIS
 
--Wynis-AD-STIG : Auditing Domain Security with STIG and other security Best Practice (Work In Progress)
+-Wynis-AD : Auditing Domain Security with STIG and other security Best Practice (Work In Progress)
 
 -WynisO365-CIS : Auditing O365 with CIS Best Practice (Work in Progress)
 
 -WynisWIN10-CIS : Auditing Win 10 with CIS Best Practice 
+
+-WynisWIN11-CIS : Auditing Win 11 with CIS Best Practice 
+
 
 -WynisWIN2016-CIS : Auditing Win 2016 with CIS Best Practice 
 
