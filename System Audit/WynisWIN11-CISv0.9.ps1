@@ -65,7 +65,7 @@ Function Clean-Value($variable) {
 
 $variable = $null 
 
-return variable
+return $variable
 
 }
 
@@ -1811,11 +1811,7 @@ Clean-Value($traitement)
 Write-Host "#########>Begin Microsoft network server audit<#########" -ForegroundColor DarkGreen
 
 #Microsoft network server: Amount of idle time required before suspending session
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "MNS" + "$indextest"
+$id = "MNS" + "2.3.9.1"
 $chaine = "$id" + ";" + "(L1)Microsoft network server: Amount of idle time required before suspending session is set to 15 or fewer minute(s) but not 0, " + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanManServer\Parameters"
 if ( $exist -eq $true) {
@@ -1828,14 +1824,12 @@ else {
 
 $chaine += $traitement
 $chaine>> $nomfichier
-
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Ensure 'Microsoft network server: Digitally sign communications (always
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "MNS" + "$indextest"
+
+$id = "MNS" + "2.3.9.2"
 $chaine = "$id" + ";" + "(L1)Ensure Microsoft network server: Digitally sign communications (always) is set to Enabled,must be 1 " + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanManServer\Parameters" 
 if ( $exist -eq $true) {
@@ -1846,16 +1840,13 @@ else {
  $traitement = "not configure"
 }
 
-$chaine += $traitement
-$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 
 # Ensure 'Microsoft network server: Digitally sign communications (if client agrees)'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "MNS" + "$indextest"
+
+$id = "MNS" + "2.3.9.3"
 $chaine = "$id" + ";" + "(L1)Ensure Microsoft network server: Digitally sign communications (if client agrees) is set to Enabled,must be 1 " + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanManServer\Parameters"
 if ( $exist -eq $true) {
@@ -1868,12 +1859,13 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
 # Microsoft network server: Disconnect clients when logon hours expire'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "MNS" + "$indextest"
+
+$id = "MNS" + "2.3.9.4"
 $chaine = "$id" + ";" + "(L1)Ensure Microsoft network server: Disconnect clients when logon hours expire is set to Enabled,must be 1 " + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanManServer\Parameters"
 if ( $exist -eq $true) {
@@ -1889,12 +1881,13 @@ $chaine += $traitement
 $chaine>> $nomfichier
 
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
 # Microsoft network server: Server SPN target name validation level'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "MNS" + "$indextest"
+
+$id = "MNS" + "2.3.9.5"
 $chaine = "$id" + ";" + "(L1)Microsoft network server: Server SPN target name validation level is set to Accept if provided by client or higher,must be 1 or highter " + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanManServer\Parameters"
 if ( $exist -eq $true) {
@@ -1905,19 +1898,17 @@ else {
  $traitement = "not configure"
 }
 
-$chaine += $traitement
-$chaine>> $nomfichier
+
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 
 #Checking Microsoft network server
 Write-Host "#########>Begin Network access audit<#########" -ForegroundColor DarkGreen
 
 # Ensure 'Network access: Allow anonymous SID/Name translation' is set to 'Disabled
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "NA" + "$indextest"
+
+$id = "NA" + "2.3.10.1"
 $chaine = "$id" + ";" + "(L1)Ensure Network access: Allow anonymous SID/Name translation is set to Disabled,must be 0 " + ";"
 $exist = Test-Path HKLM:\System\CurrentControlSet\Control\Lsa
 if ( $exist -eq $true) {
@@ -1932,23 +1923,24 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 # Network access: Do not allow anonymous enumeration of SAM accounts'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "NA" + "$indextest"
+
+$id = "NA" + "2.3.10.2"
 $chaine = "$id" + ";" + "(L1)Ensure Network access: Do not allow anonymous enumeration of SAM accounts is set to Enabled,must be 1 " + ";"
 $traitement = Get-ItemProperty HKLM:\System\CurrentControlSet\Control\Lsa |Select-Object RestrictAnonymousSAM
 $traitement = $traitement.RestrictAnonymousSAM
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 # Network access: Do not allow anonymous enumeration of SAM accounts and shares'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "NA" + "$indextest"
+
+$id = "NA" + "2.3.10.3"
 $chaine = "$id" + ";" + "(L1)Ensure Network access: Do not allow anonymous enumeration of SAM accounts and shares' is set to 'Enabled',must be 1 " + ";"
 $traitement = Get-ItemProperty HKLM:\System\CurrentControlSet\Control\Lsa |Select-Object RestrictAnonymous
 $traitement = $traitement.RestrictAnonymous
@@ -1956,12 +1948,12 @@ $chaine += $traitement
 $chaine>> $nomfichier
 
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 # Network access: Do not allow storage of passwords and credentials for network authentication
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "NA" + "$indextest"
+
+$id = "NA" + "2.3.10.4"
 $chaine = "$id" + ";" + "(L1)Network access: Do not allow storage of passwords and credentials for network authentication is set to Enabled,must be 1 " + ";"
 $exist = Test-Path HKLM:\System\CurrentControlSet\Control\Lsa
 if ( $exist -eq $true) {
@@ -1974,14 +1966,12 @@ else {
 
 $chaine += $traitement
 $chaine>> $nomfichier
-
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 # Network access: Let Everyone permissions apply to anonymous user
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "NA" + "$indextest"
+
+$id = "NA" + "2.3.10.5"
 $chaine = "$id" + ";" + "(L1)Ensure Network access: Let Everyone permissions apply to anonymous users is set to Disabled,must be 0 " + ";"
 $exist = Test-Path HKLM:\System\CurrentControlSet\Control\Lsa
 if ( $exist -eq $true) {
@@ -1995,12 +1985,11 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
 # Network access: Named Pipes that can be accessed anonymously
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "NA" + "$indextest"
+
+$id = "NA" + "2.3.10.6"
 $chaine = "$id" + ";" + "(L1)Configure Network access: Named Pipes that can be accessed anonymously,must be empty " + ";"
 $exist = Test-Path HKLM:\SYSTEM\CurrentControlSet\Services\LanManServer\Parameters
 if ( $exist -eq $true) {
@@ -2014,13 +2003,12 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 # Network access: Remotely accessible registry paths
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "NA" + "$indextest"
+
+$id = "NA" + "2.3.10.7"
 $chaine = "$id" + ";" + "(L1)Network access: Remotely accessible registry paths, musbe System\CurrentControlSet\Control\ProductOptions | System\CurrentControlSet\Control\Server Applications |Software\Microsoft\Windows NT\CurrentVersion " + ";"
 $exist = Test-Path HKLM:\SYSTEM\CurrentControlSet\Control\SecurePipeServers\Winreg\AllowedExactPaths
 if ( $exist -eq $true) {
@@ -2034,14 +2022,12 @@ else {
 
 $chaine += $traitement
 $chaine>> $nomfichier
-
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 # Network access: Remotely accessible registry paths and sub-paths
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "NA" + "$indextest"
+
+$id = "NA" + "2.3.10.8"
 $chaine = "$id" + ";" + "(L1)Network access: Remotely accessible registry paths and sub-paths:, check 2.3.10.8 part for the liste" + ";"
 $exist = Test-Path HKLM:\SYSTEM\CurrentControlSet\Control\SecurePipeServers\Winreg\AllowedPaths
 if ( $exist -eq $true) {
@@ -2054,14 +2040,12 @@ else {
 $traitement > "NetworkAcces-Allowpath.txt"
 $chaine += "Check NetworkAcces-Allowpath.txt"
 $chaine>> $nomfichier
-
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 # Network access: Restrict anonymous access to Named Pipes and Shares
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "NA" + "$indextest"
+
+$id = "NA" + "2.3.10.9"
 $chaine = "$id" + ";" + "Ensure Network access: Restrict anonymous access to Named Pipes and Shares is set to Enabled,value must be 1" + ";"
 $exist = Test-Path HKLM:\SYSTEM\CurrentControlSet\Services\LanManServer\Parameters
 if ( $exist -eq $true) {
@@ -2075,12 +2059,11 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
 # Network access: Restrict clients allowed to make remote calls to SAM
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "NA" + "$indextest"
+
+$id = "NA" + "2.3.10.10"
 $chaine = "$id" + ";" + "(L1)Ensure Network access: Restrict clients allowed to make remote calls to SAM is set to Administrators: Remote Access: Allow" + ";"
 $exist = Test-Path HKLM:\SYSTEM\CurrentControlSet\Control\Lsa
 if ( $exist -eq $true) {
@@ -2094,12 +2077,12 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 # Network access: Shares that can be accessed anonymously' is set to 'None'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "NA" + "$indextest"
+
+$id = "NA" + "2.3.10.11"
 $chaine = "$id" + ";" + "(L1)Ensure 'Network access: Shares that can be accessed anonymously' is set to 'None, value must be empty or {}" + ";"
 $exist = Test-Path HKLM:\SYSTEM\CurrentControlSet\Services\LanManServer\Parameters
 if ( $exist -eq $true) {
@@ -2113,14 +2096,12 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 # Network access: Sharing and security model for local accounts
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$exist = $null
-$id = "NA" + "$indextest"
+
+$id = "NA" + "2.3.10.12"
 $chaine = "$id" + ";" + "(L1)Ensure Network access: Sharing and security model for local accounts is set to Classic - local users authenticate as themselves,value must be 0" + ";"
 $exist = Test-Path HKLM:\SYSTEM\CurrentControlSet\Control\Lsa
 if ( $exist -eq $true) {
@@ -2133,15 +2114,14 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
 #Checking Microsoft network server 
 Write-Host "#########>Begin Network security audit<#########" -ForegroundColor DarkGreen
 
 #Network security: Allow Local System to use computer identity for NTLM
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "NS" + "$indextest"
+
+$id = "NS" + "2.3.11.1"
 $chaine = "$id" + ";" + "(L1)Network security: Allow Local System to use computer identity for NTLM is set to 'Enabled,value must be 1" + ";"
 $exist = Test-Path HKLM:\SYSTEM\CurrentControlSet\Control\Lsa
 if ( $exist -eq $true) {
@@ -2155,12 +2135,12 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Network security: Allow LocalSystem NULL session fallback
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "NS" + "$indextest"
+
+$id = "NS" + "2.3.11.2"
 $chaine = "$id" + ";" + "(L1)Ensure Network security: Allow LocalSystem NULL session fallback' is set to 'Disabled,value must be 0" + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Control\Lsa\MSV1_0"
 if ( $exist -eq $true) {
@@ -2173,12 +2153,13 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 #Network Security: Allow PKU2U authentication requests to this computer to use online identities
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "NS" + "$indextest"
+
+$id = "NS" + "2.3.11.3"
 $chaine = "$id" + ";" + "(L1)Network Security: Allow PKU2U authentication requests to this computer to use online identities is set to Disabled,value must be 0" + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Control\Lsa\pku2u"
 if ( $exist -eq $true) {
@@ -2191,13 +2172,12 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Network security: Configure encryption types allowed for Kerberos
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "NS" + "$indextest"
+
+$id = "NS" + "2.3.11.4"
 $chaine = "$id" + ";" + "(L1)Ensure Network security: Configure encryption types allowed for Kerberos is set to AES128_HMAC_SHA1, AES256_HMAC_SHA1, Future encryption types" + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\Kerberos\Parameters"
 if ( $exist -eq $true) {
@@ -2211,13 +2191,12 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #'Network security: Do not store LAN Manager hash value on next password change
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "NS" + "$indextest"
+
+$id = "NS" + "2.3.11.5"
 $chaine = "$id" + ";" + "(L1)Network security: Do not store LAN Manager hash value on next password change is set to Enabled,value must be 1" + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Control\Lsa"
 if ( $exist -eq $true) {
@@ -2230,13 +2209,12 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Network security: Force logoff when logon hours expire' is set to 'Enabled'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "NS" + "$indextest"
+
+$id = "NS" + "2.3.11.6"
 $chaine = "$id" + ";" + "(L1)Network security: Force logoff when logon hours expire is set to Enabled,value must be 1" + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanManServer\Parameters"
 if ( $exist -eq $true) {
@@ -2250,13 +2228,13 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 
 #Network security: LAN Manager authentication level
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "NS" + "$indextest"
+
+$id = "NS" + "2.3.11.7"
 $chaine = "$id" + ";" + "(L1)Ensure Network security: LAN Manager authentication level is set to Send NTLMv2 response only. Refuse LM & NTLM,value must be 5" + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Control\Lsa"
 if ( $exist -eq $true) {
@@ -2270,13 +2248,13 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 
 #Network security: LDAP client signing requirements'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "NS" + "$indextest"
+
+$id = "NS" + "2.3.11.8"
 $chaine = "$id" + ";" + "(L1)Ensure Network security: LDAP client signing requirements is set to Negotiate signing or higher,value must be 1 or highter" + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\LDAP"
 if ( $exist -eq $true) {
@@ -2289,12 +2267,13 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
 #Network security: Minimum session security for NTLM SSP based (including secure RPC) clients
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "NS" + "$indextest"
+
+$id = "NS" + "2.3.11.9"
 $chaine = "$id" + ";" + "(L1)Ensure Network security: Minimum session security for NTLM SSP based (including secure RPC) clients is set to Require NTLMv2 session security, Require 128-bit encryption,value must be 537395200" + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Control\Lsa\MSV1_0"
 if ( $exist -eq $true) {
@@ -2307,12 +2286,12 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 #NNetwork security: Minimum session security for NTLM SSP based (including secure RPC) clients' is set to 'Require NTLMv2 session security, Require 128-bit encryption'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "NS" + "$indextest"
+
+$id = "NS" + "2.3.11.10"
 $chaine = "$id" + ";" + "(L1)Network security: Minimum session security for NTLM SSP based (including secure RPC) clients' is set to 'Require NTLMv2 session security, Require 128-bit encryption', Require 128-bit encryption,value must be 537395200" + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Control\Lsa\MSV1_0"
 if ( $exist -eq $true) {
@@ -2325,17 +2304,17 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 #System cryptography
 Write-Host "#########>Begin System cryptography<#########" -ForegroundColor DarkGreen
 
 
 
 #System cryptography: Force strong key protection for user keys stored on the computer' is set to 'User is prompted when the key is first used' or higher
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "SC" + "$indextest"
+
+$id = "SC" + "2.3.14.1"
 $chaine = "$id" + ";" + "(L2)System cryptography: Force strong key protection for user keys stored on the computer' is set to 'User is prompted when the key is first used' or higher,value must be 2 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Cryptography"
 if ( $exist -eq $true) {
@@ -2349,17 +2328,18 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 #CheckingSystem objects
 Write-Host "#########>Begin System objects audit<#########" -ForegroundColor DarkGreen
 
 
 #System objects: Require case insensitivity for non-Windows subsystems
 
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "SO" + "$indextest"
+
+$id = "SO" + "2.3.15.1"
 $chaine = "$id" + ";" + "(L1)Ensure System objects: Require case insensitivity for non-Windows subsystems is set to Enabled,value must be 1" + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Kernel"
 if ( $exist -eq $true) {
@@ -2372,15 +2352,15 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 
 
 #System objects: Strengthen default permissions of internal system objects (e.g. Symbolic Links)
 
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "SO" + "$indextest"
+
+$id = "SO" + "2.3.15.2"
 $chaine = "$id" + ";" + "(L1)Ensure System objects: Strengthen default permissions of internal system objects (e.g. Symbolic Links) is set to Enabled,value must be 1" + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager"
 if ( $exist -eq $true) {
@@ -2393,17 +2373,16 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 
 #Checking User Account Control
 Write-Host "#########>Begin User Account Control(UAC) audit<#########" -ForegroundColor DarkGreen
 
 #User Account Control: Admin Approval Mode for the Built-in Administrator account
 
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "UAC" + "$indextest"
+$id = "UAC" + "2.3.17.1"
 $chaine = "$id" + ";" + "(L1)Ensure User Account Control: Admin Approval Mode for the Built-in Administrator account is set to Enabled,value must be 1" + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System"
 if ( $exist -eq $true) {
@@ -2416,37 +2395,14 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
-
-
-#User Account Control: Allow UIAccess applications to prompt for elevation without using the secure desktop
-
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "UAC" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Ensure User Account Control: Allow UIAccess applications to prompt for elevation without using the secure desktop is set to Disabled,value must be 0" + ";"
-$exist = Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System"
-if ( $exist -eq $true) {
- $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System"|Select-Object EnableUIADesktopToggle
- $traitement = $traitement.EnableUIADesktopToggle
-}
-else {
- $traitement = "not configure"
-}
-
-$chaine += $traitement
-$chaine>> $nomfichier
-
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 
 #User Account Control: Behavior of the elevation prompt for administrators in Admin Approval Mode
 
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "UAC" + "$indextest"
+
+$id = "UAC" + "2.3.17.2"
 $chaine = "$id" + ";" + "(L1)Ensure 'User Account Control: Behavior of the elevation prompt for administrators in Admin Approval Mode is set to Prompt for consent on the secure desktop,value must be 2(The value of 2 displays the UAC prompt that needs to be permitted or denied on a secure desktop. No authentication is required) or 1(A value of 1 requires the admin to enter username and password when operations require elevated privileges on a secure desktop)" + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System"
 if ( $exist -eq $true) {
@@ -2461,14 +2417,15 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
 
 #User Account Control: Behavior of the elevation prompt for standard users'
 
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "UAC" + "$indextest"
+
+$id = "UAC" + "2.3.17.3"
 $chaine = "$id" + ";" + "(L1)Ensure User Account Control: Behavior of the elevation prompt for standard users is set to Automatically deny elevation requests, value must be 0(A value of 0 will automatically deny any operation that requires elevated privileges if executed by standard users)." + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System"
 if ( $exist -eq $true) {
@@ -2482,14 +2439,13 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #User Account Control: Detect application installations and prompt for elevation
 
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "UAC" + "$indextest"
+
+$id = "UAC" + "2.3.17.4"
 $chaine = "$id" + ";" + "(L1)Ensure 'User Account Control: Detect application installations and prompt for elevation' is set to Enabled, value must be 1" + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System"
 if ( $exist -eq $true) {
@@ -2502,14 +2458,13 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 
 #User Account Control: Only elevate UIAccess applications that are installed in secure locations
 
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "UAC" + "$indextest"
+$id = "UAC" + "2.3.17.5"
 $chaine = "$id" + ";" + "(L1)Ensure 'User Account Control: Only elevate UIAccess applications that are installed in secure locations' is set to 'Enabled, value must be 1" + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System"
 if ( $exist -eq $true) {
@@ -2522,13 +2477,13 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 #User Account Control: Run all administrators in Admin Approval Mode
 
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "UAC" + "$indextest"
+
+$id = "UAC" + "2.3.17.6"
 $chaine = "$indextest" + ";" + "(L1)Ensure 'User Account Control: Run all administrators in Admin Approval Mode is set to Enabled, value must be 1" + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System"
 if ( $exist -eq $true) {
@@ -2541,13 +2496,13 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 #User Account Control: Switch to the secure desktop when prompting for elevation
 
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "UAC" + "$indextest"
+
+$id = "UAC" + "2.3.17.7"
 $chaine = "$id" + ";" + "(L1)Ensure 'User Account Control: Switch to the secure desktop when prompting for elevation' is set to 'Enabled', value must be 1" + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System"
 if ( $exist -eq $true) {
@@ -2559,14 +2514,12 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
-
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #User Account Control: Virtualize file and registry write failures to per-user locations
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "UAC" + "$indextest"
+
+$id = "UAC" + "2.3.17.8"
 $chaine = "$id" + ";" + "(L1)Ensure 'User Account Control: Virtualize file and registry write failures to per-user locations' is set to 'Enabled, value must be 1" + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System"
 if ( $exist -eq $true) {
@@ -2579,21 +2532,19 @@ else {
 
 $chaine += $traitement
 $chaine>> $nomfichier
-
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Checking System Services
 Write-Host "#########>Begin System Services audit<#########" -ForegroundColor DarkGreen
 
-#Bluetooth Handsfree Service (BthHFSrv)
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "SS" + "$indextest"
-$chaine = "$id" + ";" + "(L2)Ensure 'Bluetooth Handsfree Service (BthHFSrv)' is set to 'Disabled', value must be 4" + ";"
-$exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\BthHFSrv"
+#Bluetooth Audio Gateway Service (BTAGService)
+
+$id = "SS" + "5.1"
+$chaine = "$id" + ";" + "Ensure 'Bluetooth Audio Gateway Service (BTAGService)' is set to 'Disabled', value must be 4" + ";"
+$exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\BTAGService"
 if ( $exist -eq $true) {
- $traitement = Get-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Services\BthHFSrv"|Select-Object Start
+ $traitement = Get-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Services\BTAGService"|Select-Object Start
  $traitement = $traitement.Start
 }
 else {
@@ -2603,12 +2554,13 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
 #Bluetooth Support Service (bthserv)'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "SS" + "$indextest"
+
+$id = "SS" + "5.2"
 $chaine = "$id" + ";" + "(L2)Ensure Bluetooth Support Service (bthserv)' is set to 'Disabled', value must be 4" + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\bthserv"
 if ( $exist -eq $true) {
@@ -2622,13 +2574,13 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 
 #Computer Browser (Browser)'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "SS" + "$indextest"
+
+$id = "SS" + "5.3"
 $chaine = "$id" + ";" + "(L1)Ensure 'Computer Browser (Browser)' is set to 'Disabled' or 'Not Installed'', value must be 4 or not installed" + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\Browser"
 if ( $exist -eq $true) {
@@ -2642,12 +2594,12 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 #CDownloaded Maps Manager (MapsBroker)'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "SS" + "$indextest"
+
+$id = "SS" + "5.4"
 $chaine = "$id" + ";" + "(L2)Ensure 'Downloaded Maps Manager (MapsBroker)' is set to 'Disabled', value must be 4 or not installed" + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\MapsBroker"
 if ( $exist -eq $true) {
@@ -2661,13 +2613,12 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Geolocation Service (lfsvc)'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "SS" + "$indextest"
+
+$id = "SS" + "5.5"
 $chaine = "$id" + ";" + "(L2)Ensure 'Geolocation Service (lfsvc)' is set to 'Disabled', value must be 4 or not installed" + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\lfsvc"
 if ( $exist -eq $true) {
@@ -2681,51 +2632,14 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
-#HomeGroup Listener (HomeGroupListener)'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "SS" + "$indextest"
-$chaine = "$id" + ";" + "Ensure 'HomeGroup Listener (HomeGroupListener)' is set to 'Disabled', value must be 4 or not installed" + ";"
-$exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\HomeGroupListener"
-if ( $exist -eq $true) {
- $traitement = Get-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Services\HomeGroupListener"|Select-Object Start
- $traitement = $traitement.Start
-}
-else {
- $traitement = "It s not installed"
-}
-
-$chaine += $traitement
-$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 
-#HomeGroup Provider (HomeGroupProvider)
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "SS" + "$indextest"
-$chaine = "$id" + ";" + "Ensure 'HomeGroup Provider (HomeGroupProvider)' is set to 'Disabled', value must be 4 or not installed" + ";"
-$exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\HomeGroupProvider"
-if ( $exist -eq $true) {
- $traitement = Get-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Services\HomeGroupProvider"|Select-Object Start
- $traitement = $traitement.Start
-}
-else {
- $traitement = "It s not installed"
-}
-
-$chaine += $traitement
-$chaine>> $nomfichier
 
 #IIS Admin Service (IISADMIN)'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "SS" + "$indextest"
+
+$id = "SS" + "5.6"
 $chaine = "$id" + ";" + "(L1)Ensure 'IIS Admin Service (IISADMIN)' is set to 'Disabled' or 'Not Installed', value must be 4 or not installed" + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\IISADMIN"
 if ( $exist -eq $true) {
@@ -2739,14 +2653,12 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
-
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Infrared monitor service (irmon)'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "SS" + "$indextest"
+
+$id = "SS" + "5.7"
 $chaine = "$id" + ";" + "(L1)Ensure 'Infrared monitor service (irmon)' is set to 'Disabled', value must be 4 or not installed" + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\irmon"
 if ( $exist -eq $true) {
@@ -2760,13 +2672,12 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Internet Connection Sharing (ICS) (SharedAccess)
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "SS" + "$indextest"
+
+$id = "SS" + "5.8"
 $chaine = "$id" + ";" + "(L1)Ensure 'Internet Connection Sharing (ICS) (SharedAccess) ' is set to 'Disabled', value must be 4 or not installed" + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\SharedAccess"
 if ( $exist -eq $true) {
@@ -2780,13 +2691,12 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Link-Layer Topology Discovery Mapper (lltdsvc)'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "SS" + "$indextest"
+
+$id = "SS" + "5.9"
 $chaine = "$id" + ";" + "(L2)Ensure 'Link-Layer Topology Discovery Mapper (lltdsvc)' is set to 'Disabled', value must be 4 or not installed" + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\lltdsvc"
 if ( $exist -eq $true) {
@@ -2800,12 +2710,12 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 #LxssManager (LxssManager)'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "SS" + "$indextest"
+
+$id = "SS" + "5.10"
 $chaine = "$id" + ";" + "(L1)Ensure 'LxssManager (LxssManager)' is set to 'Disabled' or 'Not Installed', value must be 4 or not installed" + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\LxssManager"
 if ( $exist -eq $true) {
@@ -2819,13 +2729,13 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 
 #Microsoft FTP Service (FTPSVC)'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "SS" + "$indextest"
+
+$id = "SS" + "5.11"
 $chaine = "$id" + ";" + "(L1)Ensure 'Microsoft FTP Service (FTPSVC)' is set to 'Disabled' or 'Not Installed', value must be 4 or not installed" + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\FTPSVC"
 if ( $exist -eq $true) {
@@ -2839,14 +2749,12 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
-
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Microsoft iSCSI Initiator Service (MSiSCSI)'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "SS" + "$indextest"
+
+$id = "SS" + "5.12"
 $chaine = "$id" + ";" + "(L2)Ensure 'Microsoft iSCSI Initiator Service (MSiSCSI)' is set to 'Disabled' or 'Not Installed', value must be 4 or not installed" + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\MSiSCSI"
 if ( $exist -eq $true) {
@@ -2860,12 +2768,12 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 #OpenSSH SSH Server (sshd)'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "SS" + "$indextest"
+
+$id = "SS" + "5.13"
 $chaine = "$id" + ";" + "(L1)Ensure 'OpenSSH SSH Server (sshd)' is set to 'Disabled' or 'Not Installed', value must be 4 or not installed" + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\sshd"
 if ( $exist -eq $true) {
@@ -2876,13 +2784,12 @@ else {
  $traitement = "It s not installed"
 }
 
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #MPeer Name Resolution Protocol (PNRPsvc)'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "SS" + "$indextest"
+
+$id = "SS" + "5.14"
 $chaine = "$id" + ";" + "(L2)Ensure 'Peer Name Resolution Protocol (PNRPsvc)' is set to 'Disabled'or 'Not Installed', value must be 4 or not installed" + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\PNRPsvc"
 if ( $exist -eq $true) {
@@ -2896,12 +2803,13 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 #Peer Networking Grouping (p2psvc)'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "SS" + "$indextest"
+
+$id = "SS" + "5.15"
 $chaine = "$id" + ";" + "(L2)Ensure 'Peer Networking Grouping (p2psvc)' is set to 'Disabled' or 'Not Installed', value must be 4 or not installed" + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\p2psvc"
 if ( $exist -eq $true) {
@@ -2915,12 +2823,13 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 #Peer Networking Identity Manager (p2pimsvc)'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "SS" + "$indextest"
+
+$id = "SS" + "5.16"
 $chaine = "$id" + ";" + "Ensure 'Peer Networking Identity Manager (p2pimsvc)' is set to 'Disabled or 'Not Installed', value must be 4 or not installed" + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\p2pimsvc"
 if ( $exist -eq $true) {
@@ -2934,12 +2843,13 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 #'PNRP Machine Name Publication Service (PNRPAutoReg)'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "SS" + "$indextest"
+
+$id = "SS" + "5.17"
 $chaine = "$id" + ";" + "(L2)Ensure 'PNRP Machine Name Publication Service (PNRPAutoReg)' is set to 'Disabled' or 'Not Installed', value must be 4 or not installed" + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\PNRPAutoReg"
 if ( $exist -eq $true) {
@@ -2953,12 +2863,35 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
+#Print Spooler (Spooler)
+
+$id = "SS" + "5.18"
+$chaine = "$id" + ";" + "(L2)Ensure 'Print Spooler (Spooler)' is set to 'Disabled' (Automated), value must be 4 or not installed" + ";"
+$exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\Spooler"
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Services\Spooler"|Select-Object Start
+ $traitement = $traitement.Start
+}
+else {
+ $traitement = "It s not installed"
+}
+
+$chaine += $traitement
+$chaine>> $nomfichier
+
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
+
+
 #Problem Reports and Solutions Control Panel Support (wercplsupport)'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "SS" + "$indextest"
+
+$id = "SS" + "5.19"
 $chaine = "$id" + ";" + "(L2)Ensure 'Problem Reports and Solutions Control Panel Support (wercplsupport)' is set to 'Disabled' or 'Not Installed', value must be 4 or not installed" + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\wercplsupport"
 if ( $exist -eq $true) {
@@ -2972,13 +2905,13 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 
 #Remote Access Auto Connection Manager (RasAuto)'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "SS" + "$indextest"
+
+$id = "SS" + "5.20"
 $chaine = "$id" + ";" + "(L2)Ensure 'Remote Access Auto Connection Manager (RasAuto)' is set to 'Disabled' or 'Not Installed', value must be 4 or not installed" + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\RasAuto"
 if ( $exist -eq $true) {
@@ -2992,12 +2925,12 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 #Remote Desktop Configuration (SessionEnv)'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "SS" + "$indextest"
+
+$id = "SS" + "5.21"
 $chaine = "$id" + ";" + "(L2)Ensure 'Remote Desktop Configuration (SessionEnv)' is set to 'Disabled' or 'Not Installed', value must be 4 or not installed" + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\SessionEnv"
 if ( $exist -eq $true) {
@@ -3011,12 +2944,13 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
 #Remote Desktop Services (TermService)'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "SS" + "$indextest"
+
+$id = "SS" + "5.22"
 $chaine = "$id" + ";" + "(L2)Ensure 'Remote Desktop Services (TermService)' is set to 'Disabled' or 'Not Installed', value must be 4 or not installed" + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\TermService"
 if ( $exist -eq $true) {
@@ -3030,12 +2964,13 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
 #Remote Desktop Services UserMode Port Redirector (UmRdpService)'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "SS" + "$indextest"
+$id = "SS" + "5.23"
 $chaine = "$id" + ";" + "(L2)Ensure 'Remote Desktop Services UserMode Port Redirector (UmRdpService) is set to Disabled or 'Not Installed', value must be 4 or not installed" + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\UmRdpService"
 if ( $exist -eq $true) {
@@ -3049,12 +2984,13 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
 #Remote Procedure Call (RPC) Locator (RpcLocator)'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "SS" + "$indextest"
+
+$id = "SS" + "5.24"
 $chaine = "$id" + ";" + "sshdEnsure 'Remote Procedure Call (RPC) Locator (RpcLocator)' is set to 'Disabled' or 'Not Installed', value must be 4 or not installed" + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\RpcLocator"
 if ( $exist -eq $true) {
@@ -3068,13 +3004,12 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Remote Registry (RemoteRegistry)'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "SS" + "$indextest"
+
+$id = "SS" + "5.25"
 $chaine = "$id" + ";" + "(L2)Ensure 'Remote Registry (RemoteRegistry)' is set to 'Disabled' or 'Not Installed', value must be 4 or not installed" + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\RemoteRegistry"
 if ( $exist -eq $true) {
@@ -3088,12 +3023,13 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
+
 #Routing and Remote Access (RemoteAccess)'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "SS" + "$indextest"
+$id = "SS" + "5.26"
 $chaine = "$id" + ";" + "(L1)Ensure 'Routing and Remote Access (RemoteAccess)' is set to 'Disabled' or 'Not Installed', value must be 4 or not installed" + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\RemoteAccess"
 if ( $exist -eq $true) {
@@ -3107,12 +3043,13 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
 #Server (LanmanServer)'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "SS" + "$indextest"
+
+$id = "SS" + "5.27"
 $chaine = "$id" + ";" + "(L2)Ensure 'Server (LanmanServer)' is set to 'Disabled' or 'Not Installed', value must be 4 or not installed" + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer"
 if ( $exist -eq $true) {
@@ -3126,12 +3063,13 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 #Simple TCP/IP Services (simptcp)'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "SS" + "$indextest"
+
+$id = "SS" + "5.28"
 $chaine = "$id" + ";" + "(L1)Ensure 'Simple TCP/IP Services (simptcp)' is set to 'Disabled' or 'Not Installed', value must be 4 or not installed" + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\simptcp"
 if ( $exist -eq $true) {
@@ -3145,12 +3083,14 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
 #SNMP Service (SNMP)'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "SS" + "$indextest"
+
+$id = "SS" + "5.29"
 $chaine = "$id" + ";" + "(L2)Ensure 'SNMP Service (SNMP)' is set to 'Disabled' or 'Not Installed', value must be 4 or not installed" + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\SNMP"
 if ( $exist -eq $true) {
@@ -3164,12 +3104,35 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
+#Special Administration Console Helper (sacsvr)
+
+$id = "SS" + "5.30"
+$chaine = "$id" + ";" + "(L1)Ensure 'Special Administration Console Helper (sacsvr)' is set to 'Disabled' or 'Not Installed', value must be 4 or not installed" + ";"
+$exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\sacsvr"
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Services\sacsvr"|Select-Object Start
+ $traitement = $traitement.Start
+}
+else {
+ $traitement = "It s not installed"
+}
+
+$chaine += $traitement
+$chaine>> $nomfichier
+
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
+
+
 #SSDP Discovery (SSDPSRV)' is
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "SS" + "$indextest"
+
+$id = "SS" + "5.31"
 $chaine = "$id" + ";" + "(L1)Ensure 'SSDP Discovery (SSDPSRV)' is set to 'Disabled' or 'Not Installed', value must be 4 or not installed" + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\SSDPSRV"
 if ( $exist -eq $true) {
@@ -3183,12 +3146,12 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 #UPnP Device Host (upnphost)'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "SS" + "$indextest"
+
+$id = "SS" + "5.32"
 $chaine = "$id" + ";" + "(L1)Ensure 'UPnP Device Host (upnphost)' is set to 'Disabled' or 'Not Installed', value must be 4 or not installed" + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\upnphost"
 if ( $exist -eq $true) {
@@ -3202,12 +3165,13 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
 #Web Management Service (WMSvc)'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "SS" + "$indextest"
+
+$id = "SS" + "5.33"
 $chaine = "$id" + ";" + "(L1)Ensure 'Web Management Service (WMSvc)' is set to 'Disabled' or 'Not Installed', value must be 4 or not installed" + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\WMSvc"
 if ( $exist -eq $true) {
@@ -3221,13 +3185,13 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 
 #Windows Error Reporting Service (WerSvc)'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "SS" + "$indextest"
+
+$id = "SS" + "5.34"
 $chaine = "$id" + ";" + "(L2)Ensure 'Windows Error Reporting Service (WerSvc) is set to 'Disabled' or 'Not Installed', value must be 4 or not installed" + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\WerSvc"
 if ( $exist -eq $true) {
@@ -3241,14 +3205,13 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 
 #Windows Event Collector (Wecsvc)'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "SS" + "$indextest"
+
+$id = "SS" + "5.35"
 $chaine = "$id" + ";" + "(L2)Ensure 'Windows Event Collector (Wecsvc)' is set to 'Disabled' or 'Not Installed', value must be 4 or not installed" + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\Wecsvc"
 if ( $exist -eq $true) {
@@ -3262,12 +3225,13 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
 #Windows Media Player Network Sharing Service (WMPNetworkSvc)'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "SS" + "$indextest"
+
+$id = "SS" + "5.36"
 $chaine = "$id" + ";" + "(L1)Ensure 'Windows Media Player Network Sharing Service (WMPNetworkSvc)'' is set to 'Disabled' or 'Not Installed', value must be 4 or not installed" + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\WMPNetworkSvc"
 if ( $exist -eq $true) {
@@ -3281,12 +3245,12 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 #Windows Mobile Hotspot Service (icssvc)'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "SS" + "$indextest"
+
+$id = "SS" + "5.37"
 $chaine = "$id" + ";" + "(L1)Ensure Windows Mobile Hotspot Service (icssvc)'' is set to 'Disabled' or 'Not Installed', value must be 4 or not installed" + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\icssvc"
 if ( $exist -eq $true) {
@@ -3300,13 +3264,12 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Windows Push Notifications System Service (WpnService)'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "SS" + "$indextest"
+
+$id = "SS" + "5.38"
 $chaine = "$id" + ";" + "(L2)Ensure Windows Push Notifications System Service (WpnService)' is set to 'Disabled' or 'Not Installed', value must be 4 or not installed" + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\WpnService"
 if ( $exist -eq $true) {
@@ -3319,13 +3282,13 @@ else {
 
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 
 #Windows PushToInstall Service (PushToInstall)'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "SS" + "$indextest"
+
+$id = "SS" + "5.39"
 $chaine = "$id" + ";" + "(L2)Ensure 'Windows PushToInstall Service (PushToInstall)' is set to 'Disabled' or 'Not Installed', value must be 4 or not installed" + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\PushToInstall"
 if ( $exist -eq $true) {
@@ -3339,14 +3302,13 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 
 #Windows Remote Management (WS-Management) (WinRM)'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "SS" + "$indextest"
+
+$id = "SS" + "5.40"
 $chaine = "$id" + ";" + "(L2)Ensure Windows Remote Management (WS-Management) (WinRM) is set to 'Disabled' or 'Not Installed', value must be 4 or not installed" + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\WinRM"
 if ( $exist -eq $true) {
@@ -3361,31 +3323,14 @@ $chaine += $traitement
 $chaine>> $nomfichier
 
 
-#Windows Store Install Service (InstallService)'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "SS" + "$indextest"
-$chaine = "$id" + ";" + "Ensure Windows Store Install Service (InstallService)' is set to 'Disabled' or 'Not Installed', value must be 4 or not installed" + ";"
-$exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\InstallService"
-if ( $exist -eq $true) {
- $traitement = Get-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Services\InstallService"|Select-Object Start
- $traitement = $traitement.Start
-}
-else {
- $traitement = "It s not installed"
-}
+Clean-Value($chaine)
+Clean-Value($traitement)
 
-$chaine += $traitement
-$chaine>> $nomfichier
+
 
 #World Wide Web Publishing Service (W3SVC)'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "SS" + "$indextest"
+
+$id = "SS" + "5.41"
 $chaine = "$id" + ";" + "(L1)Ensure World Wide Web Publishing Service (W3SVC)' is set to 'Disabled' or 'Not Installed', value must be 4 or not installed" + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\W3SVC"
 if ( $exist -eq $true) {
@@ -3399,12 +3344,11 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 #Xbox Accessory Management Service (XboxGipSvc)'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "SS" + "$indextest"
+$id = "SS" + "5.42"
 $chaine = "$id" + ";" + "(L1)Ensure Xbox Accessory Management Service (XboxGipSvc) is set to 'Disabled' or 'Not Installed', value must be 4 or not installed" + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\XboxGipSvc"
 if ( $exist -eq $true) {
@@ -3418,33 +3362,13 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
-
-#Xbox Game Monitoring (xbgm)'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "SS" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Ensure Xbox Game Monitoring (xbgm) s set to 'Disabled' or 'Not Installed', value must be 4 or not installed" + ";"
-$exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\xbgm"
-if ( $exist -eq $true) {
- $traitement = Get-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Services\xbgm"|Select-Object Start
- $traitement = $traitement.Start
-}
-else {
- $traitement = "It s not installed"
-}
-
-$chaine += $traitement
-$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 
 #Xbox Live Auth Manager (XblAuthManager)'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "SS" + "$indextest"
+
+$id = "SS" + "5.43"
 $chaine = "$id" + ";" + "(L1)Ensure Xbox Live Auth Manager (XblAuthManager) s set to 'Disabled' or 'Not Installed', value must be 4 or not installed" + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\XblAuthManager"
 if ( $exist -eq $true) {
@@ -3458,12 +3382,12 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 #Xbox Live Game Save (XblGameSave)'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "SS" + "$indextest"
+
+$id = "SS" + "5.44"
 $chaine = "$id" + ";" + "(L1)Ensure Xbox Live Game Save (XblGameSave) is set to 'Disabled' or 'Not Installed', value must be 4 or not installed" + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\XblGameSave"
 if ( $exist -eq $true) {
@@ -3477,12 +3401,13 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 #Xbox Live Networking Service (XboxNetApiSvc)'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "SS" + "$indextest"
+
+$id = "SS" + "5.45"
 $chaine = "$id" + ";" + "(L1)Ensure Xbox Live Networking Service (XboxNetApiSvc) is set to 'Disabled' or 'Not Installed', value must be 4 or not installed" + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\XboxNetApiSvc"
 if ( $exist -eq $true) {
@@ -3496,17 +3421,18 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 #Checking Firewall Domain Profile
 Write-Host "#########>Begin Firewall Domain Profile audit<#########" -ForegroundColor DarkGreen
 
 
 
 #Windows Firewall: Domain: Firewall state
-$indextest += 1
-$chaine = $null
-$traitement = $null
 
-$id = "WFDP" + "$indextest"
+
+$id = "WFDP" + "9.1.1"
 $chaine = "$id" + ";" + "(L1)Ensure 'Windows Firewall: Domain: Firewall state' is set to 'On, value must be True" + ";"
 $traitement = Get-NetFirewallProfile -Name "Domain" |Select-Object Enabled
 $traitement = $traitement.Enabled
@@ -3514,12 +3440,13 @@ $traitement = $traitement.Enabled
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 
 #Windows Firewall: Domain: Inbound connections
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "WFDP" + "$indextest"
+
+$id = "WFDP" + "9.1.2"
 $chaine = "$id" + ";" + "(L1)Ensure 'Windows Firewall: Domain: Inbound connections' is set to 'Block (default), value must be Block" + ";"
 $traitement = Get-NetFirewallProfile -Name "Domain" |Select-Object DefaultInboundAction
 $traitement = $traitement.DefaultInboundAction
@@ -3527,12 +3454,12 @@ $traitement = $traitement.DefaultInboundAction
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Windows Firewall: Domain: Outbound connections'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "WFDP" + "$indextest"
+
+$id = "WFDP" + "9.1.3"
 $chaine = "$id" + ";" + "(L1)Ensure 'Windows Firewall: Domain: Outbound connections' is set to 'Allow (default), value must be Allow but if it's block it s fucking badass" + ";"
 $traitement = Get-NetFirewallProfile -Name "Domain" |Select-Object DefaultOutboundAction
 $traitement = $traitement.DefaultOutboundAction
@@ -3540,11 +3467,12 @@ $traitement = $traitement.DefaultOutboundAction
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 #Windows Firewall: Domain: Settings: Display a notification'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "WFDP" + "$indextest"
+
+$id = "WFDP" + "9.1.4"
 $chaine = "$id" + ";" + "(L1)Ensure 'Windows Firewall: Domain: Settings: Display a notification' is set to 'No', value must false " + ";"
 $traitement = Get-NetFirewallProfile -Name "Domain" |Select-Object NotifyOnListen
 $traitement = $traitement.NotifyOnListen
@@ -3552,51 +3480,14 @@ $traitement = $traitement.NotifyOnListen
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 
-#Windows Firewall: Domain: Settings: Apply local firewall rules'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "WFDP" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Ensure 'Windows Firewall: Domain: Settings: Apply local firewall rules' is set to 'Yes (default)', value must 1 " + ";"
-$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\WindowsFirewall\DomainProfile"
-if ( $exist -eq $true) {
- $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\WindowsFirewall\DomainProfile"|Select-Object AllowLocalPolicyMerge
- $traitement = $traitement.AllowLocalPolicyMerge
-}
-else {
- $traitement = "not configure"
-}
-$chaine += $traitement
-$chaine>> $nomfichier
-
-
-#Windows Firewall: Domain: Settings: Apply local connection security rules
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "WFDP" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Ensure 'Windows Firewall: Domain: Settings: Apply local connection security rules' is set to 'Yes (default)', value must 1 " + ";"
-$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\WindowsFirewall\DomainProfile"
-if ( $exist -eq $true) {
- $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\WindowsFirewall\DomainProfile"|Select-Object AllowLocalIPsecPolicyMerge
- $traitement = $traitement.AllowLocalIPsecPolicyMerge
-}
-else {
- $traitement = "not configure"
-}
-
-$chaine += $traitement
-$chaine>> $nomfichier
 
 #Windows Firewall: Domain: Logging: Name''
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "WFDP" + "$indextest"
+
+$id = "WFDP" + "9.1.5"
 
 $chaine = "$id" + ";" + "(L1)Ensure 'Windows Firewall: Domain: Logging: Name' is set to '%SYSTEMROOT%\System32\logfiles\firewall\domainfw.log " + ";"
 $traitement = Get-NetFirewallProfile -Name "Domain" |Select-Object LogFileName
@@ -3605,11 +3496,12 @@ $traitement = $traitement.LogFileName
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 #Windows Firewall: Domain: Logging: Size limit (KB)'''
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "WFDP" + "$indextest"
+
+$id = "WFDP" + "9.1.6"
 $chaine = "$id" + ";" + "(L1)Ensure 'Windows Firewall: Domain: Logging: Size limit (KB)' is set to '16,384 KB or greater, value must 16384 or higthter " + ";"
 $traitement = Get-NetFirewallProfile -Name "Domain" |Select-Object LogMaxSizeKilobytes
 $traitement = $traitement.LogMaxSizeKilobytes
@@ -3617,11 +3509,13 @@ $traitement = $traitement.LogMaxSizeKilobytes
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
 #Windows Firewall: Domain: Logging: Log dropped packets'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "WFDP" + "$indextest"
+
+$id = "WFDP" + "9.1.7"
 $chaine = "$id" + ";" + "(L1)Ensure 'Windows Firewall: Domain: Logging: Log dropped packets' is set to 'Yes',value must be true " + ";"
 $traitement = Get-NetFirewallProfile -Name "Domain" |Select-Object LogBlocked
 $traitement = $traitement.LogBlocked
@@ -3629,17 +3523,20 @@ $traitement = $traitement.LogBlocked
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 #Windows Firewall: Log successful connections'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "WFDP" + "$indextest"
+
+$id = "WFDP" + "9.1.8"
 $chaine = "$id" + ";" + "(L1)Ensure 'Windows Firewall: Domain: Logging: Log successful connections' is set to 'Yes,value must be true " + ";"
 $traitement = Get-NetFirewallProfile -Name "Domain" |Select-Object LogAllowed
 $traitement = $traitement.LogAllowed
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Checking Firewall Private Profile
 Write-Host "#########>Begin Firewall Private Profile audit<#########" -ForegroundColor DarkGreen
@@ -3647,34 +3544,34 @@ Write-Host "#########>Begin Firewall Private Profile audit<#########" -Foregroun
 
 
 #Windows Firewall: Private: Firewall state
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "WFPPRIP" + "$indextest"
+
+$id = "WFPPRIP" + "9.2.1"
 $chaine = "$id" + ";" + "(L1)Ensure 'Windows Firewall: Private: Firewall state' is set to 'On, value must be True" + ";"
 $traitement = Get-NetFirewallProfile -Name "Private" |Select-Object Enabled
 $traitement = $traitement.Enabled
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 
 #Windows Firewall: Private: Inbound connections
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "WFPPRIP" + "$indextest"
+
+$id = "WFPPRIP" + "9.2.2"
 $chaine = "$id" + ";" + "(L1)Ensure 'Windows Firewall: Private: Inbound connections' is set to 'Block (default, value must be Block" + ";"
 $traitement = Get-NetFirewallProfile -Name "Private" |Select-Object DefaultInboundAction
 $traitement = $traitement.DefaultInboundAction
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 
 #Windows Firewall: Private: Outbound connections'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "WFPPRIP" + "$indextest"
+
+$id = "WFPPRIP" + "9.2.3"
 $chaine = "$id" + ";" + "(L1)Ensure 'Windows Firewall: Private: Outbound connections' is set to 'Allow (default)', value must be Allow but if it's block it s fucking badass" + ";"
 $traitement = Get-NetFirewallProfile -Name "Private" |Select-Object DefaultOutboundAction
 $traitement = $traitement.DefaultOutboundAction
@@ -3682,11 +3579,12 @@ $traitement = $traitement.DefaultOutboundAction
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 #Windows Firewall: Private: Settings: Display a notification'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "WFPPRIP" + "$indextest"
+
+$id = "WFPPRIP" + "9.2.4"
 $chaine = "$id" + ";" + "(L1)Ensure 'Windows Firewall: Private: Settings: Display a notification' is set to 'No, value must false " + ";"
 $traitement = Get-NetFirewallProfile -Name "Private" |Select-Object NotifyOnListen
 $traitement = $traitement.NotifyOnListen
@@ -3695,51 +3593,13 @@ $chaine += $traitement
 $chaine>> $nomfichier
 
 
+Clean-Value($chaine)
+Clean-Value($traitement)
 
-#Windows Firewall: Private: Settings: Apply local firewall rules'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "WFPPRIP" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Ensure 'Windows Firewall: Private: Settings: Apply local firewall rules' is set to 'Yes (default)', value must 1 " + ";"
-$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\WindowsFirewall\PrivateProfile"
-if ( $exist -eq $true) {
- $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\WindowsFirewall\PrivateProfile"|Select-Object AllowLocalPolicyMerge
- $traitement = $traitement.AllowLocalPolicyMerge
-}
-else {
- $traitement = "not configure"
-}
-
-$chaine += $traitement
-$chaine>> $nomfichier
-
-
-#Windows Firewall: Private: Settings: Apply local connection security rules'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "WFPPRIP" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Ensure 'Windows Firewall: Private: Settings: Apply local connection security rules' is set to 'Yes (default)', value must 1 " + ";"
-$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\WindowsFirewall\PrivateProfile"
-if ( $exist -eq $true) {
- $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\WindowsFirewall\PrivateProfile"|Select-Object AllowLocalIPsecPolicyMerge
- $traitement = $traitement.AllowLocalIPsecPolicyMerge
-}
-else {
- $traitement = "not configure"
-}
-
-$chaine += $traitement
-$chaine>> $nomfichier
 
 #Windows Firewall: Private: Logging: Name
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "WFPPRIP" + "$indextest"
+
+$id = "WFPPRIP" + "9.2.5"
 $chaine = "$id" + ";" + "(L1)Ensure 'Windows Firewall: Private: Logging: Name' is set to '%SYSTEMROOT%\System32\logfiles\firewall\privatefw.log " + ";"
 $traitement = Get-NetFirewallProfile -Name "Private" |Select-Object LogFileName
 $traitement = $traitement.LogFileName
@@ -3747,11 +3607,14 @@ $traitement = $traitement.LogFileName
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
+
 #Windows Firewall: Private: Logging: Size limit (KB)'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "WFPPRIP" + "$indextest"
+
+$id = "WFPPRIP" + "9.2.6"
 $chaine = "$id" + ";" + "(L1)Ensure 'Windows Firewall: Private: Logging: Size limit (KB)' is set to '16,384 KB or greater, value must 16384 or higthter " + ";"
 $traitement = Get-NetFirewallProfile -Name "Private" |Select-Object LogMaxSizeKilobytes
 $traitement = $traitement.LogMaxSizeKilobytes
@@ -3759,11 +3622,13 @@ $traitement = $traitement.LogMaxSizeKilobytes
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
 #Windows Firewall: Private: Logging: Log dropped packets
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "WFPPRIP" + "$indextest"
+
+$id = "WFPPRIP" + "9.2.7"
 $chaine = "$id" + ";" + "(L1)Ensure 'Windows Firewall: Private: Logging: Log dropped packets' is set to 'Yes',value must be true " + ";"
 $traitement = Get-NetFirewallProfile -Name "Private" |Select-Object LogBlocked
 $traitement = $traitement.LogBlocked
@@ -3771,16 +3636,22 @@ $traitement = $traitement.LogBlocked
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
 #Windows Firewall: Private: Logging: Log successful connections'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "WFPPRIP" + "$indextest"
+
+$id = "WFPPRIP" + "9.2.8"
 $chaine = "$id" + ";" + "(L1)Ensure 'Windows Firewall: Private: Logging: Log successful connections' is set to 'Yes',value must be true " + ";"
 $traitement = Get-NetFirewallProfile -Name "Domain" |Select-Object LogAllowed
 $traitement = $traitement.LogAllowed
 $chaine += $traitement
 $chaine>> $nomfichier
+
+
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 
 #Checking Firewall Public Profile
@@ -3789,10 +3660,8 @@ Write-Host "#########>Begin Firewall Public Profile audit<#########" -Foreground
 
 
 #Windows Firewall: Public: Firewall state
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "WFPPUBP" + "$indextest"
+
+$id = "WFPPUBP" + "9.3.1"
 $chaine = "$id" + ";" + "(L1)Ensure 'Windows Firewall: Public: Firewall state' is set to 'On, value must be True" + ";"
 $traitement = Get-NetFirewallProfile -Name "Public" |Select-Object Enabled
 $traitement = $traitement.Enabled
@@ -3800,12 +3669,12 @@ $traitement = $traitement.Enabled
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Windows Firewall: Public: Inbound connections
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "WFPPUBP" + "$indextest"
+
+$id = "WFPPUBP" + "9.3.2"
 $chaine = "$id" + ";" + "(L1)Windows Firewall: Public: Inbound connections' is set to 'Block , value must be Block" + ";"
 $traitement = Get-NetFirewallProfile -Name "Public" |Select-Object DefaultInboundAction
 $traitement = $traitement.DefaultInboundAction
@@ -3813,12 +3682,13 @@ $traitement = $traitement.DefaultInboundAction
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 
 #Windows Firewall: Public: Outbound connections
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "WFPPUBP" + "$indextest"
+
+$id = "WFPPUBP" + "9.3.3"
 $chaine = "$id" + ";" + "(L1)Ensure 'Windows Firewall: Public: Outbound connections' is set to 'Allow (default), value must be Allow but if it's block it s fucking badass" + ";"
 $traitement = Get-NetFirewallProfile -Name "Public" |Select-Object DefaultOutboundAction
 $traitement = $traitement.DefaultOutboundAction
@@ -3826,11 +3696,14 @@ $traitement = $traitement.DefaultOutboundAction
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
+
 #Windows Firewall: Public: Settings: Display a notification
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "WFPPUBP" + "$indextest"
+
+$id = "WFPPUBP" + "9.3.4"
 $chaine = "$id" + ";" + "(L1)Ensure 'Windows Firewall: Public: Settings: Display a notification' is set to 'Yes, value must false " + ";"
 $traitement = Get-NetFirewallProfile -Name "Public" |Select-Object NotifyOnListen
 $traitement = $traitement.NotifyOnListen
@@ -3838,14 +3711,13 @@ $traitement = $traitement.NotifyOnListen
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 
 #Windows Firewall: Public: Settings: Apply local firewall rules
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "WFPPUBP" + "$indextest"
+
+$id = "WFPPUBP" + "9.3.5"
 $chaine = "$id" + ";" + "(L1)Ensure 'Windows Firewall: Public: Settings: Apply local firewall rules' is set to 'No, value must 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\WindowsFirewall\PublicProfile"
 if ( $exist -eq $true) {
@@ -3860,13 +3732,13 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 
 #Windows Firewall: Public: Settings: Apply local connection security rules
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "WFPPUBP" + "$indextest"
+
+$id = "WFPPUBP" + "9.3.6"
 $chaine = "$id" + ";" + "(L1)Ensure 'Windows Firewall: Public: Settings: Apply local connection security rules' is set to 'No', value must 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\WindowsFirewall\PublicProfile"
 if ( $exist -eq $true) {
@@ -3880,11 +3752,13 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
 #Windows Firewall: Public: Logging: Name'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "WFPPUBP" + "$indextest"
+
+$id = "WFPPUBP" + "9.3.7"
 $chaine = "$id" + ";" + "(L1)Ensure 'Windows Firewall: Public: Logging: Name' is set to '%SYSTEMROOT%\System32\logfiles\firewall\publicfw.log" + ";"
 $traitement = Get-NetFirewallProfile -Name "Public" |Select-Object LogFileName
 $traitement = $traitement.LogFileName
@@ -3892,11 +3766,13 @@ $traitement = $traitement.LogFileName
 $chaine += $traitement
 $chaine>> $nomfichier
 
+
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 #Windows Firewall: Public: Logging: Size limit (KB)'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "WFPPUBP" + "$indextest"
+
+$id = "WFPPUBP" + "9.3.8"
 $chaine = "$id" + ";" + "(L1)Ensure 'Windows Firewall: Public: Logging: Size limit (KB)' is set to '16,384 KB or greater" + ";"
 $traitement = Get-NetFirewallProfile -Name "Public" |Select-Object LogMaxSizeKilobytes
 $traitement = $traitement.LogMaxSizeKilobytes
@@ -3904,11 +3780,13 @@ $traitement = $traitement.LogMaxSizeKilobytes
 $chaine += $traitement
 $chaine>> $nomfichier
 
+
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 #Windows Firewall: Public: Logging: Log dropped packets
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "WFPPUBP" + "$indextest"
+
+$id = "WFPPUBP" + "9.3.9"
 $chaine = "$id" + ";" + "(L1)Ensure 'Windows Firewall: Public: Logging: Log dropped packets' is set to 'Yes',value must be true " + ";"
 $traitement = Get-NetFirewallProfile -Name "Public" |Select-Object LogBlocked
 $traitement = $traitement.LogBlocked
@@ -3916,11 +3794,12 @@ $traitement = $traitement.LogBlocked
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 #Windows Firewall: Public: Logging: Log successful connections
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "WFPPUBP" + "$indextest"
+
+$id = "WFPPUBP" + "9.3.10"
 $chaine = "$id" + ";" + "(L1)Ensure 'Windows Firewall: Public: Logging: Log successful connections' is set to 'Yes',value must be true " + ";"
 $traitement = Get-NetFirewallProfile -Name "Public" |Select-Object LogAllowed
 $traitement = $traitement.LogAllowed
@@ -3928,14 +3807,15 @@ $traitement = $traitement.LogAllowed
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 #Checking Advanced Audit Policy Account Logon
 Write-Host "#########>Begin Advanced Audit Policy audit<#########" -ForegroundColor DarkGreen
 
 #Audit Credential Validation
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "AAAL" + "$indextest"
+
+$id = "AAAL" + "17.1.1"
 $chaine = "$id" + ";" + "(L1)Ensure 'Audit Credential Validation' is set to 'Success and Failure" + ";"
 $traitement = Get-Content $auditconfigfile |Select-String -pattern "(Validation des informations d'identification)|(Credential Validation)"
 $traitement = $traitement.line
@@ -3943,52 +3823,13 @@ $traitement = $traitement.line
 $chaine += $traitement
 $chaine>> $nomfichier
 
-
-#Audit Application Group Management
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "AAGM" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Ensure 'Audit Application Group Management' is set to 'Success and Failure" + ";"
-$traitement = Get-Content $auditconfigfile |Select-String -pattern "(Gestion des groupes d'applications)|(Application Group Management)"
-$traitement = $traitement.line
-
-$chaine += $traitement
-$chaine>> $nomfichier
-
-
-
-#Audit Application Group Management
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "AAGM" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Ensure ''Audit Computer Account Management'' is set to 'Success and Failure" + ";"
-$traitement = Get-Content $auditconfigfile |Select-String -pattern "(Gestion des comptes d'ordinateur)|(Computer Account Management)"
-$traitement = $traitement.line
-
-$chaine += $traitement
-$chaine>> $nomfichier
-
-
-
-#Audit Other Account Management Events
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "AAGM" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Ensure 'Audit Other Account Management Events' is set to 'Success and Failure" + ";"
-$traitement = Get-Content $auditconfigfile |Select-String -pattern "(Autres événements d'ouverture de session)|(Other Account Management Events)"
-$traitement = $traitement.line
-$chaine += $traitement
-$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 
 #Audit Security Group Management
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "AAGM" + "$indextest"
+
+$id = "AAGM" + "17.2.2"
 $chaine = "$id" + ";" + "(L1)Ensure 'Audit Security Group Management' is set to 'Success and Failure'" + ";"
 $traitement = Get-Content $auditconfigfile |Select-String -pattern "(Gestion des groupes de sécurité)|(Security Group Management)"
 $traitement = $traitement.line
@@ -3996,11 +3837,12 @@ $traitement = $traitement.line
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 #Audit User Account Management
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "AAGM" + "$indextest"
+
+$id = "AAGM" + "17.2.3"
 $chaine = "$indextest" + ";" + "(L1)Ensure 'Audit User Account Management' is set to 'Success and Failure" + ";"
 $traitement = Get-Content $auditconfigfile |Select-String -pattern "(Gestion des comptes d'utilisateur)|(User Account Management)"
 $traitement = $traitement.line
@@ -4008,11 +3850,12 @@ $traitement = $traitement.line
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 #Audit PNP Activity
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "AADT" + "$indextest"
+
+$id = "AADT" + "17.3.1"
 $chaine = "$id" + ";" + "(L1)Ensure 'Audit PNP Activity' is set to 'Success'" + ";"
 $traitement = Get-Content $auditconfigfile |Select-String -pattern "(événements Plug-and-Play)|(PNP Activity)"
 $traitement = $traitement.line
@@ -4020,11 +3863,12 @@ $traitement = $traitement.line
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 #Audit Process Creation'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "AADT" + "$indextest"
+
+$id = "AADT" + "17.3.2"
 $chaine = "$id" + ";" + "(L1)Ensure 'Audit Process Creation' is set to 'Success" + ";"
 $traitement = Get-Content $auditconfigfile |Select-String -pattern "(Création du processus)|(Process Creation)"
 $traitement = $traitement.line
@@ -4032,24 +3876,27 @@ $traitement = $traitement.line
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
 #'Audit Account Lockout
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "AALL" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Ensure 'Audit Account Lockout' is set to 'Success and Failure'" + ";"
+
+$id = "AALL" + "17.5.1"
+$chaine = "$id" + ";" + "(L1)Ensure 'Audit Account Lockout' is set to Failure'" + ";"
 $traitement = Get-Content $auditconfigfile |Select-String -pattern "(Verrouillage du compte)|(Account Lockout)"
 $traitement = $traitement.line
 
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 
 #Audit Group Membership'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "AALL" + "$indextest"
+
+$id = "AALL" + "17.5.2"
 $chaine = "$id" + ";" + "(L1)Ensure 'Audit Group Membership' is set to 'Success" + ";"
 $traitement = Get-Content $auditconfigfile |Select-String -pattern "(Appartenance é un groupe)|(Group Membership)"
 $traitement = $traitement.line
@@ -4057,11 +3904,13 @@ $chaine += $traitement
 $chaine>> $nomfichier
 
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
 #Ensure 'Audit Logoff'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "AALL" + "$indextest"
+
+$id = "AALL" + "17.5.3"
 $chaine = "$id" + ";" + "(L1)Ensure 'Audit Logoff' is set to 'Success'" + ";"
 $traitement = Get-Content $auditconfigfile |Select-String -pattern "(Fermer la session)|(Logoff)"
 $traitement = $traitement.line
@@ -4069,12 +3918,12 @@ $traitement = $traitement.line
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Ensure Audit Logon
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "AALL" + "$indextest"
+
+$id = "AALL" + "17.5.4"
 $chaine = "$id" + ";" + "(L1)Ensure 'Audit Logon' is set to 'Success and Failure'" + ";"
 $traitement = Get-Content $auditconfigfile |Select-String -pattern "(Ouvrir la session)|(Logon)"
 $traitement = $traitement.line
@@ -4082,12 +3931,12 @@ $traitement = $traitement.line
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Audit Other Logon/Logoff Events
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "AALL" + "$indextest"
+
+$id = "AALL" + "17.5.5"
 $chaine = "$id" + ";" + "(L1)Ensure 'Audit Other Logon/Logoff Events' is set to 'Success and Failure'" + ";"
 $traitement = Get-Content $auditconfigfile |Select-String -pattern "(Autres événements d'ouverture/fermeture de session)|(Other Logon/Logoff Events)"
 $traitement = $traitement.line 
@@ -4095,12 +3944,13 @@ $traitement = $traitement.line
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 
 #Audit Special Logon
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "AALL" + "$indextest"
+
+$id = "AALL" + "17.5.6"
 $chaine = "$id" + ";" + "(L1)Ensure 'Audit Special Logon' is set to 'Success'" + ";"
 $traitement = Get-Content $auditconfigfile |Select-String -pattern "(Ouverture de session spéciale)|(Special Logon)"
 $traitement = $traitement.line 
@@ -4108,11 +3958,28 @@ $traitement = $traitement.line
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+#Audit Detailed File Share
+
+$id = "AAOA" + "17.6.1"
+$chaine = "$id" + ";" + "(L1)Encdsure Audit Detailed File Share is set to Failure'" + ";"
+$traitement = Get-Content $auditconfigfile |Select-String -pattern "(Partage de fichiers détaillé )|(Detailed File Share)"
+$traitement = $traitement.line 
+
+$chaine += $traitement
+$chaine>> $nomfichier
+
+
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
+
 #Audit File Share'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "AAOA" + "$indextest"
+
+$id = "AAOA" + "17.6.2"
 $chaine = "$id" + ";" + "(L1)Ensure 'Audit File Share'' is set to 'Success and Failure'" + ";"
 $traitement = Get-Content $auditconfigfile |Select-String -pattern "(Partage de fichiers)|(File share)"
 $traitement = $traitement.line 
@@ -4120,11 +3987,12 @@ $traitement = $traitement.line
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 #Audit Other Object Access Events'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "AAOA" + "$indextest"
+
+$id = "AAOA" + "17.6.3"
 $chaine = "$id" + ";" + "(L1)Ensure 'Audit Other Object Access Events''' is set to 'Success and Failure'" + ";"
 $traitement = Get-Content $auditconfigfile |Select-String -pattern "(Autres événements d'accès à l'objet)|(Other Object Access Event)"
 $traitement = $traitement.line 
@@ -4132,11 +4000,12 @@ $traitement = $traitement.line
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 #Audit Removable Storage
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "AAOA" + "$indextest"
+
+$id = "AAOA" + "17.6.4"
 $chaine = "$id" + ";" + "(L1)Ensure 'Audit Removable Storage' is set to 'Success and Failure'" + ";"
 $traitement = Get-Content $auditconfigfile |Select-String -pattern "(Stockage amovible)|(Removable Storage)"
 $traitement = $traitement.line 
@@ -4144,11 +4013,13 @@ $traitement = $traitement.line
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
 #Audit Audit Policy Change'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "AAPC" + "$indextest"
+
+$id = "AAPC" + "17.7.1"
 $chaine = "$id" + ";" + "(L1)Ensure 'Audit Audit Policy Change' is set to 'Success and Failure'" + ";"
 $traitement = Get-Content $auditconfigfile |Select-String -pattern "(Modification de la stratégie d'audit)|(Audit Policy Change)"
 $traitement = $traitement.line 
@@ -4156,11 +4027,12 @@ $traitement = $traitement.line
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 #Audit Authentication Policy Change
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "AAPC" + "$indextest"
+
+$id = "AAPC" + "17.7.2"
 $chaine = "$id" + ";" + "(L1)Ensure 'Audit Authentication Policy Change' is set to 'Success''" + ";"
 $traitement = Get-Content $auditconfigfile |Select-String -pattern "(Modification de la stratégie d'authentification)|(Authentication Policy Change)"
 $traitement = $traitement.line 
@@ -4168,11 +4040,13 @@ $traitement = $traitement.line
 $chaine += $traitement
 $chaine>> $nomfichier
 
+
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 #Audit Authorization Policy Change
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "AAPC" + "$indextest"
+
+$id = "AAPC" + "17.7.3"
 $chaine = "$id" + ";" + "Ensure 'Audit Authorization Policy Change' is set to 'Success''" + ";"
 $traitement = Get-Content $auditconfigfile |Select-String -pattern "(Modification de la stratégie d'autorisation)|(Authorization Policy Change)"
 $traitement = $traitement.line 
@@ -4180,11 +4054,12 @@ $traitement = $traitement.line
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 #Audit SMPSSVC Rule-Level Policy Change'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "AAPU" + "$indextest"
+
+$id = "AAPU" + "17.7.4"
 $chaine = "$id" + ";" + "(L1)Ensure 'Audit MPSSVC Rule-Level Policy Change is set to 'Success and Failure'" + ";"
 $traitement = Get-Content $auditconfigfile |Select-String -pattern "(Modification de la stratégie de niveau règle MPSSVC)|(MPSSVC Rule-Level Policy Change)"
 $traitement = $traitement.line 
@@ -4192,12 +4067,27 @@ $traitement = $traitement.line
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
+#Audit Other Policy Change Events'
+
+$id = "AAPU" + "17.7.5"
+$chaine = "$id" + ";" + "(L1)Ensure 'Audit Other Policy Change Events' is set to include 'Failure'" + ";"
+$traitement = Get-Content $auditconfigfile |Select-String -pattern "(Autres événements de modification de stratégie)|(Other Policy Change Events)"
+$traitement = $traitement.line 
+
+$chaine += $traitement
+$chaine>> $nomfichier
+
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 
 #Audit Sensitive Privilege Use'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "AAPU" + "$indextest"
+
+$id = "AAPU" + "17.8.1"
 $chaine = "$id" + ";" + "(L1)Ensure 'Audit Sensitive Privilege Use' is set to 'Success and Failure'" + ";"
 $traitement = Get-Content $auditconfigfile |Select-String -pattern "(Utilisation de priviléges sensibles)|(Sensitive Privilege Use)"
 $traitement = $traitement.line 
@@ -4205,11 +4095,13 @@ $traitement = $traitement.line
 $chaine += $traitement
 $chaine>> $nomfichier
 
+
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 #Ensure 'Audit IPsec Driver' is set to 'Success and Failure'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "AAS" + "$indextest"
+
+$id = "AAS" + "17.9.1"
 $chaine = "$id" + ";" + "(L1)Ensure 'Audit IPsec Driver' is set to 'Success and Failure'" + ";"
 $traitement = Get-Content $auditconfigfile |Select-String -pattern "(Pilote IPSEC)|(IPsec Driver)"
 $traitement = $traitement.line 
@@ -4217,11 +4109,13 @@ $traitement = $traitement.line
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
 #Audit Other System Events
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "AAS" + "$indextest"
+
+$id = "AAS" + "17.9.2"
 $chaine = "$id" + ";" + "(L1)Ensure 'Audit Other System Events' is set to 'Success and Failure'" + ";"
 $traitement = Get-Content $auditconfigfile |Select-String -pattern "(Autres événements systéme)|(Other System Events)"
 $traitement = $traitement.line
@@ -4229,11 +4123,12 @@ $traitement = $traitement.line
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 #Audit Security State Change'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "AAS" + "$indextest"
+
+$id = "AAS" + "17.9.3"
 $chaine = "$id" + ";" + "(L1)Ensure 'Audit Security State Change' is set to 'Success" + ";"
 $traitement = Get-Content $auditconfigfile |Select-String -pattern "(Modification de l'état de la sécurité)|(Security State Change)"
 $traitement = $traitement.line 
@@ -4241,11 +4136,12 @@ $traitement = $traitement.line
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 #Audit Security System Extension
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "AAS" + "$indextest"
+
+$id = "AAS" + "17.9.4"
 $chaine = "$id" + ";" + "(L1)Ensure 'Audit Security System Extension' is set to 'Success and Failure" + ";"
 $traitement = Get-Content $auditconfigfile |Select-String -pattern "(Extension systéme de sécurité)|(Security System Extension)"
 $traitement = $traitement.line 
@@ -4254,11 +4150,12 @@ $chaine += $traitement
 $chaine>> $nomfichier
 
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 #Audit System Integrity
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "AAS" + "$indextest"
+
+$id = "AAS" + "17.9.5"
 $chaine = "$id" + ";" + "(L1)Ensure 'Audit System Integrity' is set to 'Success and Failure'" + ";"
 $traitement = Get-Content $auditconfigfile |Select-String -pattern "(Intégrité du systéme)|(System Integrity)"
 $traitement = $traitement.line 
@@ -4267,17 +4164,16 @@ $chaine += $traitement
 $chaine>> $nomfichier
 
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 #Checking Personalization audit
 Write-Host "#########>Begin Personalization audit<#########" -ForegroundColor DarkGreen
 
 
 #Prevent enabling lock screen camera
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "PA" + "$indextest"
 
+$id = "PA" + "18.1.1.1"
 $chaine = "$id" + ";" + "(L1)Ensure 'Prevent enabling lock screen camera' is set to 'Enabled, value must 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Personalization"
 if ( $exist -eq $true) {
@@ -4291,12 +4187,13 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
 #Prevent enabling lock screen slide show'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "PA" + "$indextest"
+
+$id = "PA" + "18.1.1.2"
 $chaine = "$id" + ";" + "(L1)Ensure 'Prevent enabling lock screen slide show' is set to 'Enabled', value must 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Personalization"
 if ( $exist -eq $true) {
@@ -4309,12 +4206,13 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 #Allow users to enable online speech recognition services
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "PA" + "$indextest"
+
+$id = "PA" + "18.1.2.2"
 $chaine = "$id" + ";" + "(L1)Ensure 'Allow users to enable online speech recognition services' is set to 'Disabled', value must 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\InputPersonalization"
 if ( $exist -eq $true) {
@@ -4327,12 +4225,12 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 #Allow Online Tips'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "PA" + "$indextest"
+
+$id = "PA" + "18.1.3"
 $chaine = "$id" + ";" + "(L2)Ensure Allow Online Tips'' is set to 'Disabled', value must 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer"
 if ( $exist -eq $true) {
@@ -4345,6 +4243,8 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 
 
@@ -4354,11 +4254,8 @@ $chaine>> $nomfichier
 Write-Host "#########>Begin LAPS audit<#########" -ForegroundColor DarkGreen
 
 #LAPS AdmPwd GPO Extension / CSE is installed
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "LAPS" + "$indextest"
+
+$id = "LAPS" + "18.3.1"
 $chaine = "$id" + ";" + "(L1)Ensure LAPS AdmPwd GPO Extension / CSE is installed, value must true " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon\GPExtensions\{D76B9641-3288-4f75-942D-087DE603E3EA}"
 if ( $exist -eq $true) {
@@ -4372,14 +4269,15 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
 
 
 #Do not allow password expiration time longer than required by policy'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "LAPS" + "$indextest"
+
+$id = "LAPS" + "18.3.2"
 
 $chaine = "$id" + ";" + "(L1)Ensure 'Do not allow password expiration time longer than required by policy' is set to 'Enabled, value must 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft Services\AdmPwd"
@@ -4395,12 +4293,14 @@ $chaine += $traitement
 $chaine>> $nomfichier
 
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
+
 #Enable Local Admin Password Management
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "LAPS" + "$indextest"
+
+$id = "LAPS" + "18.3.3"
 $chaine = "$id" + ";" + "(L1)Ensure 'Enable Local Admin Password Management' is set to 'Enabled', value must 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft Services\AdmPwd"
 if ( $exist -eq $true) {
@@ -4414,11 +4314,14 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
 #Password Settings: Password Complexity' is set to 'Enabled: Large letters + small letters + numbers + special characters'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "LAPS" + "$indextest"
+
+$id = "LAPS" + "18.3.4"
 $chaine = "$id" + ";" + "(L1)Ensure 'Password Settings: Password Complexity' is set to 'Enabled: Large letters + small letters + numbers + special characters, value must 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft Services\AdmPwd"
 if ( $exist -eq $true) {
@@ -4432,13 +4335,14 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
 
 #Password Settings: Password Length
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "LAPS" + "$indextest"
+
+$id = "LAPS" + "18.3.5"
 $chaine = "$id" + ";" + "(L1)Ensure 'Password Settings: Password Length' is set to 'Enabled: 15 or more, value must greater than 15 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft Services\AdmPwd"
 if ( $exist -eq $true) {
@@ -4452,12 +4356,13 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 #Password Settings: Password Age (Days)'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "LAPS" + "$indextest"
+
+$id = "LAPS" + "18.3.6"
 
 $chaine = "$id" + ";" + "(L1)Ensure 'Password Settings: Password Age (Days)' is set to 'Enabled: 30 or fewer', value must less than 30 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft Services\AdmPwd"
@@ -4473,17 +4378,16 @@ $chaine += $traitement
 $chaine>> $nomfichier
 
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 #Checking MSS (Legacy)
 Write-Host "#########>Begin MS Security Guide audit<#########" -ForegroundColor DarkGreen
 
 
 #Apply UAC restrictions to local accounts on network logons
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
 
-$id = "MSSG" + "$indextest"
+$id = "MSSG" + "18.4.1"
 $chaine = "$id" + ";" + "(L1)Ensure 'Apply UAC restrictions to local accounts on network logons' is set to 'Enabled', value must be 0" + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System"
 if ( $exist -eq $true) {
@@ -4497,14 +4401,33 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+#Configure RPC packet level privacy setting for incoming connections' is set to 'Enabled
+
+$id = "MSSG" + "18.4.2"
+$chaine = "$id" + ";" + "(L1)Ensure 'Configure RPC packet level privacy setting for incoming connections' is set to 'Enabled', value must be 1" + ";"
+$exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Control\Print"
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Control\Print"|Select-Object RpcAuthnLevelPrivacyEnabled
+ $traitement = $traitement.RpcAuthnLevelPrivacyEnabled
+}
+else {
+ $traitement = "not configure"
+}
+
+$chaine += $traitement
+$chaine>> $nomfichier
+
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 
 #Configure SMB v1 client driver'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
 
-$id = "MSSG" + "$indextest"
+
+$id = "MSSG" + "18.4.3"
 $chaine = "$id" + ";" + "(L1)Ensure 'Configure SMB v1 client driver' is set to 'Enabled: Disable driver', value must be 4" + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\mrxsmb10"
 if ( $exist -eq $true) {
@@ -4519,14 +4442,15 @@ $chaine += $traitement
 $chaine>> $nomfichier
 
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
 
 #Configure SMB v1 server' is set to 'Disabled'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
 
-$id = "MSSG" + "$indextest"
+
+$id = "MSSG" + "18.4.4"
 $chaine = "$id" + ";" + "(L1)Ensure Configure SMB v1 server' is set to 'Disabled', value must be 0" + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters"
 if ( $exist -eq $true) {
@@ -4540,14 +4464,13 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 
 #'Enable Structured Exception Handling Overwrite Protection (SEHOP)'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
 
-$id = "MSSG" + "$indextest"
+$id = "MSSG" + "18.4.5"
 $chaine = "$id" + ";" + "(L1)Ensure 'Enable Structured Exception Handling Overwrite Protection (SEHOP)' is set to 'Enabled', value must be 0" + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\kernel"
 if ( $exist -eq $true) {
@@ -4561,13 +4484,13 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
-#Ensure 'NetBT NodeType configuration' is set to 'Enabled: P-node (recommended)
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
+Clean-Value($chaine)
+Clean-Value($traitement)
 
-$id = "MSSG" + "$indextest"
+
+#Ensure 'NetBT NodeType configuration' is set to 'Enabled: P-node (recommended)
+
+$id = "MSSG" + "18.4.6"
 $chaine = "$id" + ";" + "(L1)Ensure 'NetBT NodeType configuration' is set to 'Enabled: P-node (recommended), value must be 2" + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\NetBT\Parameters"
 if ( $exist -eq $true) {
@@ -4581,13 +4504,15 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
-#WDigest Authentication'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
+Clean-Value($chaine)
+Clean-Value($traitement)
 
-$id = "MSSG" + "$indextest"
+
+
+#WDigest Authentication'
+
+
+$id = "MSSG" + "18.4.7"
 $chaine = "$id" + ";" + "(L1)Ensure 'WDigest Authentication' is set to 'Disabled', value must be 0" + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest"
 if ( $exist -eq $true) {
@@ -4601,6 +4526,9 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 
 
 #Checking MSS (Legacy)
@@ -4608,12 +4536,8 @@ Write-Host "#########>Begin MSS (Legacy) audit<#########" -ForegroundColor DarkG
 
 
 #MSS: (AutoAdminLogon) Enable Automatic Logon (not recommended)'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
 
-$id = "MSSL" + "$indextest"
+$id = "MSSL" + "18.5.1"
 $chaine = "$id" + ";" + "(L1)Ensure 'MSS: (AutoAdminLogon) Enable Automatic Logon (not recommended)' is set to 'Disabled, value must be 0 or empty" + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"
 if ( $exist -eq $true) {
@@ -4627,13 +4551,13 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 
 #MSS: (DisableIPSourceRouting IPv6) IP source routing protection level (protects against packet spoofing)'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "MSSL" + "$indextest"
+
+$id = "MSSL" + "18.5.2"
 $chaine = "$id" + ";" + "(L1)Ensure 'MSS: (DisableIPSourceRouting IPv6) IP source routing protection level (protects against packet spoofing)' is set to 'Enabled: Highest protection, source routing is completely disabled, value must be 2" + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip6\Parameters"
 if ( $exist -eq $true) {
@@ -4647,13 +4571,13 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 
 #'MSS: (DisableIPSourceRouting) IP source routing protection level (protects against packet spoofing)'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "MSSL" + "$indextest"
+
+$id = "MSSL" + "18.5.3"
 $chaine = "$id" + ";" + "(L1)Ensure 'MSS: (DisableIPSourceRouting) IP source routing protection level (protects against packet spoofing)' is set to 'Enabled: Highest protection, source routing is completely disabled, value must be 2" + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters"
 if ( $exist -eq $true) {
@@ -4666,12 +4590,13 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
 #'MSS: (DisableSavePassword) Prevent the dial-up password from being saved''
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "MSSL" + "$indextest"
+
+$id = "MSSL" + "18.5.4"
 $chaine = "$id" + ";" + "(L2)Ensure 'MSS: (DisableSavePassword) Prevent the dial-up password from being saved' is set to 'Enabled', source routing is completely disabled, value must be 1" + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\RasMan\Parameters"
 if ( $exist -eq $true) {
@@ -4684,14 +4609,13 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 
 #'MSS: (EnableICMPRedirect) Allow ICMP redirects to override OSPF generated routes''
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
 
-$id = "MSSL" + "$indextest"
+$id = "MSSL" + "18.5.5"
 $chaine = "$id" + ";" + "(L1)Ensure 'MSS: (EnableICMPRedirect) Allow ICMP redirects to override OSPF generated routes' is set to 'Disabled, value must be 0" + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters"
 if ( $exist -eq $true) {
@@ -4704,14 +4628,13 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 
 #MSS: (KeepAliveTime) How often keep-alive packets are sent in milliseconds''
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "MSSL" + "$indextest"
+
+$id = "MSSL" + "18.5.6"
 $chaine = "$id" + ";" + "(L2)Ensure 'MSS: (KeepAliveTime) How often keep-alive packets are sent in milliseconds' is set to 'Enabled: 300,000 or 5 minutes, value must be 300000" + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters"
 if ( $exist -eq $true) {
@@ -4724,13 +4647,14 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
 
 #MSS: (NoNameReleaseOnDemand) Allow the computer to ignore NetBIOS name release requests except from WINS servers
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "MSSL" + "$indextest"
+
+$id = "MSSL" + "18.5.7"
 $chaine = "$id" + ";" + "(L1)Ensure 'MSS: (NoNameReleaseOnDemand) Allow the computer to ignore NetBIOS name release requests except from WINS servers' is set to 'Enabled, value must be 1" + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\NetBT\\Parameters"
 if ( $exist -eq $true) {
@@ -4744,12 +4668,13 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 #MSS: (PerformRouterDiscovery) Allow IRDP to detect and configure Default Gateway addresses (could lead to DoS)'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "MSSL" + "$indextest"
+
+$id = "MSSL" + "18.5.8"
 $chaine = "$id" + ";" + "(L2)Ensure MSS: (PerformRouterDiscovery) Allow IRDP to detect and configure Default Gateway addresses (could lead to DoS)', value must be 0" + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\\Parameters"
 if ( $exist -eq $true) {
@@ -4763,12 +4688,13 @@ $chaine += $traitement
 $chaine>> $nomfichier
 
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
 #MSS: (SafeDllSearchMode) Enable Safe DLL search mode (recommended)'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "MSSL" + "$indextest"
+
+$id = "MSSL" + "18.5.9"
 $chaine = "$id" + ";" + "(L1)Ensure 'MSS: (SafeDllSearchMode) Enable Safe DLL search mode (recommended)' is set to 'Enabled, value must be 1" + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager"
 if ( $exist -eq $true) {
@@ -4782,11 +4708,12 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 #MSS: (ScreenSaverGracePeriod) The time in seconds before the screen saver grace period expires (0 recommended)'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "MSSL" + "$indextest"
+
+$id = "MSSL" + "18.5.10"
 $chaine = "$id" + ";" + "(L1)Ensure MSS: (ScreenSaverGracePeriod) The time in seconds before the screen saver grace period expires 'is set to 'Enabled: 5 or fewer seconds (0 recommended)', value must be 5 or less " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"
 if ( $exist -eq $true) {
@@ -4798,13 +4725,12 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Ensure 'MSS: (TcpMaxDataRetransmissions IPv6) How many times unacknowledged data is retransmitted
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "MSSL" + "$indextest"
+
+$id = "MSSL" + "18.5.11"
 $chaine = "$id" + ";" + "(L2)Ensure 'MSS: (TcpMaxDataRetransmissions IPv6) How many times unacknowledged data is retransmitted' is set to 'Enabled: 3: value must be 3 " + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\TCPIP6\Parameters"
 if ( $exist -eq $true) {
@@ -4817,12 +4743,12 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 #MSS: (TcpMaxDataRetransmissions) How many times unacknowledged data is retransmitted
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "MSSL" + "$indextest"
+
+$id = "MSSL" + "18.5.12"
 $chaine = "$id" + ";" + "(L2)Ensure 'MSS: (TcpMaxDataRetransmissions) How many times unacknowledged data is retransmitted' is set to 'Enabled: 3: value must be 3 " + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\TCPIP\Parameters" 
 if ( $exist -eq $true) {
@@ -4835,12 +4761,13 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 #MSS: (WarningLevel) Percentage threshold for the security event log at which the system will generate a warning
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "MSSL" + "$indextest"
+
+$id = "MSSL" + "18.5.13"
 $chaine = "$id" + ";" + "(L1)Ensure 'MSS: (WarningLevel) Percentage threshold for the security event log at which the system will generate a warning' is set to 'Enabled: 90% or less " + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\Eventlog\Security"
 if ( $exist -eq $true) {
@@ -4853,17 +4780,60 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
 #DNS Client
 Write-Host "#########>Begin DNS Client audit<#########" -ForegroundColor DarkGreen
 
 
 
+#DNS Ensure 'Configure DNS over HTTPS (DoH) name resolution' is set to 'Enabled: Allow DoH' or higher
+
+$id = "DNSCA" + "18.6.4.1"
+$chaine = "$id" + ";" + "(L1) Ensure 'Configure DNS over HTTPS (DoH) name resolution' is set to 'Enabled: Allow DoH' or higher, value must be 2 OR 3 could cause issue in domain joined environment " + ";"
+$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\DNSClient"
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\DNSClient" |Select-Object DoHPolicy
+ $traitement = $traitement.DoHPolicy
+}
+else {
+ $traitement = "not configure"
+}
+$chaine += $traitement
+$chaine>> $nomfichier
+
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
+
+
+#DNS Ensure 'Configure DNS over HTTPS (DoH) name resolution' is set to 'Enabled: Allow DoH' or higher
+
+$id = "DNSCA" + "18.6.4.2"
+$chaine = "$id" + ";" + "(L1) Ensure 'Configure NetBIOS settings' is set to 'Enabled: Disable NetBIOS name resolution on public networks, value must be 0" + ";"
+$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\DNSClient"
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\DNSClient" |Select-Object EnableNetbios
+ $traitement = $traitement.EnableNetbios
+}
+else {
+ $traitement = "not configure"
+}
+$chaine += $traitement
+$chaine>> $nomfichier
+
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
+
+
+
 #Turn off multicast name resolution'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "DNSC" + "$indextest"
+$id = "DNSCA" + "18.6.4.3"
 $chaine = "$id" + ";" + "(L1)Ensure 'Turn off multicast name resolution' is set to 'Enabled' (MS Only), value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\DNSClient"
 if ( $exist -eq $true) {
@@ -4877,16 +4847,16 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 #Check Fonts
 Write-Host "#########>Begin Fonts audit<#########" -ForegroundColor DarkGreen
 
 
 #Enable Font Providers'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "FONT" + "$indextest"
+
+$id = "FONT" + "18.6.5.1"
 $chaine = "$id" + ";" + "(L2)Ensure 'Enable Font Providers' is set to 'Disabled, value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System"
 if ( $exist -eq $true) {
@@ -4899,17 +4869,17 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 
 #Check Lanman Workstation
 Write-Host "#########>Begin Lanman Workstation audit<#########" -ForegroundColor DarkGreen
 
 
 #Enable insecure guest logons'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "LW" + "$indextest"
+
+$id = "LW" + "18.6.8.1"
 $chaine = "$id" + ";" + "(L1)Ensure 'Enable insecure guest logons' is set to 'Disabled', value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\LanmanWorkstation"
 if ( $exist -eq $true) {
@@ -4922,16 +4892,16 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 
 #Check Link-Layer Topology Discovery
 Write-Host "#########>Begin Link-Layer Topology Discovery audit<#########" -ForegroundColor DarkGreen
 
 #Turn on Mapper I/O (LLTDIO) driver'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "LLTDIO" + "$indextest"
+
+$id = "LLTDIO" + "18.6.9.1"
 $chaine = "$id" + ";" + "(L2)Ensure 'Turn on Mapper I/O (LLTDIO) driver' is set to 'Disabled', value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\LLTD"
 if ( $exist -eq $true) {
@@ -4955,13 +4925,13 @@ else {
 $chaine += $traitementtemp
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 
 #Turn on Responder (RSPNDR) driver
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "LLTDIO" + "$indextest"
+
+$id = "LLTDIO" + "18.6.9.2"
 $chaine = "$id" + ";" + "(L2)Ensure 'Turn on Responder (RSPNDR) driver' is set to 'Disabled'', value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\LLTD"
 if ( $exist -eq $true) {
@@ -4985,16 +4955,17 @@ else {
 $chaine += $traitementtemp
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
 #Check Microsoft Peer-to-Peer Networking Services
 Write-Host "#########>Begin Microsoft Peer-to-Peer Networking Service saudit<#########" -ForegroundColor DarkGreen
 
 
 #Turn off Microsoft Peer-to-Peer Networking Services
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "PPNS" + "$indextest"
+
+$id = "PPNS" + "18.6.10.2"
 
 $chaine = "$id" + ";" + "(L2)Ensure 'Turn off Microsoft Peer-to-Peer Networking Services' is set to 'Enabled', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Peernet" 
@@ -5008,15 +4979,14 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
 #Check Network Connections
 Write-Host "#########>Begin Network Connections audit<#########" -ForegroundColor DarkGreen
 
 #Prohibit installation and configuration of Network Bridge on your DNS domain network
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "NC" + "$indextest"
+
+$id = "NC" + "18.6.11.2"
 $chaine = "$id" + ";" + "(L1)Ensure 'Prohibit installation and configuration of Network Bridge on your DNS domain network' is set to 'Enabled', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Network Connections" 
 if ( $exist -eq $true) {
@@ -5030,13 +5000,12 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Prohibit use of Internet Connection Sharing on your DNS domain network
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "NC" + "$indextest"
+
+$id = "NC" + "18.6.11.3"
 $chaine = "$id" + ";" + "(L1)Ensure 'Prohibit use of Internet Connection Sharing on your DNS domain network' is set to 'Enabled', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Network Connections"
 if ( $exist -eq $true) {
@@ -5049,12 +5018,13 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
 #Require domain users to elevate when setting a network's location'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "NC" + "$indextest"
+
+$id = "NC" + "18.6.11.4"
 $chaine = "$id" + ";" + "(L1)Ensure 'Require domain users to elevate when setting a network's location' is set to 'Enabled, value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Network Connections"
 if ( $exist -eq $true) {
@@ -5068,12 +5038,12 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 #Hardened UNC Paths
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "NP" + "$indextest"
+
+$id = "NP" + "18.6.14.1"
 $chaine = "$id" + ";" + "(L1)Ensure 'Hardened UNC Paths' is set to 'Enabled, with Require Mutual Authentication and Require Integrity set for all NETLOGON and SYSVOL shares', RequireMutualAuthentication=1, RequireIntegrity=1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\NetworkProvider"
 if ( $exist -eq $true) {
@@ -5091,12 +5061,15 @@ else {
 $chaine += $traitementtemp
 $chaine>> $nomfichier
 
+
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
+
 #Disable IPv6
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "IPV6" + "$indextest"
+
+$id = "IPV6" + "18.6.19.2.1"
 
 $chaine = "$id" + ";" + "(L2)Disable IPv6 (Ensure TCPIP6 Parameter 'DisabledComponents' is set to '0xff (255)'), value must be 255 " + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\TCPIP6\Parameters"
@@ -5110,12 +5083,14 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
+
 #Configuration of wireless settings using Windows Connect Now
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "WCN" + "$indextest"
+
+$id = "WCN" + "18.6.20.1"
 $chaine = "$id" + ";" + "(L2)Ensure 'Configuration of wireless settings using Windows Connect Now' is set to 'Disabled, value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WCN\Registrars"
 if ( $exist -eq $true) {
@@ -5142,12 +5117,12 @@ else {
 $chaine += $traitementtemp
 $chaine>> $nomfichier
 
+
+Clean-Value($chaine)
+Clean-Value($traitement)
 #Prohibit access of the Windows Connect Now wizards'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "WCN" + "$indextest"
+
+$id = "WCN" + "18.6.20.2"
 $chaine = "$id" + ";" + "(L2)Ensure 'Prohibit access of the Windows Connect Now wizards' is set to 'Enabled, value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WCN\UI"
 if ( $exist -eq $true) {
@@ -5160,14 +5135,12 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Minimize the number of simultaneous connections to the Internet or a Windows Domain'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
 
-$id = "WCM" + "$indextest"
+$id = "WCM" + "18.6.21.1"
 $chaine = "$id" + ";" + "(L1)Ensure Minimize the number of simultaneous connections to the Internet or a Windows Domain' is set to 'Enabled: 3 = Prevent Wi-Fi when on Ethernet', value must be 3 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WcmSvc\GroupPolicy"
 if ( $exist -eq $true) {
@@ -5181,12 +5154,12 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 #Prohibit connection to non-domain networks when connected to domain authenticated network'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "WCM" + "$indextest"
+
+$id = "WCM" + "18.6.21.2"
 $chaine = "$id" + ";" + "(L1)Ensure 'Prohibit connection to non-domain networks when connected to domain authenticated network' is set to 'Enabled'', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WcmSvc\GroupPolicy"
 if ( $exist -eq $true) {
@@ -5200,17 +5173,17 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 
 
 
 #Check WLAN Settings
 Write-Host "#########>Begin WLAN Settings audit<#########" -ForegroundColor DarkGreen
 #Allow Windows to automatically connect to suggested open hotspots, to networks shared by contacts, and to hotspots offering paid services
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "WLAN" + "$indextest"
+
+$id = "WLAN" + "18.6.23.2.1"
 $chaine = "$id" + ";" + "(L1)Ensure 'Allow Windows to automatically connect to suggested open hotspots, to networks shared by contacts, and to hotspots offering paid services' is set to 'Disabled', value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Microsoft\WcmSvc\wifinetworkmanager\config"
 if ( $exist -eq $true) {
@@ -5223,6 +5196,243 @@ else {
 
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
+
+
+#Check WLAN Settings
+Write-Host "#########>Begin Printer Settings audit<#########" -ForegroundColor DarkGreen
+#Ensure 'Allow Print Spooler to accept client connections' is set to 'Disabled
+
+$id = "PRINT" + "18.7.1"
+$chaine = "$id" + ";" + "(L1)Ensure 'Allow Print Spooler to accept client connections' is set to 'Disabled'', value must be 2 " + ";"
+$exist = Test-Path "HKLM:\Software\Policies\Microsoft\Windows NT\Printers"
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\Software\Policies\Microsoft\Windows NT\Printers" |Select-Object RegisterSpoolerRemoteRpcEndPoint
+ $traitement = $traitement.RegisterSpoolerRemoteRpcEndPoint
+}
+else {
+ $traitement = "not configure"
+}
+
+$chaine += $traitement
+$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+# Ensure 'Configure Redirection Guard' is set to 'Enabled: Redirection Guard Enabled'
+
+$id = "PRINT" + "18.7.2"
+$chaine = "$id" + ";" + "Ensure 'Configure Redirection Guard' is set to 'Enabled: Redirection Guard Enabled', value must be 1 , 2 mean audit mode " + ";"
+$exist = Test-Path "HKLM:\Software\Policies\Microsoft\Windows NT\Printers"
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\Software\Policies\Microsoft\Windows NT\Printers" |Select-Object RedirectionguardPolicy
+ $traitement = $traitement.RedirectionguardPolicy
+}
+else {
+ $traitement = "not configure"
+}
+
+$chaine += $traitement
+$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
+# Ensure 'Configure RPC connection settings: Protocol to use for outgoing RPC connections' is set to 'Enabled: RPC over TCP'
+
+$id = "PRINT" + "18.7.3"
+$chaine = "$id" + ";" + "(L1) Ensure 'Configure RPC connection settings: Protocol to use for outgoing RPC connections' is set to 'Enabled: RPC over TCP', value must be 1 " + ";"
+$exist = Test-Path "HKLM:\Software\Policies\Microsoft\Windows NT\Printers\RPC"
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\Software\Policies\Microsoft\Windows NT\Printers\RPC" |Select-Object RpcUseNamedPipeProtocol
+ $traitement = $traitement.RpcUseNamedPipeProtocol
+}
+else {
+ $traitement = "not configure"
+}
+
+$chaine += $traitement
+$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+# Ensure '(L1) Ensure 'Configure RPC connection settings: Use authentication for outgoing RPC connections' is set to 'Enabled: Default''
+
+$id = "PRINT" + "18.7.4"
+$chaine = "$id" + ";" + "(L1) (L1) Ensure 'Configure RPC connection settings: Use authentication for outgoing RPC connections' is set to 'Enabled: Default', value must be 1 " + ";"
+$exist = Test-Path "HKLM:\Software\Policies\Microsoft\Windows NT\Printers\RPC"
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\Software\Policies\Microsoft\Windows NT\Printers\RPC" |Select-Object RpcAuthentication
+ $traitement = $traitement.RpcAuthentication
+}
+else {
+ $traitement = "not configure"
+}
+
+$chaine += $traitement
+$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
+# Ensure '(L1) Ensure 'Configure RPC listener settings: Protocols to allow for incoming RPC connections' is set to 'Enabled: RPC over TCP'
+
+$id = "PRINT" + "18.7.5"
+$chaine = "$id" + ";" + "(L1) Ensure 'Configure RPC listener settings: Protocols to allow for incoming RPC connections' is set to 'Enabled: RPC over TCP', value must be 0x7 " + ";"
+$exist = Test-Path "HKLM:\Software\Policies\Microsoft\Windows NT\Printers\RPC"
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\Software\Policies\Microsoft\Windows NT\Printers\RPC" |Select-Object RpcProtocols
+ $traitement = $traitement.RpcProtocols
+}
+else {
+ $traitement = "not configure"
+}
+
+$chaine += $traitement
+$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
+# (L1) Ensure 'Configure RPC listener settings: Authentication protocol to use for incoming RPC connections:' is set to 'Enabled: Negotiate' or higher
+
+$id = "PRINT" + "18.7.7"
+$chaine = "$id" + ";" + "(L1) Ensure 'Configure RPC over TCP port' is set to 'Enabled: 0' (Automated) value must be 0 " + ";"
+$exist = Test-Path "HKLM:\Software\Policies\Microsoft\Windows NT\Printers\RPC"
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\Software\Policies\Microsoft\Windows NT\Printers\RPC" |Select-Object RpcTcpPort
+ $traitement = $traitement.RpcTcpPort
+}
+else {
+ $traitement = "not configure"
+}
+
+$chaine += $traitement
+$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
+# (L1) Ensure 'Limits print driver installation to Administrators' is set to 'Enabled'
+
+$id = "PRINT" + "18.7.8"
+$chaine = "$id" + ";" + "(L1) Ensure 'Configure RPC over TCP port' is set to 'Enabled: 0' (Automated) value must be 1 " + ";"
+$exist = Test-Path "HKLM:\Software\Policies\Microsoft\Windows NT\Printers\PointAndPrint"
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\Software\Policies\Microsoft\Windows NT\Printers\PointAndPrint" |Select-Object RestrictDriverInstallationToAdministrators
+ $traitement = $traitement.RestrictDriverInstallationToAdministrators
+}
+else {
+ $traitement = "not configure"
+}
+
+$chaine += $traitement
+$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+# (L1) Ensure 'Manage processing of Queue-specific files' is set to 'Enabled: Limit Queue-specific files to Color profiles'
+
+$id = "PRINT" + "18.7.9"
+$chaine = "$id" + ";" + "(L1)Ensure 'Manage processing of Queue-specific files' is set to 'Enabled: Limit Queue-specific files to Color profiles' value must be 1 " + ";"
+$exist = Test-Path "HKLM:\Software\Policies\Microsoft\Windows NT\Printers"
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\Software\Policies\Microsoft\Windows NT\Printers" |Select-Object CopyFilesPolicy
+ $traitement = $traitement.CopyFilesPolicy
+}
+else {
+ $traitement = "not configure"
+}
+
+$chaine += $traitement
+$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
+# (L1) Ensure 'Point and Print Restrictions: When installing drivers for a new connection' is set to 'Enabled: Show warning and elevation prompt''
+
+$id = "PRINT" + "18.7.10"
+$chaine = "$id" + ";" + "(L1)Ensure 'Point and Print Restrictions: When installing drivers for a new connection' is set to 'Enabled: Show warning and elevation prompt',value must be 1 " + ";"
+$exist = Test-Path "HKLM:\Software\Policies\Microsoft\Windows NT\Printers\PointAndPrint"
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\Software\Policies\Microsoft\Windows NT\Printers\PointAndPrint" |Select-Object NoWarningNoElevationOnInstall
+ $traitement = $traitement.NoWarningNoElevationOnInstall
+}
+else {
+ $traitement = "not configure"
+}
+
+$chaine += $traitement
+$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
+# (L1) Ensure 'Point and Print Restrictions: When updating drivers for an existing connection' is set to 'Enabled: Show warning and elevation prompt'
+
+$id = "PRINT" + "18.7.11"
+$chaine = "$id" + ";" + "(L1)Ensure 'Point and Print Restrictions: When updating drivers for an existing connection' is set to 'Enabled: Show warning and elevation prompt',value must be 0 " + ";"
+$exist = Test-Path "HKLM:\Software\Policies\Microsoft\Windows NT\Printers\PointAndPrint"
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\Software\Policies\Microsoft\Windows NT\Printers\PointAndPrint" |Select-Object UpdatePromptSettings
+ $traitement = $traitement.UpdatePromptSettings
+}
+else {
+ $traitement = "not configure"
+}
+
+$chaine += $traitement
+$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
+#Check Notifications Seting
+Write-Host "#########>Begin Notification Settings audit<#########" -ForegroundColor DarkGreen
+# (L2) Ensure 'Turn off notifications network usage' is set to 'Enabled'
+
+$id = "NOTI" + "18.8.1.1"
+$chaine = "$id" + ";" + "(L2) Ensure 'Turn off notifications network usage' is set to 'Enabled',value must be 1 " + ";"
+$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\CurrentVersion\PushNotifications"
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\CurrentVersion\PushNotifications" |Select-Object NoCloudApplicationNotification
+ $traitement = $traitement.NoCloudApplicationNotification
+}
+else {
+ $traitement = "not configure"
+}
+
+$chaine += $traitement
+$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
+
+#Check Network Connections
+Write-Host "#########>Begin Audit Process Creation audit<#########" -ForegroundColor DarkGreen
+#(L1) Ensure 'Include command line in process creation events' is set to 'Enabled'
+$id = "APC" + "18.9.3.1"
+$chaine = "$id" + ";" + "(L1) Ensure 'Include command line in process creation events' is set to 'Enabled',value must be 1 " + ";"
+$exist = Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\Audit"
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\Audit" |Select-Object ProcessCreationIncludeCmdLine_Enabled
+ $traitement = $traitement.ProcessCreationIncludeCmdLine_Enabled
+}
+else {
+ $traitement = "not configure"
+}
+
+$chaine += $traitement
+$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
 
 
 
@@ -5230,50 +5440,11 @@ $chaine>> $nomfichier
 #Check Network Connections
 Write-Host "#########>Begin Credential Delegation audit<#########" -ForegroundColor DarkGreen
 
-#Apply UAC restrictions to local accounts on network logons
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "CD" + "$indextest"
-$chaine = "$id" + ";" + "(L2)Ensure 'Apply UAC restrictions to local accounts on network logons' is set to 'Enabled, value must be 1 " + ";"
-$exist = Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System"
-if ( $exist -eq $true) {
-$traitement = Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" |Select-Object LocalAccountTokenFilterPolicy
-$traitement = $traitement.LocalAccountTokenFilterPolicy
-}
-else {
- $traitement = "not configure"
-}
-
-$chaine += $traitement
-$chaine>> $nomfichier
-
-#WDigest Authentication'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "CD" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Ensure 'WDigest Authentication' is set to 'Disabled', value must be 0 " + ";"
-$exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest"
-if ( $exist -eq $true) {
- $traitement = Get-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest" |Select-Object UseLogonCredential
- $traitement = $traitement.UseLogonCredential
-}
-else {
- $traitement = "not configure"
-}
-
-$chaine += $traitement
-$chaine>> $nomfichier
 
 
 #Encryption Oracle Remediation''
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "CD" + "$indextest"
+
+$id = "CD" + "18.9.4.1"
 $chaine = "$indextest" + ";" + "(L1) Ensure 'Encryption Oracle Remediation' is set to 'Enabled: Force Updated Clients', value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\CredSSP\Parameters"
 if ( $exist -eq $true) {
@@ -5287,11 +5458,11 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 #Remote host allows delegation of non-exportable credentials
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
+
 $id = "CD" + "$indextest"
 $chaine = "$indextest" + ";" + "(L1) Ensure 'Remote host allows delegation of non-exportable credentials' is set to 'Enabled', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\CredentialsDelegation"
@@ -5306,6 +5477,8 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 
 
@@ -5313,11 +5486,8 @@ $chaine>> $nomfichier
 Write-Host "#########>Begin Device Guard audit<#########" -ForegroundColor DarkGreen
 
 #Turn On Virtualization Based Security
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "DG" + "$indextest"
+
+$id = "DG" + "18.9.5.1"
 $chaine = "$id" + ";" + "(L1)Ensure 'Turn On Virtualization Based Security' is set to 'Enabled' (Scored), value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DeviceGuard"
 if ( $exist -eq $true) {
@@ -5331,12 +5501,12 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 #Turn On Virtualization Based Security: Select Platform Security Level' is set to 'Secure Boot and DMA Protection
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "DG" + "$indextest"
+
+$id = "DG" + "18.9.5.2"
 $chaine = "$id" + ";" + "(L1)Ensure 'Turn On Virtualization Based Security: Select Platform Security Level' is set to 'Secure Boot and DMA Protection', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DeviceGuard"
 if ( $exist -eq $true) {
@@ -5350,13 +5520,12 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Turn On Virtualization Based Security: Virtualization Based Protection of Code Integrity'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "DG" + "$indextest"
+
+$id = "DG" + "18.9.5.3"
 $chaine = "$id" + ";" + "(L1)Ensure 'Turn On Virtualization Based Security: Virtualization Based Protection of Code Integrity' is set to 'Enabled with UEFI lock' (Scored), value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DeviceGuard"
 if ( $exist -eq $true) {
@@ -5370,17 +5539,18 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 #Turn On Virtualization Based Security: Require UEFI Memory Attributes Table' is set to 'True (checked)'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "DG" + "$indextest"
+
+$id = "DG" + "18.9.5.4"
 $chaine = "$id" + ";" + "(L1)Ensure 'Turn On Virtualization Based Security: Require UEFI Memory Attributes Table' is set to 'True (checked)', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DeviceGuard"
 if ( $exist -eq $true) {
- $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DeviceGuard" |Select-Object HypervisorEnforcedCodeIntegrity
- $traitement = $traitement.HypervisorEnforcedCodeIntegrity
+ $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DeviceGuard" |Select-Object HVCIMATRequired
+ $traitement = $traitement.HVCIMATRequired
 }
 else {
  $traitement = "not configure"
@@ -5389,12 +5559,12 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 #Turn On Virtualization Based Security: Credential Guard Configuration' is set to 'Enabled with UEFI lock'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "DG" + "$indextest"
+
+$id = "DG" + "18.9.5.5"
 $chaine = "$id" + ";" + "(L1)Ensure 'Turn On Virtualization Based Security: Credential Guard Configuration' is set to 'Enabled with UEFI lock', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DeviceGuard"
 if ( $exist -eq $true) {
@@ -5408,15 +5578,56 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+#Ensure 'Turn On Virtualization Based Security: Secure Launch Configuration' is set to 'Enabled'
+$id = "DG" + "18.9.5.6"
+$chaine = "$id" + ";" + "(L1)Ensure 'Turn On Virtualization Based Security: Credential Guard Configuration' is set to 'Enabled with UEFI lock', value must be 1 " + ";"
+$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DeviceGuard"
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DeviceGuard" |Select-Object ConfigureSystemGuardLaunch
+ $traitement = $traitement.ConfigureSystemGuardLaunch
+}
+else {
+ $traitement = "not configure"
+}
+
+$chaine += $traitement
+$chaine>> $nomfichier
+
+
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
+#Ensure 'Turn On Virtualization Based Security: Kernel-mode Hardware-enforced Stack Protection'
+$id = "DG" + "18.9.5.7"
+$chaine = "$id" + ";" + "(L1)Ensure 'Turn On Virtualization Based Security: Kernel-mode Hardware-enforced Stack Protection' is set to 'Enabled: Enabled in enforcement mode', value must be 1 " + ";"
+$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DeviceGuard"
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DeviceGuard" |Select-Object ConfigureKernelShadowStacksLaunch
+ $traitement = $traitement.ConfigureKernelShadowStacksLaunch
+}
+else {
+ $traitement = "not configure"
+}
+
+$chaine += $traitement
+$chaine>> $nomfichier
+
+
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
 #Check Device Installation Restrictions
 Write-Host "#########>Begin Device Installation Restrictions audit<#########" -ForegroundColor DarkGreen
 
 #Prevent installation of devices that match any of these device IDs'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "DIR" + "$indextest"
+
+$id = "DIR" + "18.9.7.1.1"
 $chaine = "$id" + ";" + "(L1)Ensure 'Prevent installation of devices that match any of these device IDs' is set to 'Enabled', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DeviceInstall\Restrictions"
 if ( $exist -eq $true) {
@@ -5430,13 +5641,13 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 
 #Prevent installation of devices that match any of these device IDs: Prevent installation of devices that match any of these device
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "DIR" + "$indextest"
+
+$id = "DIR" + "18.9.7.1.2"
 $chaine = "$id" + ";" + "Ensure 'Prevent installation of devices that match any of these device IDs' is set to 'Enabled', value must be PCI\CC_0C0A " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DeviceInstall\Restrictions\DenyDeviceIDs"
 if ( $exist -eq $true) {
@@ -5450,12 +5661,13 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 #Prevent installation of devices that match any of these device IDs: Also apply to matching devices that are already installed
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "DIR" + "$indextest"
+
+$id = "DIR" + "18.9.7.1.3"
 $chaine = "$id" + ";" + "(L1)Ensure 'Prevent installation of devices that match any of these device IDs' is set to 'Enabled', value must be PCI\CC_0C0A " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DeviceInstall\Restrictions"
 if ( $exist -eq $true) {
@@ -5470,12 +5682,12 @@ $chaine += $traitement
 $chaine>> $nomfichier
 
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 #Prevent installation of devices using drivers that match these device setup classes'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "DIR" + "$indextest"
+
+$id = "DIR" + "18.9.7.1.4"
 $chaine = "$id" + ";" + "(L1)Ensure 'Prevent installation of devices using drivers that match these device setup classes' is set to 'Enabled', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DeviceInstall\Restrictions"
 if ( $exist -eq $true) {
@@ -5489,12 +5701,13 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
 #Prevent installation of devices using drivers that match these device setup classes: Prevent installation of devices using drivers for these device setup' is set to 'IEEE 1394 device setup classes
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "DIR" + "$indextest"
+
+$id = "DIR" + "18.9.7.1.5"
 $chaine = "$id" + ";" + "(L1)Ensure 'Prevent installation of devices using drivers that match these device setup classes: Prevent installation of devices using drivers for these device setup' is set to 'IEEE 1394 device setup classes, value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DeviceInstall\Restrictions\DenyDeviceClasses"
 if ( $exist -eq $true) {
@@ -5519,12 +5732,13 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
 #Prevent installation of devices using drivers that match these device setup classes: Also apply to matching devices that are already installed.'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "DIR" + "$indextest"
+
+$id = "DIR" + "18.9.7.1.6"
 $chaine = "$id" + ";" + "(L1)Ensure 'Prevent installation of devices using drivers that match these device setup classes: Also apply to matching devices that are already installed.' is set to 'True', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DeviceInstall\Restrictions"
 if ( $exist -eq $true) {
@@ -5538,16 +5752,36 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+#(L1) Ensure 'Prevent device metadata retrieval from the Internet' is set to 'Enabled'
+
+$id = "DIR" + "18.9.7.2"
+$chaine = "$id" + ";" + "(L1)Ensure 'Prevent device metadata retrieval from the Internet' is set to 'Enabled'' is set to 'True', value must be 1 " + ";"
+$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Device Metadata"
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Device Metadata" |Select-Object PreventDeviceMetadataFromNetwork
+ $traitement = $traitement.PreventDeviceMetadataFromNetwork
+}
+else {
+ $traitement = "not configure"
+}
+
+$chaine += $traitement
+$chaine>> $nomfichier
+
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
 
 #Check Early Launch Antimalware
 Write-Host "#########>Begin Early Launch Antimalware audit<#########" -ForegroundColor DarkGreen
 
 #Boot-Start Driver Initialization Policy
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$exist = $null
-$id = "ELA" + "$indextest"
+
+$id = "ELA" + "18.9.13.1"
 $chaine = "$id" + ";" + "(L1)Ensure 'Boot-Start Driver Initialization Policy' is set to 'Enabled: Good, unknown and bad but critical, value must be 3 " + ";"
 $exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Policies\EarlyLaunch"
 if ( $exist -eq $true) {
@@ -5560,16 +5794,17 @@ else {
 
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 
 #Check Logging and tracing
 Write-Host "#########>Begin Logging and tracing audit<#########" -ForegroundColor DarkGreen
 
 
 #Configure registry policy processing: Do not apply during periodic background processing
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "LT" + "$indextest"
+
+$id = "LT" + "18.9.19.2"
 $chaine = "$id" + ";" + "(L1)Ensure 'Configure registry policy processing: Do not apply during periodic background processing' is set to 'Enabled: FALSE', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Group Policy\{35378EAC-683F-11D2-A89A-00C04FBBCFA2}"
 if ( $exist -eq $true) {
@@ -5581,13 +5816,13 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 
 #Configure registry policy processing: Process even if the Group Policy objects have not changed
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "LT" + "$indextest"
+
+$id = "LT" + "18.9.19.3"
 $chaine = "$id" + ";" + "(L1)Ensure 'Configure registry policy processing: Process even if the Group Policy objects have not changed' is set to 'Enabled: TRUE', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Group Policy\{35378EAC-683F-11D2-A89A-00C04FBBCFA2}"
 if ( $exist -eq $true) {
@@ -5600,11 +5835,11 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
 #Continue experiences on this device
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "LT" + "$indextest"
+
+$id = "LT" + "18.9.19.4"
 $chaine = "$id" + ";" + "(L1)Ensure 'Continue experiences on this device' is set to 'Disabled, value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System"
 if ( $exist -eq $true) {
@@ -5617,11 +5852,14 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
 #Turn off background refresh of Group Policy'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "LT" + "$indextest"
+
+$id = "LT" + "18.9.19.5"
 $chaine = "$id" + ";" + "(L1)Ensure 'Turn off background refresh of Group Policy' is set to 'Disabled', value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" 
 if ( $exist -eq $true) {
@@ -5633,15 +5871,15 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Internet Communication Management 
 Write-Host "#########>Begin Internet Communication Management audit<#########" -ForegroundColor DarkGreen
 
 #Turn off access to the Store 
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "ICS" + "$indextest"
+
+$id = "ICS" + "18.9.20.1.1"
 $chaine = "$id" + ";" + "(L1)Ensure Turn off access to the Store is set to Enabled, value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Explorer" 
 if ( $exist -eq $true) {
@@ -5653,12 +5891,11 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
-
+Clean-Value($chaine)
+Clean-Value($traitement)
 #Turn off downloading of print drivers over HTTP 
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "ICS" + "$indextest"
+
+$id = "ICS" + "18.9.20.1.2"
 $chaine = "$id" + ";" + "(L1)Ensure Turn off downloading of print drivers over HTTP, value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Printers" 
 if ( $exist -eq $true) {
@@ -5670,12 +5907,11 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
-
+Clean-Value($chaine)
+Clean-Value($traitement)
 #Turn off handwriting personalization data sharing
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "ICS" + "$indextest"
+
+$id = "ICS" + "18.9.20.1.3"
 $chaine = "$id" + ";" + "(L2)Ensure Turn off handwriting personalization data sharing is set to Enabled, value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\TabletPC"
 if ( $exist -eq $true) {
@@ -5687,12 +5923,11 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
-
+Clean-Value($chaine)
+Clean-Value($traitement)
 #Turn off handwriting recognition error reporting
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "ICS" + "$indextest"
+
+$id = "ICS" + "18.9.20.1.4"
 $chaine = "$id" + ";" + "(L2)Ensure Turn off handwriting recognition error reporting is set to Enabled, value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\HandwritingErrorReports"
 if ( $exist -eq $true) {
@@ -5702,14 +5937,11 @@ if ( $exist -eq $true) {
 else {
  $traitement = "not configure"
 }
-$chaine += $traitement
-$chaine>> $nomfichier
-
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Turn off Internet Connection Wizard if URL connection is referring to Microsoft.com
-$indextest += 1
-$chaine = $null
-$traitement = $null
+$id = "ICS" + "18.9.20.1.5"
 
 $chaine = "$id" + ";" + "(L2)Turn off Internet Connection Wizard if URL connection is referring to Microsoft.com is set to Enabled, value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Internet Connection Wizard"
@@ -5721,16 +5953,15 @@ else {
  $traitement = "not configure"
 }
 
-$chaine += $traitement
-$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 
 
 #Turn off Internet download for Web publishing and online ordering wizards'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "ICS" + "$indextest"
+$id = "ICS" + "18.9.20.1.6"
+
+
 $chaine = "$id" + ";" + "(L1)Ensure Turn off Internet download for Web publishing and online ordering wizards is set to 'Enabled' , value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer"
 if ( $exist -eq $true) {
@@ -5740,15 +5971,12 @@ if ( $exist -eq $true) {
 else {
  $traitement = "not configure"
 }
-$chaine += $traitement
-$chaine>> $nomfichier
-
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Turn off printing over HTTP
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "ICS" + "$indextest"
+$id = "ICS" + "18.9.20.1.7"
+
 $chaine = "$id" + ";" + "(L2)Ensure Turn off printing over HTTP is set to Enabled, value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Printers"
 if ( $exist -eq $true) {
@@ -5758,14 +5986,12 @@ if ( $exist -eq $true) {
 else {
  $traitement = "not configure"
 }
-$chaine += $traitement
-$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Turn off Registration if URL connection is referring to Microsoft.com
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "ICS" + "$indextest"
+$id = "ICS" + "18.9.20.1.8"
+
 $chaine = "$id" + ";" + "(L2)Ensure Turn off Registration if URL connection is referring to Microsoft.com is set to Enabled, value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Registration Wizard Control"
 if ( $exist -eq $true) {
@@ -5775,15 +6001,14 @@ if ( $exist -eq $true) {
 else {
  $traitement = "not configure"
 }
-$chaine += $traitement
-$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 
 
 #Turn off Search Companion content file updates
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "ICS" + "$indextest"
+$id = "ICS" + "18.9.20.1.9"
+
 $chaine = "$id" + ";" + "(L2)Ensure Turn off Search Companion content file updates is set to Enabled, value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\SearchCompanion" 
 if ( $exist -eq $true) {
@@ -5793,15 +6018,13 @@ if ( $exist -eq $true) {
 else {
  $traitement = "not configure"
 }
-$chaine += $traitement
-$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 
 #Turn off the "Order Prints" picture task
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "ICS" + "$indextest"
+$id = "ICS" + "18.9.20.1.10"
+
 $chaine = "$id" + ";" + "(L2)Ensure Turn off the Order Prints picture task is set to Enabled, value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer"
 if ( $exist -eq $true) {
@@ -5811,14 +6034,13 @@ if ( $exist -eq $true) {
 else {
  $traitement = "not configure"
 }
-$chaine += $traitement
-$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 
 #Turn off the "Publish to Web" task for files and folders'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "ICS" + "$indextest"
+$id = "ICS" + "18.9.20.1.11"
+
 $chaine = "$id" + ";" + "(L2)Ensure 'Turn off the Publish to Web task for files and folders is set to Enabled, value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer"
 if ( $exist -eq $true) {
@@ -5828,15 +6050,13 @@ if ( $exist -eq $true) {
 else {
  $traitement = "not configure"
 }
-$chaine += $traitement
-$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 
 #Turn off the Windows Messenger Customer Experience Improvement Program
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "ICS" + "$indextest"
+$id = "ICS" + "18.9.20.1.12"
+
 $chaine = "$id" + ";" + "(L2)Ensure Turn off the Windows Messenger Customer Experience Improvement Program is set to Enabled, value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Messenger\Client"
 if ( $exist -eq $true) {
@@ -5846,15 +6066,12 @@ if ( $exist -eq $true) {
 else {
  $traitement = "not configure"
 }
-$chaine += $traitement
-$chaine>> $nomfichier
-
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Turn off Windows Customer Experience Improvement Program
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "ICS" + "$indextest"
+$id = "ICS" + "18.9.20.1.13"
+
 $chaine = "$id" + ";" + "(L2)Ensure Turn off Windows Customer Experience Improvement Program is set to Enabled, value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\SQMClient\Windows"
 if ( $exist -eq $true) {
@@ -5864,14 +6081,12 @@ if ( $exist -eq $true) {
 else {
  $traitement = "not configure"
 }
-$chaine += $traitement
-$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #'Turn off Windows Error Reporting
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "ICS" + "$indextest"
+$id = "ICS" + "18.9.20.1.14"
+
 $chaine = "$id" + ";" + "(L2)Ensure Turn off Windows Error Reporting is set to Enabled, value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Error Reporting" 
 if ( $exist -eq $true) {
@@ -5881,17 +6096,15 @@ if ( $exist -eq $true) {
 else {
  $traitement = "not configure"
 }
-$chaine += $traitement
-$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Check Kerberos
 Write-Host "#########>Begin Kerberos audit<#########" -ForegroundColor DarkGreen
 
 #Support device authentication using certificate'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "KERB" + "$indextest"
+$id = "KER" + "18.9.23.1"
+
 $chaine = "$id" + ";" + "(L2)Ensure 'Support device authentication using certificate' is set to 'Enabled: Automatic, value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\kerberos\parameters"
 if ( $exist -eq $true) {
@@ -5905,18 +6118,16 @@ if ( $exist -eq $true) {
 else {
  $traitementtemp = "not configure"
 }
-$chaine += $traitementtemp
-$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Kernel DMA Protection
 Write-Host "#########>Begin Kernel DMA Protection audit<#########" -ForegroundColor DarkGreen
 
 
 #Disallow copying of user input methods to the system account for sign-in'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "KDP" + "$indextest"
+$id = "KDP" + "18.9.24.1"
+
 $chaine = "$id" + ";" + "(L1)Ensure 'Enumeration policy for external devices incompatible with Kernel DMA Protection' is set to 'Enabled: Block All', value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Kernel DMA Protection"
 if ( $exist -eq $true) {
@@ -5928,18 +6139,54 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
+#Locale Services
+Write-Host "#########>Begin Local Security Authority audit<#########" -ForegroundColor DarkGreen
 
+#Allow Custom SSPs and APs to be loaded into LSASS
+$id = "LSA" + "18.9.25.1"
+
+$chaine = "$id" + ";" + "(L1) Ensure 'Allow Custom SSPs and APs to be loaded into LSASS' is set to 'Disabled', value must be 0 " + ";"
+$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System"
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System" |Select-Object AllowCustomSSPsAPs
+ $traitement = $traitement.AllowCustomSSPsAPs
+}
+else {
+ $traitement = "not configure"
+}
+$chaine += $traitement
+$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+#Configures LSASS to run as a protected process
+
+$id = "LSA" + "18.9.25.2"
+
+$chaine = "$id" + ";" + "(L1) Ensure 'Configures LSASS to run as a protected process' is set to 'Enabled: Enabled with UEFI Lock', value must be 1 " + ";"
+$exist = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Control\Lsa"
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Control\Lsa" |Select-Object RunAsPPL
+ $traitement = $traitement.RunAsPPL
+}
+else {
+ $traitement = "not configure"
+}
+$chaine += $traitement
+$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Locale Services
 Write-Host "#########>Begin Locale Services audit<#########" -ForegroundColor DarkGreen
 
 
 #Disallow copying of user input methods to the system account for sign-in'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "LS" + "$indextest"
+$id = "LS" + "18.9.26.1"
+
 $chaine = "$id" + ";" + "(L2)Ensure Disallow copying of user input methods to the system account for sign-in is set to Enabled, value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Control Panel\International"
 if ( $exist -eq $true) {
@@ -5949,8 +6196,8 @@ if ( $exist -eq $true) {
 else {
  $traitement = "not configure"
 }
-$chaine += $traitement
-$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 
 #Logon
@@ -5958,10 +6205,8 @@ Write-Host "#########>Begin Logon audit<#########" -ForegroundColor DarkGreen
 
 
 #Disallow copying of user input methods to the system account for sign-in'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "LOGON" + "$indextest"
+$id = "LOGON" + "18.9.27.1"
+
 $chaine = "$id" + ";" + "(L1)Ensure Block user from showing account details on sign-in is set to Enabled, value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System"
 if ( $exist -eq $true) {
@@ -5973,12 +6218,12 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Do not display network selection UI
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "LOGON" + "$indextest"
+$id = "LOGON" + "18.9.27.2"
+
 $chaine = "$id" + ";" + "(L1)Ensure Do not display network selection UI is set to Enabled, value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System"
 if ( $exist -eq $true) {
@@ -5990,12 +6235,13 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 
 #Do not enumerate connected users on domain-joined computers'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "LOGON" + "$indextest"
+$id = "LOGON" + "18.9.27.3"
+
 $chaine = "$id" + ";" + "Ensure Do not enumerate connected users on domain-joined computers is set to Enabled, value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System"
 if ( $exist -eq $true) {
@@ -6007,13 +6253,11 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
-
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Enumerate local users on domain-joined computers'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "LOGON" + "$indextest"
+$id = "LOGON" + "18.9.27.4"
 $chaine = "$id" + ";" + "(L1)Ensure 'Enumerate local users on domain-joined computers' is set to 'Disabled', value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System"
 if ( $exist -eq $true) {
@@ -6025,15 +6269,13 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
-
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 
 
 #Turn off app notifications on the lock screen'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "LOGON" + "$indextest"
+$id = "LOGON" + "18.9.27.5"
 $chaine = "$id" + ";" + "(L1)Ensure Turn off app notifications on the lock screen is set to Enabled, value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System" 
 if ( $exist -eq $true) {
@@ -6045,13 +6287,12 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
-
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Turn off picture password sign-in'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "LOGON" + "$indextest"
+$id = "LOGON" + "18.9.27.6"
+
 $chaine = "$id" + ";" + "(L1)Ensure 'Turn off picture password sign-in' is set to 'Enabled', value must be1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System" 
 if ( $exist -eq $true) {
@@ -6063,14 +6304,12 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
-
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 
 #Turn on convenience PIN sign-in'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "LOGON" + "$indextest"
+$id = "LOGON" + "18.9.27.7"
 $chaine = "$id" + ";" + "(L1)Ensure 'Turn on convenience PIN sign-in' is set to 'Disabled', value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System" 
 if ( $exist -eq $true) {
@@ -6082,17 +6321,15 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
-
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 
 #OS Policies
 Write-Host "#########>Begin OS Policies audit<#########" -ForegroundColor DarkGreen
 
 #Allow Clipboard synchronization across devices
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "OP" + "$indextest"
+$id = "OP" + "18.9.30.1"
 $chaine = "$id" + ";" + "(L2) Ensure 'Allow Clipboard synchronization across devices' is set to 'Disabled', value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System" 
 if ( $exist -eq $true) {
@@ -6104,12 +6341,11 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Allow Clipboard synchronization across devices
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "OP" + "$indextest"
+$id = "OP" + "18.9.30.2"
 $chaine = "$id" + ";" + "(L2) Ensure 'Allow upload of User Activities' is set to 'Disabled', value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System" 
 if ( $exist -eq $true) {
@@ -6121,7 +6357,8 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
-
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 
 
@@ -6129,10 +6366,7 @@ $chaine>> $nomfichier
 Write-Host "#########>Begin Sleep Settings audit<#########" -ForegroundColor DarkGreen
 
 #Allow network connectivity during connected-standby (on battery)'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "SLEEP" + "$indextest"
+$id = "SLEEP" + "18.9.32.6.1"
 $chaine = "$id" + ";" + "(L1) Ensure 'Allow network connectivity during connected-standby (on battery)' is set to 'Disabled', value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Power\PowerSettings\f15576e8-98b7-4186-b944-eafa664402d9" 
 if ( $exist -eq $true) {
@@ -6144,13 +6378,12 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 
 #Allow network connectivity during connected-standby (plugged in)'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "SLEEP" + "$indextest"
+$id = "SLEEP" + "18.9.32.6.2"
 $chaine = "$id" + ";" + "(L1) Ensure 'Allow network connectivity during connected-standby (plugged in)' is set to 'Disabled', value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Power\PowerSettings\f15576e8-98b7-4186-b944-eafa664402d9" 
 if ( $exist -eq $true) {
@@ -6162,12 +6395,11 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #'Allow standby states (S1-S3) when sleeping (on battery)'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "SLEEP" + "$indextest"
+$id = "SLEEP" + "18.9.32.6.3"
 $chaine = "$id" + ";" + "(L1) Ensure 'Allow standby states (S1-S3) when sleeping (on battery)' is set to 'Disabled', value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Power\PowerSettings\abfc2519-3608-4c2a-94ea-171b0ed546ab" 
 if ( $exist -eq $true) {
@@ -6179,12 +6411,11 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Allow standby states (S1-S3) when sleeping (plugged in)'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "SLEEP" + "$indextest"
+$id = "SLEEP" + "18.9.32.6.4"
 $chaine = "$id" + ";" + "(L1) Ensure 'Allow standby states (S1-S3) when sleeping (plugged in)' is set to 'Disabled', value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Power\PowerSettings\abfc2519-3608-4c2a-94ea-171b0ed546ab" 
 if ( $exist -eq $true) {
@@ -6196,12 +6427,12 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 
 #Require a password when a computer wakes (on battery)'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "SLEEP" + "$indextest"
+$id = "SLEEP" + "18.9.32.6.5"
 $chaine = "$id" + ";" + "(L1) Ensure 'Require a password when a computer wakes (on battery)' is set to 'Enabled', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Power\PowerSettings\0e796bdb-100d-47d6-a2d5-f7d2daa51f51" 
 if ( $exist -eq $true) {
@@ -6213,12 +6444,11 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #'Require a password when a computer wakes (plugged in)'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "SLEEP" + "$indextest"
+$id = "SLEEP" + "18.9.32.6.6"
 $chaine = "$id" + ";" + "(L1) Ensure 'Require a password when a computer wakes (plugged in)' is set to 'Enabled', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Power\PowerSettings\0e796bdb-100d-47d6-a2d5-f7d2daa51f51" 
 if ( $exist -eq $true) {
@@ -6230,7 +6460,8 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
-
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 
 
@@ -6238,10 +6469,7 @@ $chaine>> $nomfichier
 Write-Host "#########>Begin Remote Assistance audit<#########" -ForegroundColor DarkGreen
 
 #Configure Offer Remote Assistance'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "RA" + "$indextest"
+$id = "RA" + "18.9.34.1"
 $chaine = "$id" + ";" + "(L1) Ensure 'Configure Offer Remote Assistance' is set to 'Disabled, value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services"
 if ( $exist -eq $true) {
@@ -6253,12 +6481,12 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 
 #Configure Solicited Remote Assistance'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "RA" + "$indextest"
+$id = "RA" + "18.9.34.2"
 $chaine = "$id" + ";" + "(L1) Ensure 'Configure Solicited Remote Assistance' is set to 'Disabled'', value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services"
 if ( $exist -eq $true) {
@@ -6270,15 +6498,14 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Remote Procedure Call
 Write-Host "#########>Begin Remote Procedure Call audit<#########" -ForegroundColor DarkGreen
 
 #Enable RPC Endpoint Mapper Client Authentication'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "RPC" + "$indextest"
+$id = "RPC" + "18.9.35.1"
 $chaine = "$id" + ";" + "(L1) Ensure 'Enable RPC Endpoint Mapper Client Authentication' is set to 'Enabled, value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Rpc"
 if ( $exist -eq $true) {
@@ -6290,13 +6517,11 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
-
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Restrict Unauthenticated RPC clients
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "RPC" + "$indextest"
+$id = "RPC" + "18.9.35.2"
 $chaine = "$id" + ";" + "(L1) Ensure 'Restrict Unauthenticated RPC clients' is set to 'Enabled: Authenticated', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Rpc" 
 if ( $exist -eq $true) {
@@ -6308,16 +6533,15 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Microsoft Support Diagnostic Tool
 Write-Host "#########>Begin Microsoft Support Diagnostic Tool audit<#########" -ForegroundColor DarkGreen
 
 
 #Microsoft Support Diagnostic Tool: Turn on MSDT interactive communication with support provider
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "MSDT" + "$indextest"
+$id = "MSDT" + "18.9.46.5.1"
 $chaine = "$id" + ";" + "(L2) Ensure 'Microsoft Support Diagnostic Tool: Turn on MSDT interactive communication with support provider' is set to 'Disabled, value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\ScriptedDiagnosticsProvider\Policy" 
 if ( $exist -eq $true) {
@@ -6329,7 +6553,8 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
-
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 
 #Windows Performance PerfTrack
@@ -6337,10 +6562,7 @@ Write-Host "#########>Begin Windows Performance PerfTrack audit<#########" -Fore
 
 
 #Enable/Disable PerfTrack
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "WPP" + "$indextest"
+$id = "WPP" + "18.9.46.11.1"
 $chaine = "$id" + ";" + "(L2) Ensure 'Enable/Disable PerfTrack' is set to 'Disabled', value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WDI\{9c5a40da-b965-4fc3-8781-88dd50a6299d}"
 if ( $exist -eq $true) {
@@ -6352,6 +6574,8 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 
 #User Profiles
@@ -6359,10 +6583,7 @@ Write-Host "#########>Begin User Profiles audit<#########" -ForegroundColor Dark
 
 
 #Turn off the advertising ID'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "UP" + "$indextest"
+$id = "UP" + "18.9.48.1"
 $chaine = "$id" + ";" + "(L2) Ensure 'Turn off the advertising ID' is set to 'Enabled', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\policies\Microsoft\Windows\AdvertisingInfo" 
 if ( $exist -eq $true) {
@@ -6374,6 +6595,8 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 
 #Time Providers
@@ -6381,10 +6604,7 @@ Write-Host "#########>Begin Time Providers audit<#########" -ForegroundColor Dar
 
 
 #Enable Windows NTP Client
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "TP" + "$indextest"
+$id = "TP" + "18.9.50.1.1"
 $chaine = "$id" + ";" + "(L2) Ensure 'Enable Windows NTP Client' is set to 'Enabled', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\W32Time\TimeProviders\NtpClient"
 if ( $exist -eq $true) {
@@ -6396,12 +6616,12 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 
 #Enable Windows NTP Server'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "TP" + "$indextest"
+$id = "TP" + "18.9.50.1.2"
 $chaine = "$id" + ";" + "(L2) Ensure 'Enable Windows NTP Server' is set to 'Disabled', value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\W32Time\TimeProviders\NtpServer"
 if ( $exist -eq $true) {
@@ -6413,17 +6633,15 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
-
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #App Package Deployment
 Write-Host "#########>Begin App Package Deployment audit<#########" -ForegroundColor DarkGreen
 
 
 #Allow a Windows app to share application data between user
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "APD" + "$indextest"
+$id = "APD" + "18.10.3.1"
 $chaine = "$id" + ";" + "(L2) Ensure Allow a Windows app to share application data between users, value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\CurrentVersion\AppModel\StateManager"
 if ( $exist -eq $true) {
@@ -6435,13 +6653,30 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
+#Prevent non-admin users from installing packaged Windows apps
+$id = "APD" + "18.10.3.2"
+$chaine = "$id" + ";" + "Ensure 'Prevent non-admin users from installing packaged Windows apps' is set to 'Enabled', value must be 1 " + ";"
+$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Appx"
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Appx" |Select-Object BlockNonAdminUserInstall
+ $traitement = $traitement.BlockNonAdminUserInstall
+}
+else {
+ $traitement = "not configure"
+}
+$chaine += $traitement
+$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+#App Package Deployment
+Write-Host "#########>Begin App Privacy audit<#########" -ForegroundColor DarkGreen
 
 #Let Windows apps activate with voice while the system is locked'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "APD" + "$indextest"
+$id = "APP" + "18.10.4.1"
 $chaine = "$id" + ";" + "(L1) Ensure 'Let Windows apps activate with voice while the system is locked' is set to 'Enabled: Force Deny', value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\AppPrivacy"
 if ( $exist -eq $true) {
@@ -6453,7 +6688,8 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
-
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 
 #App runtime
@@ -6461,10 +6697,8 @@ Write-Host "#########>Begin App runtime audit<#########" -ForegroundColor DarkGr
 
 
 #Allow Microsoft accounts to be optional'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "AR" + "$indextest"
+$id = "AR" + "18.10.5.1"
+
 $chaine = "$id" + ";" + "(L1) Ensure 'Allow Microsoft accounts to be optional' is set to 'Enabled', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System"
 if ( $exist -eq $true) {
@@ -6476,12 +6710,12 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 
 #Block launching Windows Store apps with Windows Runtime API access from hosted content.'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "TP" + "$indextest"
+$id = "AR" + "18.10.5.2"
 $chaine = "$id" + ";" + "(L2)Ensure 'Block launching Windows Store apps with Windows Runtime API access from hosted content.' is set to 'Enabled', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" 
 if ( $exist -eq $true) {
@@ -6493,17 +6727,15 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
-
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #AutoPlay Policies
 Write-Host "#########>Begin AutoPlay Policies audit<#########" -ForegroundColor DarkGreen
 
 
 #Allow Microsoft accounts to be optional'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "AP" + "$indextest"
+$id = "AP" + "18.10.7.1"
 $chaine = "$id" + ";" + "(L1)Ensure 'Disallow Autoplay for non-volume devices' is set to 'Enabled', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Explorer"
 if ( $exist -eq $true) {
@@ -6515,12 +6747,10 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
-
+Clean-Value($chaine)
+Clean-Value($traitement)
 #Set the default behavior for AutoRun'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "AP" + "$indextest"
+$id = "AP" + "18.10.7.2"
 $chaine = "$id" + ";" + "(L1)Ensure 'Set the default behavior for AutoRun' is set to 'Enabled: Do not execute any autorun commands', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer"
 if ( $exist -eq $true) {
@@ -6532,13 +6762,12 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 
 #Turn off Autoplay'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "AP" + "$indextest"
+$id = "AP" + "18.10.7.3"
 $chaine = "$id" + ";" + "(L1)Ensure 'Turn off Autoplay' is set to 'Enabled: All drives'', value must be B5 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer"
 if ( $exist -eq $true) {
@@ -6550,16 +6779,16 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 
 #Facial Features
 Write-Host "#########>Begin Facial Features audit<#########" -ForegroundColor DarkGreen
 
 
 #Use enhanced anti-spoofing when available'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "FF" + "$indextest"
+$id = "FF" + "18.10.8.1.1"
 $chaine = "$id" + ";" + "(L1)Ensure 'Use enhanced anti-spoofing when available' is set to 'Enabled', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Biometrics\FacialFeatures"
 if ( $exist -eq $true) {
@@ -6571,17 +6800,15 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
-
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #BitLocker Drive Encryption
 Write-Host "#########>Begin BitLocker Drive Encryption audit<#########" -ForegroundColor DarkGreen
 
 
 #Allow access to BitLocker-protected fixed data drives from earlier versions of Windows'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "BDE" + "$indextest"
+$id = "BDE" + "18.10.9.1.1"
 $chaine = "$id" + ";" + "(L1)Ensure 'Allow access to BitLocker-protected fixed data drives from earlier versions of Windows' is set to 'Disabled', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\FVE"
 if ( $exist -eq $true) {
@@ -6593,13 +6820,12 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
-
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Choose how BitLocker-protected fixed drives can be recovered'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "BDE" + "$indextest"
+
+$id = "BDE" + "18.10.9.1.2"
 $chaine = "$id" + ";" + "(L1)Ensure 'Choose how BitLocker-protected fixed drives can be recovered' is set to 'Enabled', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\FVE"
 if ( $exist -eq $true) {
@@ -6611,12 +6837,13 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 
 #Choose how BitLocker-protected fixed drives can be recovered: Allow data recovery agent' is set to 'Enabled: True'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "BDE" + "$indextest"
+
+$id = "BDE" + "18.10.9.1.3"
 $chaine = "$id" + ";" + "(L1)Ensure 'Choose how BitLocker-protected fixed drives can be recovered: Allow data recovery agent' is set to 'Enabled: True', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\FVE"
 if ( $exist -eq $true) {
@@ -6628,13 +6855,12 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 
 #Choose how BitLocker-protected fixed drives can be recovered: Recovery Password'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "BDE" + "$indextest"
+$id = "BDE" + "18.10.9.1.4"
 $chaine = "$id" + ";" + "(L1)Ensure 'Choose how BitLocker-protected fixed drives can be recovered: Recovery Password' is set to 'Enabled: Allow 48-digit recovery password', value must be 2 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\FVE"
 if ( $exist -eq $true) {
@@ -6646,13 +6872,11 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
-
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Choose how BitLocker-protected fixed drives can be recovered: Recovery Key'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "BDE" + "$indextest"
+$id = "BDE" + "18.10.9.1.5"
 $chaine = "$id" + ";" + "(L1)Ensure 'Choose how BitLocker-protected fixed drives can be recovered: Recovery Key' is set to 'Enabled: Allow 256-bit recovery key', value must be 2 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\FVE"
 if ( $exist -eq $true) {
@@ -6664,13 +6888,13 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 
 
 #Choose how BitLocker-protected fixed drives can be recovered: Omit recovery options from the BitLocker setup wizard
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "BDE" + "$indextest"
+$id = "BDE" + "18.10.9.1.6"
 $chaine = "$id" + ";" + "(L1)Ensure 'Choose how BitLocker-protected fixed drives can be recovered: Omit recovery options from the BitLocker setup wizard' is set to 'Enabled: True', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\FVE"
 if ( $exist -eq $true) {
@@ -6682,13 +6906,11 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
-
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Choose how BitLocker-protected fixed drives can be recovered: Save BitLocker recovery information to AD DS for fixed data drives'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "BDE" + "$indextest"
+$id = "BDE" + "18.10.9.1.7"
 $chaine = "$id" + ";" + "(L1)Ensure 'Choose how BitLocker-protected fixed drives can be recovered: Save BitLocker recovery information to AD DS for fixed data drives' is set to 'Enabled: False', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\FVE"
 if ( $exist -eq $true) {
@@ -6700,12 +6922,11 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Choose how BitLocker-protected fixed drives can be recovered: Configure storage of BitLocker recovery information to AD DS'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "BDE" + "$indextest"
+$id = "BDE" + "18.10.9.1.8"
 $chaine = "$id" + ";" + "(L1)Ensure 'Choose how BitLocker-protected fixed drives can be recovered: Configure storage of BitLocker recovery information to AD DS' is set to 'Enabled: Backup recovery passwords and key packages', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\FVE"
 if ( $exist -eq $true) {
@@ -6717,12 +6938,11 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Choose how BitLocker-protected fixed drives can be recovered: Do not enable BitLocker until recovery information is stored to AD DS for fixed data drives
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "BDE" + "$indextest"
+$id = "BDE" + "18.10.9.1.9"
 $chaine = "$id" + ";" + "(L1)Ensure 'Choose how BitLocker-protected fixed drives can be recovered: Do not enable BitLocker until recovery information is stored to AD DS for fixed data drives' is set to 'Enabled: False', value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\FVE"
 if ( $exist -eq $true) {
@@ -6734,12 +6954,11 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #'Configure use of hardware-based encryption for fixed data drives'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "BDE" + "$indextest"
+$id = "BDE" + "18.10.9.1.10"
 $chaine = "$id" + ";" + "(L1)Ensure 'Configure use of hardware-based encryption for fixed data drives' is set to 'Enabled', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\FVE"
 if ( $exist -eq $true) {
@@ -6751,63 +6970,11 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
-
-#Configure use of hardware-based encryption for fixed data drives: Use BitLocker software-based encryption when hardware encryption is not available'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "BDE" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Ensure 'Configure use of hardware-based encryption for fixed data drives: Use BitLocker software-based encryption when hardware encryption is not available' is set to 'Enabled: True', value must be 1 " + ";"
-$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\FVE"
-if ( $exist -eq $true) {
- $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\FVE" |Select-Object FDVAllowSoftwareEncryptionFailover
- $traitement = $traitement.FDVAllowSoftwareEncryptionFailover
-}
-else {
- $traitement = "not configure"
-}
-$chaine += $traitement
-$chaine>> $nomfichier
-
-#Configure use of hardware-based encryption for fixed data drives: Restrict encryption algorithms and cipher suites allowed for hardware-based encryption
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "BDE" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Ensure 'Configure use of hardware-based encryption for fixed data drives: Restrict encryption algorithms and cipher suites allowed for hardware-based encryption' is set to 'Enabled: False', value must be 0 " + ";"
-$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\FVE"
-if ( $exist -eq $true) {
- $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\FVE" |Select-Object FDVRestrictHardwareEncryptionAlgorithms
- $traitement = $traitement.FDVRestrictHardwareEncryptionAlgorithms
-}
-else {
- $traitement = "not configure"
-}
-$chaine += $traitement
-$chaine>> $nomfichier
-
-#Configure use of hardware-based encryption for fixed data drives: Restrict crypto algorithms or cipher suites to the following
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "BDE" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Ensure 'Configure use of hardware-based encryption for fixed data drives: Restrict crypto algorithms or cipher suites to the following:' is set to 'Enabled: 2.16.840.1.101.3.4.1.2;2.16.840.1.101.3.4.1.42', value must be 2.16.840.1.101.3.4.1.2;2.16.840.1.101.3.4.1.42 " + ";"
-$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\FVE"
-if ( $exist -eq $true) {
- $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\FVE" |Select-Object FDVAllowedHardwareEncryptionAlgorithms
- $traitement = $traitement.FDVAllowedHardwareEncryptionAlgorithms
-}
-else {
- $traitement = "not configure"
-}
-$chaine += $traitement
-$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Configure use of passwords for fixed data drives'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "BDE" + "$indextest"
+$id = "BDE" + "18.10.9.1.11"
 $chaine = "$id" + ";" + "(L1)Ensure 'Configure use of passwords for fixed data drives' is set to 'Disabled', value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\FVE"
 if ( $exist -eq $true) {
@@ -6819,13 +6986,14 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
 
 
 #Configure use of smart cards on fixed data drives
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "BDE" + "$indextest"
+$id = "BDE" + "18.10.9.1.12"
 $chaine = "$id" + ";" + "(L1)Ensure 'Configure use of smart cards on fixed data drives' is set to 'Enabled', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\FVE"
 if ( $exist -eq $true) {
@@ -6838,11 +7006,12 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
 #Configure use of smart cards on fixed data drives: Require use of smart cards on fixed data drives
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "BDE" + "$indextest"
+$id = "BDE" + "18.10.9.1.13"
 $chaine = "$id" + ";" + "(L1)Ensure 'Configure use of smart cards on fixed data drives: Require use of smart cards on fixed data drives' is set to 'Enabled: True', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\FVE"
 if ( $exist -eq $true) {
@@ -6854,16 +7023,15 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Operating System Drives
 Write-Host "#########>Begin Operating System Drivesn audit<#########" -ForegroundColor DarkGreen
 
 
 #Allow enhanced PINs for startup' is set to 'Enabled'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "OSD" + "$indextest"
+$id = "OSD" + "18.10.9.2.1"
 $chaine = "$id" + ";" + "(L1)Ensure 'Allow enhanced PINs for startup' is set to 'Enabled, value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\FVE"
 if ( $exist -eq $true) {
@@ -6875,12 +7043,12 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 
 #Allow Secure Boot for integrity validation
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "OSD" + "$indextest"
+$id = "OSD" + "18.10.9.2.2"
 $chaine = "$id" + ";" + "(L1)Ensure 'Allow Secure Boot for integrity validation' is set to 'Enabled', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\FVE"
 if ( $exist -eq $true) {
@@ -6892,12 +7060,11 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Choose how BitLocker-protected operating system drives can be recovered'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "OSD" + "$indextest"
+$id = "OSD" + "18.10.9.2.3"
 $chaine = "$id" + ";" + "(L1)Ensure 'Choose how BitLocker-protected operating system drives can be recovered' is set to 'Enabled', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\FVE"
 if ( $exist -eq $true) {
@@ -6909,12 +7076,12 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 
 #Choose how BitLocker-protected operating system drives can be recovered: Allow data recovery agent
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "OSD" + "$indextest"
+$id = "OSD" + "18.10.9.2.4"
 $chaine = "$id" + ";" + "(L1)Ensure 'Choose how BitLocker-protected operating system drives can be recovered: Allow data recovery agent' is set to 'Enabled: False', value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\FVE"
 if ( $exist -eq $true) {
@@ -6926,12 +7093,11 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Choose how BitLocker-protected operating system drives can be recovered: Recovery Password
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "OSD" + "$indextest"
+$id = "OSD" + "18.10.9.2.5"
 $chaine = "$id" + ";" + "(L1)Ensure 'Choose how BitLocker-protected operating system drives can be recovered: Recovery Password' is set to 'Enabled: Require 48-digit recovery password', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\FVE"
 if ( $exist -eq $true) {
@@ -6943,12 +7109,11 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Choose how BitLocker-protected operating system drives can be recovered: Recovery Key
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "OSD" + "$indextest"
+$id = "OSD" + "18.10.9.2.6"
 $chaine = "$id" + ";" + "(L1)Ensure 'Choose how BitLocker-protected operating system drives can be recovered: Recovery Key' is set to 'Enabled: Do not allow 256-bit recovery key', value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\FVE"
 if ( $exist -eq $true) {
@@ -6960,12 +7125,11 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Choose how BitLocker-protected operating system drives can be recovered: Omit recovery options from the BitLocker setup wizard
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "OSD" + "$indextest"
+$id = "OSD" + "18.10.9.2.7"
 $chaine = "$id" + ";" + "(L1)Ensure 'Choose how BitLocker-protected operating system drives can be recovered: Omit recovery options from the BitLocker setup wizard' is set to 'Enabled: True', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\FVE"
 if ( $exist -eq $true) {
@@ -6977,31 +7141,98 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 
-
-#Configure minimum PIN length for startup
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "OSD" + "$indextest"
-$chaine = "$id" + ";" + "Ensure 'Configure minimum PIN length for startup' is set to 'Enabled: 7 or more characters', value must be 7 or more " + ";"
+#Choose how BitLocker-protected operating system drives can be recovered: Save BitLocker recovery information to AD DS for operating system drive
+$id = "OSD" + "18.10.9.2.8"
+$chaine = "$id" + ";" + "(L1)Ensure 'Choose how BitLocker-protected operating system drives can be recovered: Save BitLocker recovery information to AD DS for operating system drives' is set to 'Enabled: True', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\FVE"
 if ( $exist -eq $true) {
- $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\FVE" |Select-Object MinimumPIN
- $traitement = $traitement.MinimumPIN
+ $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\FVE" |Select-Object OSActiveDirectoryBackup
+ $traitement = $traitement.OSActiveDirectoryBackup
 }
 else {
  $traitement = "not configure"
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
+#Choose how BitLocker-protected operating system drives can be recovered: Save BitLocker recovery information to AD DS for operating system drive
+$id = "OSD" + "18.10.9.2.9"
+$chaine = "$id" + ";" + "(L1)Ensure 'Choose how BitLocker-protected operating system drives can be recovered: Configure storage of BitLocker recovery information to AD DS:' is set to 'Enabled: Store recovery passwords and key packages'', value must be 1 " + ";"
+$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\FVE"
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\FVE" |Select-Object OSActiveDirectoryInfoToStore
+ $traitement = $traitement.OSActiveDirectoryInfoToStore
+}
+else {
+ $traitement = "not configure"
+}
+$chaine += $traitement
+$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
+#Choose how BitLocker-protected operating system drives can be recovered: Do not enable BitLocker until recovery information is stored to AD DS for operating system drives
+$id = "OSD" + "18.10.9.2.10"
+$chaine = "$id" + ";" + "(L1)Ensure 'Choose how BitLocker-protected operating system drives can be recovered: Do not enable BitLocker until recovery information is stored to AD DS for operating system drives', value must be 1 " + ";"
+$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\FVE"
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\FVE" |Select-Object OSRequireActiveDirectoryBackup
+ $traitement = $traitement.OSRequireActiveDirectoryBackup
+}
+else {
+ $traitement = "not configure"
+}
+$chaine += $traitement
+$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
+#Configure use of hardware-based encryption for operating system drives' is set to 'Disabled
+$id = "OSD" + "18.10.9.2.11"
+$chaine = "$id" + ";" + "(L1)Ensure 'Configure use of hardware-based encryption for operating system drives' is set to 'Disabled', value must be 0 " + ";"
+$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\FVE"
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\FVE" |Select-Object OSHardwareEncryption
+ $traitement = $traitement.OSHardwareEncryption
+}
+else {
+ $traitement = "not configure"
+}
+$chaine += $traitement
+$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+#Configure use of passwords for operating system drives' is set to 'Disabled'
+$id = "OSD" + "18.10.9.2.12"
+$chaine = "$id" + ";" + "(L1)Ensure 'Configure use of passwords for operating system drives' is set to 'Disabled'', value must be 0 " + ";"
+$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\FVE"
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\FVE" |Select-Object OSPassphrase
+ $traitement = $traitement.OSPassphrase
+}
+else {
+ $traitement = "not configure"
+}
+$chaine += $traitement
+$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
+
 
 #Require additional authentication at startup'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "OSD" + "$indextest"
+$id = "OSD" + "18.10.9.2.13"
 $chaine = "$id" + ";" + "Ensure 'Require additional authentication at startup' is set to 'Enabled', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\FVE"
 if ( $exist -eq $true) {
@@ -7013,13 +7244,13 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 
 
 #Require additional authentication at startup: Allow BitLocker without a compatible TPM
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "OSD" + "$indextest"
+$id = "OSD" + "18.10.9.2.14"
 $chaine = "$id" + ";" + "Ensure 'Require additional authentication at startup: Allow BitLocker without a compatible TPM' is set to 'Enabled: False', value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\FVE"
 if ( $exist -eq $true) {
@@ -7031,75 +7262,8 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
-
-
-#Require additional authentication at startup: Configure TPM startup:'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "OSD" + "$indextest"
-$chaine = "$id" + ";" + "Ensure 'Require additional authentication at startup: Configure TPM startup:' is set to 'Enabled: Do not allow TPM', value must be 0 " + ";"
-$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\FVE"
-if ( $exist -eq $true) {
- $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\FVE" |Select-Object UseTPM
- $traitement = $traitement.UseTPM
-}
-else {
- $traitement = "not configure"
-}
-$chaine += $traitement
-$chaine>> $nomfichier
-
-#Require additional authentication at startup: Configure TPM startup PIN
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "OSD" + "$indextest"
-$chaine = "$id" + ";" + "Ensure 'Require additional authentication at startup: Configure TPM startup PIN:' is set to 'Enabled: Require startup PIN with TPM', value must be 1 " + ";"
-$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\FVE"
-if ( $exist -eq $true) {
- $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\FVE" |Select-Object UseTPMPIN
- $traitement = $traitement.UseTPMPIN
-}
-else {
- $traitement = "not configure"
-}
-$chaine += $traitement
-$chaine>> $nomfichier
-
-#Require additional authentication at startup: Configure TPM startup key:'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "OSD" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Ensure 'Require additional authentication at startup: Configure TPM startup key:' is set to 'Enabled: Do not allow startup key with TPM'', value must be 0 " + ";"
-$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\FVE"
-if ( $exist -eq $true) {
- $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\FVE" |Select-Object UseTPMKey
- $traitement = $traitement.UseTPMKey
-}
-else {
- $traitement = "not configure"
-}
-$chaine += $traitement
-$chaine>> $nomfichier
-
-#Require additional authentication at startup: Configure TPM startup key and PIN:'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "OSD" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Ensure 'Require additional authentication at startup: Configure TPM startup key and PIN:' is set to 'Enabled: Do not allow startup key and PIN with TPM', value must be 0 " + ";"
-$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\FVE"
-if ( $exist -eq $true) {
- $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\FVE" |Select-Object UseTPMKeyPIN
- $traitement = $traitement.UseTPMKeyPIN
-}
-else {
- $traitement = "not configure"
-}
-$chaine += $traitement
-$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 
 #Removable Data Drives
@@ -7107,10 +7271,7 @@ Write-Host "#########>Begin Removable Data Drives audit<#########" -ForegroundCo
 
 
 #Allow access to BitLocker-protected removable data drives from earlier versions of Windows
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "OSD" + "$indextest"
+$id = "RDD" + "18.10.9.3.1"
 $chaine = "$id" + ";" + "(L1)Ensure 'Allow access to BitLocker-protected removable data drives from earlier versions of Windows' is set to 'Disabled', value must be empty " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\FVE"
 if ( $exist -eq $true) {
@@ -7122,13 +7283,12 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 
 #Choose how BitLocker-protected removable drives can be recovered'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "OSD" + "$indextest"
+$id = "RDD" + "18.10.9.3.2"
 $chaine = "$id" + ";" + "(L1)Ensure 'Choose how BitLocker-protected removable drives can be recovered' is set to 'Enabled', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\FVE"
 if ( $exist -eq $true) {
@@ -7140,12 +7300,11 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Choose how BitLocker-protected removable drives can be recovered: Allow data recovery agent'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "OSD" + "$indextest"
+$id = "RDD" + "18.10.9.3.3"
 $chaine = "$id" + ";" + "(L1)Ensure 'Choose how BitLocker-protected removable drives can be recovered: Allow data recovery agent' is set to 'Enabled: True', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\FVE"
 if ( $exist -eq $true) {
@@ -7157,13 +7316,12 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 
 #Choose how BitLocker-protected removable drives can be recovered: Recovery Password' is set to 'Enabled: Do not allow 48-digit recovery password'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "OSD" + "$indextest"
+$id = "RDD" + "18.10.9.3.4"
 $chaine = "$id" + ";" + "(L1)Ensure 'Choose how BitLocker-protected removable drives can be recovered: Recovery Password' is set to 'Enabled: Do not allow 48-digit recovery password', value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\FVE"
 if ( $exist -eq $true) {
@@ -7173,17 +7331,13 @@ if ( $exist -eq $true) {
 else {
  $traitement = "not configure"
 }
-$chaine += $traitement
-$chaine>> $nomfichier
-
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 
 
 #'Choose how BitLocker-protected removable drives can be recovered: Recovery Key' is set to 'Enabled: Do not allow 256-bit recovery key'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "OSD" + "$indextest"
+$id = "RDD" + "18.10.9.3.5"
 $chaine = "$id" + ";" + "(L1)Ensure 'Choose how BitLocker-protected removable drives can be recovered: Recovery Key' is set to 'Enabled: Do not allow 256-bit recovery key', value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\FVE"
 if ( $exist -eq $true) {
@@ -7195,13 +7349,13 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 
 
 #Choose how BitLocker-protected removable drives can be recovered: Omit recovery options from the BitLocker setup wizard' is set to
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "OSD" + "$indextest"
+$id = "RDD" + "18.10.9.3.6"
 $chaine = "$id" + ";" + "(L1)Ensure 'Choose how BitLocker-protected removable drives can be recovered: Omit recovery options from the BitLocker setup wizard' is set to 'Enabled: True', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\FVE"
 if ( $exist -eq $true) {
@@ -7213,13 +7367,12 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Choose how BitLocker-protected removable drives can be recovered: Save BitLocker recovery information to AD DS for removable data drives
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "OSD" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Ensure 'Choose how BitLocker-protected removable drives can be recovered: Save BitLocker recovery information to AD DS for removable data drives' is set to 'Enabled: False', value must be 0 " + ";"
+$id = "RDD" + "18.10.9.3.7"
+$chaine = "$id" + ";" + "(L1)Ensure 'Choose how BitLocker-protected removable drives can be recovered: Save BitLocker recovery information to AD DS for removable data drives' is set to 'Enabled: False', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\FVE"
 if ( $exist -eq $true) {
  $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\FVE" |Select-Object RDVActiveDirectoryBackup
@@ -7230,13 +7383,13 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 
 #Choose how BitLocker-protected removable drives can be recovered: Configure storage of BitLocker recovery information to AD DS:
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "OSD" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Ensure 'Choose how BitLocker-protected removable drives can be recovered: Configure storage of BitLocker recovery information to AD DS:' is set to 'Enabled: Backup recovery passwords and key packages', value must be 0 " + ";"
+$id = "RDD" + "18.10.9.3.8"
+$chaine = "$id" + ";" + "(L1)Ensure 'Choose how BitLocker-protected removable drives can be recovered: Configure storage of BitLocker recovery information to AD DS:' is set to 'Enabled: Backup recovery passwords and key packages', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\FVE"
 if ( $exist -eq $true) {
  $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\FVE" |Select-Object RDVActiveDirectoryInfoToStore
@@ -7247,14 +7400,13 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 
 
 #Choose how BitLocker-protected removable drives can be recovered: Do not enable BitLocker until recovery information is stored to AD DS for removable data drives
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "OSD" + "$indextest"
+$id = "RDD" + "18.10.9.3.9"
 $chaine = "$id" + ";" + "(L1)Ensure 'Choose how BitLocker-protected removable drives can be recovered: Do not enable BitLocker until recovery information is stored to AD DS for removable data drives' is set to 'Enabled: False', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\FVE"
 if ( $exist -eq $true) {
@@ -7266,14 +7418,12 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
-
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Configure use of hardware-based encryption for removable data drives'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "OSD" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Ensure 'Configure use of hardware-based encryption for removable data drives' is set to 'Enabled', value must be 0 " + ";"
+$id = "RDD" + "18.10.9.3.10"
+$chaine = "$id" + ";" + "(L1)Ensure 'Ensure 'Configure use of hardware-based encryption for removable data drives' is set to 'Disabled'', value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\FVE"
 if ( $exist -eq $true) {
  $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\FVE" |Select-Object RDVHardwareEncryption
@@ -7284,47 +7434,12 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
-
-#Configure use of hardware-based encryption for removable data drives: Use BitLocker software-based encryption when hardware encryption is not available
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "OSD" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Ensure 'Configure use of hardware-based encryption for removable data drives: Use BitLocker software-based encryption when hardware encryption is not available' is set to 'Enabled: True', value must be 1 " + ";"
-$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\FVE"
-if ( $exist -eq $true) {
- $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\FVE" |Select-Object RDVAllowSoftwareEncryptionFailover
- $traitement = $traitement.RDVAllowSoftwareEncryptionFailover
-}
-else {
- $traitement = "not configure"
-}
-$chaine += $traitement
-$chaine>> $nomfichier
-
-#Configure use of hardware-based encryption for removable data drives: Restrict encryption algorithms and cipher suites allowed for hardware-based encryption
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "OSD" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Ensure 'Configure use of hardware-based encryption for removable data drives: Restrict encryption algorithms and cipher suites allowed for hardware-based encryption' is set to 'Enabled: False', value must be 0 " + ";"
-$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\FVE"
-if ( $exist -eq $true) {
- $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\FVE" |Select-Object RDVRestrictHardwareEncryptionAlgorithms
- $traitement = $traitement.RDVRestrictHardwareEncryptionAlgorithms
-}
-else {
- $traitement = "not configure"
-}
-$chaine += $traitement
-$chaine>> $nomfichier
 
 #Configure use of passwords for removable data drives
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "OSD" + "$indextest"
+$id = "RDD" + "18.10.9.3.11"
 $chaine = "$id" + ";" + "(L1)Ensure 'Configure use of passwords for removable data drives' is set to 'Disable, value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\FVE"
 if ( $exist -eq $true) {
@@ -7336,13 +7451,12 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 
 #Configure use of smart cards on removable data drives'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "OSD" + "$indextest"
+$id = "RDD" + "18.10.9.3.12"
 $chaine = "$id" + ";" + "(L1)Ensure 'Configure use of smart cards on removable data drives' is set to 'Enabled', value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\FVE"
 if ( $exist -eq $true) {
@@ -7354,12 +7468,11 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Configure use of smart cards on removable data drives: Require use of smart cards on removable data drives
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "OSD" + "$indextest"
+$id = "RDD" + "18.10.9.3.13"
 $chaine = "$id" + ";" + "(L1)Ensure 'Configure use of smart cards on removable data drives: Require use of smart cards on removable data drives' is set to 'Enabled: True', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\FVE"
 if ( $exist -eq $true) {
@@ -7371,12 +7484,11 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Deny write access to removable drives not protected by BitLocker
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "OSD" + "$indextest"
+$id = "RDD" + "18.10.9.3.14"
 $chaine = "$id" + ";" + "(L1)Ensure 'Deny write access to removable drives not protected by BitLocker' is set to 'Enabled'', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\FVE"
 if ( $exist -eq $true) {
@@ -7388,12 +7500,11 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Deny write access to removable drives not protected by BitLocker: Do not allow write access to devices configured in another organization'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "OSD" + "$indextest"
+$id = "RDD" + "18.10.9.3.15"
 $chaine = "$id" + ";" + "(L1)Ensure 'Deny write access to removable drives not protected by BitLocker: Do not allow write access to devices configured in another organization' is set to 'Enabled: False', value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\FVE"
 if ( $exist -eq $true) {
@@ -7405,38 +7516,13 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
-#Choose drive encryption method and cipher strength (Windows 10 [Version 1511] and later
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "OSD" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Ensure 'Choose drive encryption method and cipher strength (Windows 10 [Version 1511] and later)' is set to 'Enabled: XTS-AES 256-bit'', value must be 7 foreach registry key " + ";"
-$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\FVE"
-if ( $exist -eq $true) {
- $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\FVE" |Select-Object EncryptionMethodWithXtsFdv
- $traitement = $traitement.EncryptionMethodWithXtsFdv
- $traitementtemp = "EncryptionMethodWithXtsFdv" + ":" + "$traitement" + "|"
- $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\FVE" |Select-Object EncryptionMethodWithXtsOs
- $traitement = $traitement.EncryptionMethodWithXtsOs
- $traitementtemp += "EncryptionMethodWithXtsOs" + ":" + "$traitement" + "|"
- $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\FVE" |Select-Object EncryptionMethodWithXtsRdv
- $traitement = $traitement.EncryptionMethodWithXtsRdv
- $traitementtemp += "EncryptionMethodWithXtsRdv" + ":" + "$traitement" + "|"
- 
-}
-else {
- $traitement = "not configure"
-}
 
-$chaine += $traitementtemp
-$chaine>> $nomfichier
 
 #Disable new DMA devices when this computer is locked'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "OSD" + "$indextest"
+$id = "RDD" + "18.10.9.4"
 $chaine = "$id" + ";" + "(L1)Ensure 'Disable new DMA devices when this computer is locked' is set to 'Enabled', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\FVE"
 if ( $exist -eq $true) {
@@ -7449,15 +7535,15 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 #Camera
 Write-Host "#########>Begin Camera audit<#########" -ForegroundColor DarkGreen
 
 
 #Allow Use of Camera
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "CAM" + "$indextest"
+$id = "CAM" + "18.10.10.1"
 $chaine = "$id" + ";" + "(L2)Ensure 'Allow Use of Camera' is set to 'Disabled', value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Camera"
 if ( $exist -eq $true) {
@@ -7469,7 +7555,8 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
-
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Cloud Content
 Write-Host "#########>Begin Cloud Content audit<#########" -ForegroundColor DarkGreen
@@ -7477,11 +7564,41 @@ Write-Host "#########>Begin Cloud Content audit<#########" -ForegroundColor Dark
 
 
 #Turn off Microsoft consumer experiences'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "CLOUD" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Ensure Turn off Microsoft consumer experiences is set to Enabled, value must be 1 " + ";"
+$id = "CLOUD" + "18.10.12.1"
+$chaine = "$id" + ";" + "(L2)Ensure 'Turn off cloud consumer account state content' is set to 'Enabled', value must be 1 " + ";"
+$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\CloudContent"
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\CloudContent" |Select-Object DisableConsumerAccountStateContent
+ $traitement = $traitement.DisableConsumerAccountStateContent
+}
+else {
+ $traitement = "not configure"
+}
+$chaine += $traitement
+$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+#Turn off cloud optimized content
+$id = "CLOUD" + "18.10.12.2"
+$chaine = "$id" + ";" + "(L2)Ensure 'Turn off cloud optimized content' is set to 'Enabled', value must be 1 " + ";"
+$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\CloudContent"
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\CloudContent" |Select-Object DisableCloudOptimizedContent
+ $traitement = $traitement.DisableCloudOptimizedContent
+}
+else {
+ $traitement = "not configure"
+}
+$chaine += $traitement
+$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
+#Turn off Microsoft consumer experiences'
+$id = "CLOUD" + "18.10.12.3"
+$chaine = "$id" + ";" + "(L1)Ensure 'Turn off Microsoft consumer experiences' is set to 'Enabled', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\CloudContent"
 if ( $exist -eq $true) {
  $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\CloudContent" |Select-Object DisableWindowsConsumerFeatures
@@ -7492,6 +7609,9 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 
 
 #Connect
@@ -7500,10 +7620,7 @@ Write-Host "#########>Begin Connect audit<#########" -ForegroundColor DarkGreen
 
 
 #Require pin for pairing'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "CONNECT" + "$indextest"
+$id = "CONNECT" + "18.10.13.1"
 $chaine = "$id" + ";" + "(L1)Ensure Require pin for pairing is set to Enabled, value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Connect"
 if ( $exist -eq $true) {
@@ -7515,6 +7632,8 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 
 #Credential User Interface
@@ -7523,10 +7642,7 @@ Write-Host "#########>Begin Credential User Interface audit<#########" -Foregrou
 
 
 #Do not display the password reveal button
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "CUI" + "$indextest"
+$id = "CUI" + "18.10.14.1"
 $chaine = "$id" + ";" + "(L1)Ensure 'Do not display the password reveal button' is set to 'Enabled', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\CredUI" 
 if ( $exist -eq $true) {
@@ -7538,14 +7654,12 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
-
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 
 #Enumerate administrator accounts on elevation'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "CUI" + "$indextest"
+$id = "CUI" + "18.10.14.2"
 $chaine = "$id" + ";" + "(L1)Ensure 'Enumerate administrator accounts on elevation' is set to 'Disabled', value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\CredUI"
 if ( $exist -eq $true) {
@@ -7557,13 +7671,11 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
-
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Prevent the use of security questions for local accounts
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "CUI" + "$indextest"
+$id = "CUI" + "18.10.14.3"
 $chaine = "$id" + ";" + "(L1)Ensure 'Prevent the use of security questions for local accounts' is set to 'Enabled', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System"
 if ( $exist -eq $true) {
@@ -7575,17 +7687,17 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 
 #Data Collection and Preview Builds
 Write-Host "#########>Begin Data Collection and Preview Builds audit<#########" -ForegroundColor DarkGreen
 
 #Allow Telemetry'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "DCPB" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Ensure 'Allow Telemetry' is set to 'Enabled: 0 - Security [Enterprise Only]' Enabled: 1 - Basic' , value must be 0(recommended) or 1" + ";"
+$id = "DCPB" + "18.10.15.1"
+
+$chaine = "$id" + ";" + "(L1)Ensure'Allow Diagnostic Data' is set to 'Enabled: Diagnostic data off (not recommended)' or 'Enabled: Send required diagnostic data'' , value must be 0(recommended) or 1" + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DataCollection"
 if ( $exist -eq $true) {
  $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DataCollection" |Select-Object AllowTelemetry
@@ -7597,13 +7709,13 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 
 
 #Configure Authenticated Proxy usage for the Connected User Experience and Telemetry service'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "DCPB" + "$indextest"
+$id = "DCPB" + "18.10.15.2"
 $chaine = "$id" + ";" + "(L2)Ensure 'Configure Authenticated Proxy usage for the Connected User Experience and Telemetry service' is set to 'Enabled: Disable Authenticated Proxy usage', value must be 1" + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DataCollection"
 if ( $exist -eq $true) {
@@ -7616,17 +7728,17 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
 
-#Disable pre-release features or settings'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "DCPB" + "$indextest"
-$chaine = "$id" + ";" + "(L2)Ensure 'Disable pre-release features or settings' is set to 'Disabled', value must be 0 " + ";"
-$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\PreviewBuilds"
+
+#Disable OneSettings Downloads'
+$id = "DCPB" + "18.10.15.3"
+$chaine = "$id" + ";" + "(L1) Ensure 'Disable OneSettings Downloads' is set to 'Enabled', value must be 1 " + ";"
+$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DataCollection"
 if ( $exist -eq $true) {
- $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\PreviewBuilds" |Select-Object EnableConfigFlighting
- $traitement = $traitement.EnableConfigFlighting
+ $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DataCollection" |Select-Object DisableOneSettingsDownloads
+ $traitement = $traitement.DisableOneSettingsDownloads
 }
 else {
  $traitement = "not configure"
@@ -7634,13 +7746,13 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 
 #Do not show feedback notifications'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "DCPB" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Ensure 'Do not show feedback notifications' is set to 'Enabled, value must be 0 " + ";"
+$id = "DCPB" + "18.10.15.4"
+$chaine = "$id" + ";" + "(L1)Ensure 'Do not show feedback notifications' is set to 'Enabled, value must be 1" + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DataCollection"
 if ( $exist -eq $true) {
  $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DataCollection" |Select-Object DoNotShowFeedbackNotifications
@@ -7651,14 +7763,63 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 
-#Toggle user control over Insider builds'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "DCPB" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Ensure 'Toggle user control over Insider builds' is set to 'Disabled', value must be 0 " + ";"
+#Enable OneSettings Auditing'
+$id = "DCPB" + "18.10.15.5"
+$chaine = "$id" + ";" + "(L1)Ensure 'Enable OneSettings Auditing' is set to 'Enabled', value must be 1 " + ";"
+$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DataCollection"
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DataCollection" |Select-Object EnableOneSettingsAuditing
+ $traitement = $traitement.EnableOneSettingsAuditing
+}
+else {
+ $traitement = "not configure"
+}
+$chaine += $traitement
+$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
+#Limit Diagnostic Log Collection
+$id = "DCPB" + "18.10.15.6"
+$chaine = "$id" + ";" + "(L1)Ensure 'Limit Diagnostic Log Collection is set to 'Enabled', value must be 1 " + ";"
+$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DataCollection"
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DataCollection" |Select-Object LimitDiagnosticLogCollection
+ $traitement = $traitement.LimitDiagnosticLogCollection
+}
+else {
+ $traitement = "not configure"
+}
+$chaine += $traitement
+$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
+#Limit Dump Collection'
+$id = "DCPB" + "18.10.15.7"
+$chaine = "$id" + ";" + "(L1)Ensure 'Limit Dump Collection' is set to 'Enabled', value must be 1 " + ";"
+$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DataCollection"
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DataCollection" |Select-Object LimitDumpCollection
+ $traitement = $traitement.LimitDumpCollection
+}
+else {
+ $traitement = "not configure"
+}
+$chaine += $traitement
+$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+#Limit Dump Collection'
+$id = "DCPB" + "18.10.15.8"
+$chaine = "$id" + ";" + "(L1)Ensure 'Toggle user control over Insider builds'is set to 'Disabled, value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\PreviewBuilds"
 if ( $exist -eq $true) {
  $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\PreviewBuilds" |Select-Object AllowBuildPreview
@@ -7669,15 +7830,16 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
 
 #Delivery Optimization
 Write-Host "#########>Begin Delivery Optimization audit<#########" -ForegroundColor DarkGreen
 
 #Download Mode' is NOT set to 'Enabled: Internet
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "DCPB" + "$indextest"
+$id = "DO" + "18.10.16"
 $chaine = "$id" + ";" + "Ensure 'Download Mode' is NOT set to 'Enabled: Internet' , value must be anything other than 3" + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DeliveryOptimization"
 if ( $exist -eq $true) {
@@ -7689,6 +7851,76 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+#Application
+Write-Host "#########>Begin Desktop App Installer audit<#########" -ForegroundColor DarkGreen
+
+#Enable App Installer
+$id = "DAI" + "18.10.17.1"
+$chaine = "$id" + ";" + "(L1)Ensure 'Enable App Installer' is set to 'Disabled, value must be 0 " + ";"
+$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\AppInstaller"
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\AppInstaller" |Select-Object EnableAppInstaller
+ $traitement = $traitement.EnableAppInstaller
+}
+else {
+ $traitement = "not configure"
+}
+$chaine += $traitement
+$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+#'Enable App Installer Experimental Features
+$id = "DAI" + "18.10.17.2"
+$chaine = "$id" + ";" + "Ensure Ensure 'Enable App Installer Experimental Features' is set to 'Disabled', value must be 0 " + ";"
+$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\AppInstaller"
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\AppInstaller" |Select-Object EnableExperimentalFeatures
+ $traitement = $traitement.EnableExperimentalFeatures
+}
+else {
+ $traitement = "not configure"
+}
+$chaine += $traitement
+$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
+#'Enable App Installer Hash Override'
+$id = "DAI" + "18.10.17.3"
+$chaine = "$id" + ";" + "Ensure Ensure 'Enable App Installer Hash Override' is set to 'Disabled', value must be 0 " + ";"
+$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\AppInstaller"
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\AppInstaller" |Select-Object EnableHashOverride
+ $traitement = $traitement.EnableHashOverride
+}
+else {
+ $traitement = "not configure"
+}
+$chaine += $traitement
+$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+#'Enable App Installer ms-appinstaller protocol'
+$id = "DAI" + "18.10.17.4"
+$chaine = "$id" + ";" + "Ensure Ensure 'Enable App Installer Hash Override' is set to 'Disabled', value must be 0 " + ";"
+$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\AppInstaller"
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\AppInstaller" |Select-Object EnableMSAppInstallerProtocol
+ $traitement = $traitement.EnableMSAppInstallerProtocol
+}
+else {
+ $traitement = "not configure"
+}
+$chaine += $traitement
+$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 
 #Application
@@ -7697,10 +7929,7 @@ Write-Host "#########>Begin Application Log audit<#########" -ForegroundColor Da
 
 
 #Application: Control Event Log behavior when the log file reaches its maximum size'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "APP" + "$indextest"
+$id = "APP" + "18.10.26.1.1"
 $chaine = "$id" + ";" + "(L1)Ensure 'Application: Control Event Log behavior when the log file reaches its maximum size' is set to 'Disabled', value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\EventLog\Application"
 if ( $exist -eq $true) {
@@ -7712,12 +7941,11 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Application: Specify the maximum log file size
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "APP" + "$indextest"
+$id = "APP" + "18.10.26.1.2"
 $chaine = "$id" + ";" + "(L1)Ensure 'Application: Specify the maximum log file size (KB)' is set to 'Enabled: 32,768 or greater', value must be 32,768 or greater " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\EventLog\Application"
 if ( $exist -eq $true) {
@@ -7729,19 +7957,16 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
-
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 
 #Security 
 Write-Host "#########>Begin Security Log audit<#########" -ForegroundColor DarkGreen
 
 
-
 #Security: Control Event Log behavior when the log file reaches its maximum size
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "SECL" + "$indextest"
+$id = "SECL" + "18.10.26.2.1"
 $chaine = "$id" + ";" + "(L1)Ensure 'Security: Control Event Log behavior when the log file reaches its maximum size' is set to 'Disabled', value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\EventLog\Security" 
 if ( $exist -eq $true) {
@@ -7753,13 +7978,11 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
-
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Security: Specify the maximum log file size (KB)'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "SECL" + "$indextest"
+$id = "SECL" + "18.10.26.2.2"
 $chaine = "$id" + ";" + "(L1)Ensure 'Security: Specify the maximum log file size (KB)' is set to 'Enabled: 196,608 or greater', value must be 196,608 or greater " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\EventLog\Security"
 if ( $exist -eq $true) {
@@ -7771,7 +7994,8 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
-
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Setup 
 Write-Host "#########>Begin Setup Log audit<#########" -ForegroundColor DarkGreen
@@ -7779,10 +8003,7 @@ Write-Host "#########>Begin Setup Log audit<#########" -ForegroundColor DarkGree
 
 
 #Setup: Control Event Log behavior when the log file reaches its maximum size'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "SETL" + "$indextest"
+$id = "SETL" + "18.10.26.3.1"
 $chaine = "$id" + ";" + "(L1)Ensure 'Setup: Control Event Log behavior when the log file reaches its maximum size' is set to 'Disabled, value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\EventLog\Setup"
 if ( $exist -eq $true) {
@@ -7794,13 +8015,13 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 
 
 #Setup: Specify the maximum log file size (KB)'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "SETL" + "$indextest"
+$id = "SETL" + "18.10.26.3.2"
 $chaine = "$id" + ";" + "(L1)Ensure 'Setup: Specify the maximum log file size (KB)' is set to 'Enabled: 32,768 or greater', value must be 32,768 or greater " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\EventLog\Setup" 
 if ( $exist -eq $true) {
@@ -7812,6 +8033,8 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 
 
@@ -7821,10 +8044,8 @@ Write-Host "#########>Begin System Log audit<#########" -ForegroundColor DarkGre
 
 
 #System: Control Event Log behavior when the log file reaches its maximum size'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "SYSL" + "$indextest"
+$id = "SYSL" + "18.10.26.4.1"
+
 $chaine = "$id" + ";" + "(L1)Ensure 'System: Control Event Log behavior when the log file reaches its maximum size' is set to 'Disabled', value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\EventLog\System"
 if ( $exist -eq $true) {
@@ -7836,13 +8057,13 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 
 
 #Setup: Specify the maximum log file size (KB)'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "SYSL" + "$indextest"
+$id = "SYSL" + "18.10.26.4.2"
 $chaine = "$id" + ";" + "(L1)Ensure 'System: Specify the maximum log file size (KB)' is set to 'Enabled: 32,768 or greater', value must be 32,768 or greater " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\EventLog\System"
 if ( $exist -eq $true) {
@@ -7854,17 +8075,16 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 
-#Previous Versions
-Write-Host "#########>Begin Previous Versions audit<#########" -ForegroundColor DarkGreen
+#File Explorer
+Write-Host "#########>Begin File Explorer audit<#########" -ForegroundColor DarkGreen
 
 
 #Turn off Data Execution Prevention for Explorer'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "PV" + "$indextest"
+$id = "FE" + "18.10.29.2"
 $chaine = "$id" + ";" + "(L1)Ensure 'Turn off Data Execution Prevention for Explorer' is set to 'Disabled', value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Explorer"
 if ( $exist -eq $true) {
@@ -7877,11 +8097,29 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+#Turn off files from Office.com in Quick access view'
+$id = "FE" + "18.10.29.3"
+$chaine = "$id" + ";" + "(L2)Ensure 'Turn off files from Office.com in Quick access view' is set to 'Enabled', value must be 1 " + ";"
+$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Explorer"
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Explorer" |Select-Object DisableGraphRecentItems
+ $traitement = $traitement.DisableGraphRecentItems
+}
+else {
+ $traitement = "not configure"
+}
+$chaine += $traitement
+$chaine>> $nomfichier
+
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
 #Turn off heap termination on corruption'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "PV" + "$indextest"
+$id = "FE" + "18.10.29.4"
 $chaine = "$id" + ";" + "(L1)Ensure 'Turn off heap termination on corruption' is set to 'Disabled', value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Explorer"
 if ( $exist -eq $true) {
@@ -7893,12 +8131,12 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 
 #Turn off shell protocol protected mode'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "PV" + "$indextest"
+$id = "FE" + "18.10.29.5"
 $chaine = "$id" + ";" + "(L1)Ensure 'Turn off shell protocol protected mode' is set to 'Disabled', value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer"
 if ( $exist -eq $true) {
@@ -7910,16 +8148,15 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
-#Previous Versions
+#HomeGroup
 Write-Host "#########>Begin HomeGroup audit<#########" -ForegroundColor DarkGreen
 
 
 #Prevent the computer from joining a homegroup
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "PV" + "$indextest"
+$id = "HOME" + "18.10.33.1"
 $chaine = "$id" + ";" + "(L1)Ensure 'Prevent the computer from joining a homegroup' is set to 'Enabled', value must be 1" + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\HomeGroup"
 if ( $exist -eq $true) {
@@ -7931,7 +8168,8 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
-
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 
 
@@ -7941,10 +8179,7 @@ Write-Host "#########>Begin Windows Location Provider audit<#########" -Foregrou
 
 
 #Turn off location'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "WLP" + "$indextest"
+$id = "WLP" + "18.10.37.2"
 $chaine = "$id" + ";" + "(L2)Ensure 'Turn off location' is set to 'Enabled'', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\LocationAndSensors" 
 if ( $exist -eq $true) {
@@ -7956,16 +8191,15 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Messaging
 Write-Host "#########>Begin Messaging audit<#########" -ForegroundColor DarkGreen
 
 
 #Allow Message Service Cloud Sync'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "WLP" + "$indextest"
+$id = "MES" + "18.10.41.1"
 $chaine = "$id" + ";" + "(L2)Ensure 'Allow Message Service Cloud Sync' is set to 'Disabled', value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Messaging" 
 if ( $exist -eq $true) {
@@ -7977,6 +8211,8 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 
 #Microsoft account
@@ -7984,10 +8220,7 @@ Write-Host "#########>Begin Microsoft account audit<#########" -ForegroundColor 
 
 
 #Block all consumer Microsoft account user authentication
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "MA" + "$indextest"
+$id = "MA" + "18.10.42.1"
 $chaine = "$id" + ";" + "(L1)Ensure 'Block all consumer Microsoft account user authentication' is set to 'Enabled', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\MicrosoftAccount" 
 if ( $exist -eq $true) {
@@ -7999,734 +8232,14 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 
-
-#Microsoft Edge
-Write-Host "#########>Begin Microsoft Edge audit<#########" -ForegroundColor DarkGreen
-
-
-
-#Allow Address bar drop-down list suggestions
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "ME" + "$indextest"
-$chaine = "$id" + ";" + "(L2)Ensure 'Allow Address bar drop-down list suggestions' is set to 'Disabled', value must be 0 " + ";"
-$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\MicrosoftEdge\ServiceUI"
-if ( $exist -eq $true) {
- $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\MicrosoftEdge\ServiceUI" |Select-Object ShowOneBox
- $traitement = $traitement.ShowOneBox
-}
-else {
- $traitement = "not configure"
-}
-$chaine += $traitement
-$chaine>> $nomfichier
-
-
-#Allow Adobe Flash'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "ME" + "$indextest"
-$chaine = "$id" + ";" + "(L2)Ensure 'Allow Adobe Flash' is set to 'Disabled', value must be 0 " + ";"
-$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\MicrosoftEdge\Addons"
-if ( $exist -eq $true) {
- $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\MicrosoftEdge\Addons" |Select-Object FlashPlayerEnabled
- $traitement = $traitement.FlashPlayerEnabled
-}
-else {
- $traitement = "not configure"
-}
-$chaine += $traitement
-$chaine>> $nomfichier
-
-
-#'Allow InPrivate Browsing'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "ME" + "$indextest"
-$chaine = "$id" + ";" + "(L2)Ensure 'Allow InPrivate Browsing' is set to 'Disabled', value must be 0 " + ";"
-$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\MicrosoftEdge\Main"
-if ( $exist -eq $true) {
- $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\MicrosoftEdge\Main" |Select-Object AllowInPrivate
- $traitement = $traitement.AllowInPrivate
-}
-else {
- $traitement = "not configure"
-}
-$chaine += $traitement
-$chaine>> $nomfichier
-
-
-#Allow Sideloading of extension
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "ME" + "$indextest"
-$chaine = "$id" + ";" + "(L1) Ensure 'Allow Sideloading of extension' is set to 'Disabled', value must be 0 " + ";"
-$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\MicrosoftEdge\Extensions"
-if ( $exist -eq $true) {
- $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\MicrosoftEdge\Extensions" |Select-Object AllowSideloadingOfExtensions
- $traitement = $traitement.AllowSideloadingOfExtensions
-}
-else {
- $traitement = "not configure"
-}
-$chaine += $traitement
-$chaine>> $nomfichier
-
-
-#'Configure cookies'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "ME" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Ensure 'Configure cookies' is set to 'Enabled: Block only 3rd-party cookies' or higher', value must be 0 " + ";"
-$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\MicrosoftEdge\Main"
-if ( $exist -eq $true) {
- $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\MicrosoftEdge\Main" |Select-Object Cookies
- $traitement = $traitement.Cookies
-}
-else {
- $traitement = "not configure"
-}
-$chaine += $traitement
-$chaine>> $nomfichier
-
-
-#Configure Password Manager'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "ME" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Ensure 'Configure Password Manager' is set to 'Disabled', value must be 0 " + ";"
-$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\MicrosoftEdge\Main"
-if ( $exist -eq $true) {
- $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\MicrosoftEdge\Main" |Select-Object FormSuggestPasswords
- $traitement = $traitement.FormSuggestPasswords
-}
-else {
- $traitement = "not configure"
-}
-$chaine += $traitement
-$chaine>> $nomfichier
-
-
-
-#Configure Pop-up Blocker'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "ME" + "$indextest"
-$chaine = "$id" + ";" + "(L2)Ensure 'Configure Pop-up Blocker' is set to 'Enabled', value must be 1 " + ";"
-$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\MicrosoftEdge\Main"
-if ( $exist -eq $true) {
- $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\MicrosoftEdge\Main" |Select-Object AllowPopups
- $traitement = $traitement.AllowPopups
-}
-else {
- $traitement = "not configure"
-}
-$chaine += $traitement
-$chaine>> $nomfichier
-
-
-
-#Configure search suggestions in Address bar'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "ME" + "$indextest"
-$chaine = "$id" + ";" + "(L2)Ensure 'Configure search suggestions in Address bar' is set to 'Disabled', value must be 0 " + ";"
-$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\MicrosoftEdge\SearchScopes"
-if ( $exist -eq $true) {
- $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\MicrosoftEdge\SearchScopes" |Select-Object ShowSearchSuggestionsGlobal
- $traitement = $traitement.ShowSearchSuggestionsGlobal
-}
-else {
- $traitement = "not configure"
-}
-$chaine += $traitement
-$chaine>> $nomfichier
-
-#Configure the Adobe Flash Click-to-Run setting'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "ME" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Ensure 'Configure the Adobe Flash Click-to-Run setting' is set to 'Enabled', value must be 1 " + ";"
-$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\MicrosoftEdge\Security"
-if ( $exist -eq $true) {
- $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\MicrosoftEdge\Security" |Select-Object FlashClickToRunMode
- $traitement = $traitement.FlashClickToRunMode
-}
-else {
- $traitement = "not configure"
-}
-$chaine += $traitement
-$chaine>> $nomfichier
-
-
-#Prevent access to the about:flags page in Microsoft Edge'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "ME" + "$indextest"
-$chaine = "$id" + ";" + "(L2)Ensure 'Prevent access to the about:flags page in Microsoft Edge' is set to 'Enabled', value must be 1 " + ";"
-$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\MicrosoftEdge\Main"
-if ( $exist -eq $true) {
- $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\MicrosoftEdge\Main" |Select-Object PreventAccessToAboutFlagsInMicrosoftEdge
- $traitement = $traitement.PreventAccessToAboutFlagsInMicrosoftEdge
-}
-else {
- $traitement = "not configure"
-}
-$chaine += $traitement
-$chaine>> $nomfichier
-
-
-
-#Prevent using Localhost IP address for WebRTC'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "ME" + "$indextest"
-$chaine = "$id" + ";" + "(L2)Ensure 'Prevent using Localhost IP address for WebRTC' is set to 'Enabled', value must be 1 " + ";"
-$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\MicrosoftEdge\Main"
-if ( $exist -eq $true) {
- $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\MicrosoftEdge\Main" |Select-Object HideLocalHostIP
- $traitement = $traitement.HideLocalHostIP
-}
-else {
- $traitement = "not configure"
-}
-$chaine += $traitement
-$chaine>> $nomfichier
-
-
-#OneDrive
-Write-Host "#########>Begin OneDrive audit<#########" -ForegroundColor DarkGreen
-
-
-
-#Prevent the usage of OneDrive for file storage'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "OD" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Ensure 'Prevent the usage of OneDrive for file storage' is set to 'Enabled'', value must be 1 " + ";"
-$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\OneDrive"
-if ( $exist -eq $true) {
- $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\OneDrive" |Select-Object DisableFileSyncNGSC
- $traitement = $traitement.DisableFileSyncNGSC
-}
-else {
- $traitement = "not configure"
-}
-$chaine += $traitement
-$chaine>> $nomfichier
-
-#Push to Install 
-Write-Host "#########>Begin Push To Install audit<#########" -ForegroundColor DarkGreen
-
-
-
-#Turn off Push To Install service'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "OD" + "$indextest"
-$chaine = "$id" + ";" + "(L2)Ensure 'Turn off Push To Install service' is set to 'Enabled, value must be 1 " + ";"
-$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\PushToInstall"
-if ( $exist -eq $true) {
- $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\PushToInstall" |Select-Object DisablePushToInstall
- $traitement = $traitement.DisablePushToInstall
-}
-else {
- $traitement = "not configure"
-}
-$chaine += $traitement
-$chaine>> $nomfichier
-
-
-
-#Remote Desktop Connection Client
-Write-Host "#########>Begin Remote Desktop Connection Client audit<#########" -ForegroundColor DarkGreen
-
-
-
-#Do not allow passwords to be saved'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "RDCC" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Ensure 'Do not allow passwords to be saved' is set to 'Enabled', value must be 1 " + ";"
-$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services"
-if ( $exist -eq $true) {
- $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" |Select-Object DisablePasswordSaving
- $traitement = $traitement.DisablePasswordSaving
-}
-else {
- $traitement = "not configure"
-}
-$chaine += $traitement
-$chaine>> $nomfichier
-
-
-#Allow users to connect remotely by using Remote Desktop Services
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "RDCC" + "$indextest"
-$chaine = "$id" + ";" + "(L2)Ensure 'Allow users to connect remotely by using Remote Desktop Services' is set to 'Disabled', value must be 1 " + ";"
-$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services"
-if ( $exist -eq $true) {
- $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" |Select-Object fDenyTSConnections
- $traitement = $traitement.fDenyTSConnections
-}
-else {
- $traitement = "not configure"
-}
-$chaine += $traitement
-$chaine>> $nomfichier
-
-#Do not allow COM port redirection'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "RDCC" + "$indextest"
-$chaine = "$id" + ";" + "(L2)Ensure 'Do not allow COM port redirection' is set to 'Enabled', value must be 1 " + ";"
-$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" 
-if ( $exist -eq $true) {
- $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" |Select-Object fDisableCcm
- $traitement = $traitement.fDisableCcm
-}
-else {
- $traitement = "not configure"
-}
-$chaine += $traitement
-$chaine>> $nomfichier
-
-
-
-#Do not allow drive redirection'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "RDCC" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Ensure 'Do not allow drive redirection' is set to 'Enabled', value must be 1 " + ";"
-$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" 
-if ( $exist -eq $true) {
- $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" |Select-Object fDisableCdm
- $traitement = $traitement.fDisableCdm
-}
-else {
- $traitement = "not configure"
-}
-$chaine += $traitement
-$chaine>> $nomfichier
-
-#Do not allow LPT port redirection'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "RDCC" + "$indextest"
-$chaine = "$id" + ";" + "(L2)Ensure 'Do not allow LPT port redirection' is set to 'Enabled'', value must be 1 " + ";"
-$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services"
-if ( $exist -eq $true) {
- $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" |Select-Object fDisableLPT
- $traitement = $traitement.fDisableLPT
-}
-else {
- $traitement = "not configure"
-}
-$chaine += $traitement
-$chaine>> $nomfichier
-
-#Do not allow supported Plug and Play device redirection'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "RDCC" + "$indextest"
-$chaine = "$id" + ";" + "(L2)Ensure 'Do not allow supported Plug and Play device redirection' is set to 'Enabled'', value must be 1 " + ";"
-$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services"
-if ( $exist -eq $true) {
- $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" |Select-Object fDisablePNPRedir
- $traitement = $traitement.fDisablePNPRedir
-}
-else {
- $traitement = "not configure"
-}
-$chaine += $traitement
-$chaine>> $nomfichier
-
-
-
-#Always prompt for password upon connection'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "RDCC" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Ensure 'Always prompt for password upon connection' is set to 'Enabled', value must be 1 " + ";"
-$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services"
-if ( $exist -eq $true) {
- $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" |Select-Object fPromptForPassword
- $traitement = $traitement.fPromptForPassword
-}
-else {
- $traitement = "not configure"
-}
-$chaine += $traitement
-$chaine>> $nomfichier
-
-
-#Require secure RPC communication'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "RDCC" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Ensure 'Require secure RPC communication' is set to 'Enabled', value must be 1 " + ";"
-$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" 
-if ( $exist -eq $true) {
- $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" |Select-Object fEncryptRPCTraffic
- $traitement = $traitement.fEncryptRPCTraffic
-}
-else {
- $traitement = "not configure"
-}
-$chaine += $traitement
-$chaine>> $nomfichier
-
-
-#'Set client connection encryption level'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "RDCC" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Ensure 'Set client connection encryption level' is set to 'Enabled: High Level', value must be 3 " + ";"
-$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" 
-if ( $exist -eq $true) {
- $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" |Select-Object MinEncryptionLevel
- $traitement = $traitement.MinEncryptionLevel
-}
-else {
- $traitement = "not configure"
-}
-$chaine += $traitement
-$chaine>> $nomfichier
-
-
-
-#Set time limit for active but idle Remote Desktop Services sessions'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "RDCC" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Ensure 'Set time limit for active but idle Remote Desktop Services sessions' is set to 'Enabled: 15 minutes or less', value must be 15 or less " + ";"
-$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services"
-if ( $exist -eq $true) {
- $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" |Select-Object MaxIdleTime
- $traitement = $traitement.MaxIdleTime
-}
-else {
- $traitement = "not configure"
-}
-$chaine += $traitement
-$chaine>> $nomfichier
-
-
-#Set time limit for disconnected sessions'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "RDCC" + "$indextest"
-$chaine = "$id" + ";" + "(L2)Ensure 'Set time limit for disconnected sessions' is set to 'Enabled: 1 minute', value must 1 " + ";"
-$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services"
-if ( $exist -eq $true) {
- $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" |Select-Object MaxDisconnectionTime
- $traitement = $traitement.MaxDisconnectionTime
-}
-else {
- $traitement = "not configure"
-}
-$chaine += $traitement
-$chaine>> $nomfichier
-
-
-#Do not delete temp folders upon exit'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "RDCC" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Ensure 'Do not delete temp folders upon exit' is set to 'Disabled', value must 0 " + ";"
-$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services"
-if ( $exist -eq $true) {
- $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" |Select-Object DeleteTempDirsOnExit
- $traitement = $traitement.DeleteTempDirsOnExit
-}
-else {
- $traitement = "not configure"
-}
-$chaine += $traitement
-$chaine>> $nomfichier
-
-#Do not use temporary folders per session'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "RDCC" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Ensure 'Do not use temporary folders per session' is set to 'Disabled' (Scored), value must 0 " + ";"
-$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services"
-if ( $exist -eq $true) {
- $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" |Select-Object PerSessionTempDir
- $traitement = $traitement.PerSessionTempDir
-}
-else {
- $traitement = "not configure"
-}
-$chaine += $traitement
-$chaine>> $nomfichier
-
-#RSS Feeds
-Write-Host "#########>Begin RSS Feeds audit<#########" -ForegroundColor DarkGreen
-
-
-
-#Prevent downloading of enclosures'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "RSS" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Ensure 'Prevent downloading of enclosures' is set to 'Enabled', value must be 1 " + ";"
-$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Internet Explorer\Feeds"
-if ( $exist -eq $true) {
- $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Internet Explorer\Feeds" |Select-Object DisableEnclosureDownload
- $traitement = $traitement.DisableEnclosureDownload
-}
-else {
- $traitement = "not configure"
-}
-$chaine += $traitement
-$chaine>> $nomfichier
-
-
-#OCR
-Write-Host "#########>Begin OCR audit<#########" -ForegroundColor DarkGreen
-
-
-
-#Allow Cloud Search'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "OCR" + "$indextest"
-$chaine = "$id" + ";" + "(L2)Ensure 'Allow Cloud Search' is set to 'Enabled: Disable Cloud Search', value must be 0 " + ";"
-$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Search"
-if ( $exist -eq $true) {
- $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Search" |Select-Object AllowCloudSearch
- $traitement = $traitement.AllowCloudSearch
-}
-else {
- $traitement = "not configure"
-}
-$chaine += $traitement
-$chaine>> $nomfichier
-
-
-#Allow Cortana'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "OCR" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Ensure 'Allow Cortana' is set to 'Disabled', value must be 0 " + ";"
-$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Search"
-if ( $exist -eq $true) {
- $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Search" |Select-Object AllowCortana
- $traitement = $traitement.AllowCortana
-}
-else {
- $traitement = "not configure"
-}
-$chaine += $traitement
-$chaine>> $nomfichier
-
-#Allow Cortana above lock screen'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "OCR" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Ensure 'Allow Cortana above lock screen' is set to 'Disabled', value must be 0 " + ";"
-$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Search" 
-if ( $exist -eq $true) {
- $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Search" |Select-Object AllowCortanaAboveLock
- $traitement = $traitement.AllowCortanaAboveLock
-}
-else {
- $traitement = "not configure"
-}
-$chaine += $traitement
-$chaine>> $nomfichier
-
-#Allow indexing of encrypted files'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "OCR" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Ensure 'Allow indexing of encrypted files' is set to 'Disabled', value must be 0 " + ";"
-$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Search"
-if ( $exist -eq $true) {
- $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Search" |Select-Object AllowIndexingEncryptedStoresOrItems
- $traitement = $traitement.AllowIndexingEncryptedStoresOrItems
-}
-else {
- $traitement = "not configure"
-}
-$chaine += $traitement
-$chaine>> $nomfichier
-
-#Ensure 'Allow search and Cortana to use location' is set to 'Disabled'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "OCR" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Ensure 'Allow search and Cortana to use location' is set to 'Disabled', value must be 0 " + ";"
-$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Search"
-if ( $exist -eq $true) {
- $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Search" |Select-Object AllowSearchToUseLocation
- $traitement = $traitement.AllowSearchToUseLocation
-}
-else {
- $traitement = "not configure"
-}
-$chaine += $traitement
-$chaine>> $nomfichier
-
-#Software Protection Platform
-Write-Host "#########>Begin Software Protection Platform audit<#########" -ForegroundColor DarkGreen
-
-
-#Turn off KMS Client Online AVS Validation'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "SPP" + "$indextest"
-$chaine = "$id" + ";" + "(L2)Ensure 'Turn off KMS Client Online AVS Validation' is set to 'Enabled', value must be 1 " + ";"
-$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\CurrentVersion\Software Protection Platform" 
-if ( $exist -eq $true) {
- $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\CurrentVersion\Software Protection Platform" |Select-Object NoGenTicket
- $traitement = $traitement.NoGenTicket
-}
-else {
- $traitement = "not configure"
-}
-$chaine += $traitement
-$chaine>> $nomfichier
-
-
-#Store
-Write-Host "#########>Begin Store audit<#########" -ForegroundColor DarkGreen
-
-
-#Disable all apps from Windows Store'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "STORE" + "$indextest"
-$chaine = "$id" + ";" + "(L2)Ensure 'Disable all apps from Windows Store' is set to 'Enabled', value must be 1 " + ";"
-$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\WindowsStore"
-if ( $exist -eq $true) {
- $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\WindowsStore" |Select-Object DisableStoreApps
- $traitement = $traitement.DisableStoreApps
-}
-else {
- $traitement = "not configure"
-}
-$chaine += $traitement
-$chaine>> $nomfichier
-
-
-#Only display the private store within the Microsoft Store
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "STORE" + "$indextest"
-$chaine = "$id" + ";" + "(L1) Ensure 'Only display the private store within the Microsoft Store' is set to 'Enabled', value must be 1 " + ";"
-$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\WindowsStore"
-if ( $exist -eq $true) {
- $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\WindowsStore" |Select-Object RequirePrivateStoreOnly
- $traitement = $traitement.RequirePrivateStoreOnly
-}
-else {
- $traitement = "not configure"
-}
-$chaine += $traitement
-$chaine>> $nomfichier
-
-
-#Turn off Automatic Download and Install of updates'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "SPP" + "$indextest"
-$chaine = "$id" + ";" + "(L1) Ensure 'Turn off Automatic Download and Install of updates' is set to 'Disabled', value must be 0 " + ";"
-$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\WindowsStore" 
-if ( $exist -eq $true) {
- $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\WindowsStore" |Select-Object AutoDownload
- $traitement = $traitement.AutoDownload
-}
-else {
- $traitement = "not configure"
-}
-$chaine += $traitement
-$chaine>> $nomfichier
-
-
-#Turn off the offer to update to the latest version of Windows'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "SPP" + "$indextest"
-$chaine = "$id" + ";" + " (L1)Ensure 'Turn off the offer to update to the latest version of Windows' is set to 'Enabled, value must be 1 " + ";"
-$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\WindowsStore"
-if ( $exist -eq $true) {
- $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\WindowsStore" |Select-Object DisableOSUpgrade
- $traitement = $traitement.DisableOSUpgrade
-}
-else {
- $traitement = "not configure"
-}
-$chaine += $traitement
-$chaine>> $nomfichier
-
-#Turn off the Store application'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "SPP" + "$indextest"
-$chaine = "$id" + ";" + "(L2)Ensure 'Turn off the Store application' is set to 'Enabled', value must be 1 " + ";"
-$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\WindowsStore"
-if ( $exist -eq $true) {
- $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\WindowsStore" |Select-Object RemoveWindowsStore
- $traitement = $traitement.RemoveWindowsStore
-}
-else {
- $traitement = "not configure"
-}
-$chaine += $traitement
-$chaine>> $nomfichier
-
-
-#Windows
-Write-Host "#########>Begin Windows Defender audit<#########" -ForegroundColor DarkGreen
-
+#Microsoft Defender Antivirus
+Write-Host "#########>Begin Microsoft Defender Antivirus <#########" -ForegroundColor DarkGreen
 #'Configure local setting override for reporting to Microsoft MAPS'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "WDEF" + "$indextest"
+$id = "MDA" + "18.10.43.5.1"
 $chaine = "$id" + ";" + "(L1)Ensure 'Configure local setting override for reporting to Microsoft MAPS' is set to 'Disabled', value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Spynet"
 if ( $exist -eq $true) {
@@ -8738,13 +8251,11 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
-
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Join Microsoft MAPS'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "WDEF" + "$indextest"
+$id = "MDA" + "18.10.43.5.2"
 $chaine = "$id" + ";" + " (L2)Ensure 'Join Microsoft MAPS' is set to 'Disabled', value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Spynet"
 if ( $exist -eq $true) {
@@ -8756,86 +8267,12 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
-
-
-
-#Turn on behavior monitoring'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "WDEF" + "$indextest"
-$chaine = "$id" + ";" + "(L1) Ensure 'Turn on behavior monitoring' is set to 'Enabled', value must be 1 " + ";"
-$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Real-Time Protection"
-if ( $exist -eq $true) {
- $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Real-Time Protection" |Select-Object DisableBehaviorMonitoring
- $traitement = $traitement.DisableBehaviorMonitoring
-}
-else {
- $traitement = "not configure"
-}
-$chaine += $traitement
-$chaine>> $nomfichier
-
-
-#Configure Watson events'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "WDEF" + "$indextest"
-$chaine = "$id" + ";" + "(L2)Ensure 'Configure Watson events' is set to 'Disabled, value must be 0 " + ";"
-$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Reporting"
-if ( $exist -eq $true) {
- $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Reporting" |Select-Object DisableGenericRePorts
- $traitement = $traitement.DisableGenericRePorts
-}
-else {
- $traitement = "not configure"
-}
-$chaine += $traitement
-$chaine>> $nomfichier
-
-
-#Scan removable drives'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "WDEF" + "$indextest"
-$chaine = "$id" + ";" + "(L1) Ensure 'Scan removable drives' is set to 'Enabled', value must be 0 " + ";"
-$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Scan"
-if ( $exist -eq $true) {
- $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Scan" |Select-Object DisableRemovableDriveScanning
- $traitement = $traitement.DisableRemovableDriveScanning
-}
-else {
- $traitement = "not configure"
-}
-$chaine += $traitement
-$chaine>> $nomfichier
-
-
-#Turn on e-mail scanning'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "WDEF" + "$indextest"
-$chaine = "$id" + ";" + "(L1) Ensure 'Turn on e-mail scanning' is set to 'Enabled', value must be 0 " + ";"
-$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Scan"
-if ( $exist -eq $true) {
- $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Scan" |Select-Object DisableEmailScanning
- $traitement = $traitement.DisableEmailScanning
-}
-else {
- $traitement = "not configure"
-}
-$chaine += $traitement
-$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 
 #Configure Attack Surface Reduction rules'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "WDEF" + "$indextest"
+$id = "MDA" + "18.10.43.6.1.1"
 $chaine = "$id" + ";" + "(L1)Ensure 'Configure Attack Surface Reduction rules' is set to 'Enabled', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Windows Defender Exploit Guard\ASR"
 if ( $exist -eq $true) {
@@ -8847,12 +8284,11 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Configure Attack Surface Reduction rules'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "WDEF" + "$indextest"
+$id = "MDA" + "18.10.43.6.1.2"
 $chaine = "$id" + ";" + "(L1) Ensure 'Configure Attack Surface Reduction rules: Set the state for each ASR rule' is 'configured', value must be 1 foreach key " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Windows Defender Exploit Guard\ASR\Rules"
 if ( $exist -eq $true) {
@@ -8883,13 +8319,12 @@ else {
 }
 $chaine += $traitementtemp
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 
 #Prevent users and apps from accessing dangerous websites'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "WDEF" + "$indextest"
+$id = "MDA" + "18.10.43.6.3.1"
 $chaine = "$id" + ";" + "(L1)Ensure 'Prevent users and apps from accessing dangerous websites' is set to 'Enabled: Block', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Windows Defender Exploit Guard\Network Protection"
 if ( $exist -eq $true) {
@@ -8901,14 +8336,150 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+#Enable file hash computation feature
+$id = "MDA" + "18.10.43.6.3.1"
+$chaine = "$id" + ";" + "(L2)Ensure 'Enable file hash computation feature' is set to 'Enabled' value must be 1 " + ";"
+$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\MpEngine"
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\MpEngine" |Select-Object EnableFileHashComputation
+ $traitement = $traitement.EnableFileHashComputation
+}
+else {
+ $traitement = "not configure"
+}
+$chaine += $traitement
+$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+#Scan all downloaded files and attachments
+$id = "MDA" + "18.10.43.10.1"
+$chaine = "$id" + ";" + "(L1) Ensure 'Scan all downloaded files and attachments' is set to 'Enabled', value must be 1 or disable if you have another EPP" + ";"
+$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Real-Time Protection"
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Real-Time Protection" |Select-Object DisableIOAVProtection
+ $traitement = $traitement.DisableIOAVProtection
+}
+else {
+ $traitement = "not configure"
+}
+$chaine += $traitement
+$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
+#Scan all downloaded files and attachments
+$id = "MDA" + "18.10.43.10.2"
+$chaine = "$id" + ";" + "(L1) Ensure 'Turn off real-time protection' is set to 'Disabled' (Automated), value must be 0 or disable if you have another EPP" + ";"
+$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Real-Time Protection"
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Real-Time Protection" |Select-Object DisableRealtimeMonitoring
+ $traitement = $traitement.DisableRealtimeMonitoring
+}
+else {
+ $traitement = "not configure"
+}
+$chaine += $traitement
+$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
+
+#Turn on behavior monitoring'
+$id = "MDA" + "18.10.43.10.3"
+$chaine = "$id" + ";" + "(L1) Ensure 'Turn on behavior monitoring' is set to 'Enabled', value must be 0  or disable if you have another EPP " + ";"
+$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Real-Time Protection"
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Real-Time Protection" |Select-Object DisableBehaviorMonitoring
+ $traitement = $traitement.DisableBehaviorMonitoring
+}
+else {
+ $traitement = "not configure"
+}
+$chaine += $traitement
+$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+#Turn on script scanning
+$id = "MDA" + "18.10.43.10.4"
+$chaine = "$id" + ";" + "(L1) Ensure 'Turn on script scanning' is set to 'Enabled', value must be 0  or disable if you have another EPP " + ";"
+$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Real-Time Protection"
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Real-Time Protection" |Select-Object DisableScriptScanning
+ $traitement = $traitement.DisableScriptScanning
+}
+else {
+ $traitement = "not configure"
+}
+$chaine += $traitement
+$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
+
+#Configure Watson events'
+$id = "MDA" + "18.10.43.12.1"
+$chaine = "$id" + ";" + "(L2)Ensure 'Configure Watson events' is set to 'Disabled, value must be 0 " + ";"
+$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Reporting"
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Reporting" |Select-Object DisableGenericRePorts
+ $traitement = $traitement.DisableGenericRePorts
+}
+else {
+ $traitement = "not configure"
+}
+$chaine += $traitement
+$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
+
+
+#Scan removable drives'
+$id = "MDA" + "18.10.43.13.1"
+$chaine = "$id" + ";" + "(L1) Ensure 'Scan removable drives' is set to 'Enabled', value must be 0 or disable if you have another EPP" + ";"
+$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Scan"
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Scan" |Select-Object DisableRemovableDriveScanning
+ $traitement = $traitement.DisableRemovableDriveScanning
+}
+else {
+ $traitement = "not configure"
+}
+$chaine += $traitement
+$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
+#Turn on e-mail scanning'
+$id = "MDA" + "18.10.43.13.2"
+$chaine = "$id" + ";" + "(L1) Ensure 'Turn on e-mail scanning' is set to 'Enabled', value must be 0 or disable if you have another EPP" + ";"
+$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Scan"
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Scan" |Select-Object DisableEmailScanning
+ $traitement = $traitement.DisableEmailScanning
+}
+else {
+ $traitement = "not configure"
+}
+$chaine += $traitement
+$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 
 #Configure detection for potentially unwanted applications
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "WDEF" + "$indextest"
-$chaine = "$id" + ";" + "(L1) Ensure 'Configure detection for potentially unwanted applications' is set to 'Enabled: Block', value must be 1 " + ";"
+$id = "MDA" + "18.10.43.16"
+$chaine = "$id" + ";" + "(L1) Ensure 'Configure detection for potentially unwanted applications' is set to 'Enabled: Block', value must be 1 or disable if you have another EPP " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender"
 if ( $exist -eq $true) {
  $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender" |Select-Object PUAProtection
@@ -8919,15 +8490,13 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
-
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 
 #Turn off Windows Defender AntiVirus'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "WDEF" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Ensure 'Turn off Windows Defender AntiVirus' is set to 'Disabled', value must be 0 " + ";"
+$id = "MDA" + "18.10.43.17"
+$chaine = "$id" + ";" + "(L1)Ensure 'Turn off Windows Defender AntiVirus' is set to 'Disabled', value must be 0 or disable if you have another EPP" + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender"
 if ( $exist -eq $true) {
  $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender" |Select-Object DisableAntiSpyware
@@ -8938,13 +8507,12 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 
 #Allow auditing events in Windows Defender Application Guard'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "WDEF" + "$indextest"
+$id = "MDA" + "18.10.44.1"
 $chaine = "$id" + ";" + "(L1)Ensure 'Allow auditing events in Windows Defender Application Guard' is set to 'Enabled', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\AppHVSI"
 if ( $exist -eq $true) {
@@ -8956,14 +8524,14 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 
 
 
 #Allow camera and microphone access in Windows Defender Application Guard
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "WDEF" + "$indextest"
+$id = "MDA" + "18.10.44.2"
 $chaine = "$id" + ";" + "(L1)Ensure 'Allow camera and microphone access in Windows Defender Application Guard' is set to 'Disabled', value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\AppHVSI"
 if ( $exist -eq $true) {
@@ -8975,13 +8543,11 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
-
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Allow data persistence for Windows Defender Application Guard
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "WDEF" + "$indextest"
+$id = "MDA" + "18.10.44.3"
 $chaine = "$id" + ";" + "(L1)Ensure 'Allow data persistence for Windows Defender Application Guard' is set to 'Disabled', value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\AppHVSI"
 if ( $exist -eq $true) {
@@ -8993,13 +8559,11 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
-
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Allow files to download and save to the host operating system from Windows Defender Application Guard'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "WDEF" + "$indextest"
+$id = "MDA" + "18.10.44.4"
 $chaine = "$id" + ";" + "(L1)Ensure 'Allow files to download and save to the host operating system from Windows Defender Application Guard' is set to 'Disabled', value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\AppHVSI"
 if ( $exist -eq $true) {
@@ -9011,31 +8575,13 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
-
-#Allow files to download and save to the host operating system from Windows Defender Application Guard'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "WDEF" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Ensure 'Allow users to trust files that open in Windows Defender Application Guard' is set to 'Enabled: 0 (Do not allow users to manually trust files)' OR '2 (Allow users to manually trust after an antivirus check)', value must be 0 OR 2 " + ";"
-$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\AppHVSI"
-if ( $exist -eq $true) {
- $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\AppHVSI" |Select-Object FileTrustCriteria
- $traitement = $traitement.FileTrustCriteria
-}
-else {
- $traitement = "not configure"
-}
-$chaine += $traitement
-$chaine>> $nomfichier
 
 
 #Configure Windows Defender Application Guard clipboard settings: Clipboard behavior setting'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "WDEF" + "$indextest"
+$id = "MDA" + "18.10.44.5"
 $chaine = "$id" + ";" + "(L1)Ensure 'Configure Windows Defender Application Guard clipboard settings: Clipboard behavior setting' is set to 'Enabled: Enable clipboard operation from an isolated session to the host', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\AppHVSI"
 if ( $exist -eq $true) {
@@ -9047,13 +8593,11 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
-
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Turn on Windows Defender Application Guard in Enterprise Mode'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "WDEF" + "$indextest"
+$id = "MDA" + "18.10.44.6"
 $chaine = "$id" + ";" + "(L1)Ensure 'Turn on Windows Defender Application Guard in Enterprise Mode' is set to 'Enabled', value must be 3 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\AppHVSI"
 if ( $exist -eq $true) {
@@ -9065,18 +8609,41 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
+#Windows Game Recording and Broadcasting
+Write-Host "#########>Begin News and interests audit<#########" -ForegroundColor DarkGreen
 
-#Prevent users from modifying settings'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "WDEF" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Ensure 'Prevent users from modifying settings' is set to 'Enabled', value must be 1 " + ";"
-$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender Security Center\App and Browser protection"
+#Enable news and interests on the taskbar
+$id = "NI" + "18.10.50.1"
+$chaine = "$id" + ";" + "(L2)Ensure 'Enable news and interests on the taskbar' is set to 'Disabled', value must be 0 " + ";"
+$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Feeds:"
 if ( $exist -eq $true) {
- $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender Security Center\App and Browser protection" |Select-Object DisallowExploitProtectionOverride
- $traitement = $traitement.DisallowExploitProtectionOverride
+ $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Feeds:" |Select-Object EnableFeeds
+ $traitement = $traitement.EnableFeeds
+}
+else {
+ $traitement = "not configure"
+}
+$chaine += $traitement
+$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
+#OneDrive
+Write-Host "#########>Begin OneDrive audit<#########" -ForegroundColor DarkGreen
+
+
+
+#Prevent the usage of OneDrive for file storage'
+$id = "OD" + "18.10.50.1"
+$chaine = "$id" + ";" + "(L1)Ensure 'Prevent the usage of OneDrive for file storage' is set to 'Enabled'', value must be 1 " + ";"
+$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\OneDrive"
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\OneDrive" |Select-Object DisableFileSyncNGSC
+ $traitement = $traitement.DisableFileSyncNGSC
 }
 else {
  $traitement = "not configure"
@@ -9084,12 +8651,679 @@ else {
 $chaine += $traitement
 $chaine>> $nomfichier
 
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
+#Push to Install 
+Write-Host "#########>Begin Push To Install audit<#########" -ForegroundColor DarkGreen
+
+
+
+#Turn off Push To Install service'
+
+$id = "PTI" + "18.10.56.1"
+$chaine = "$id" + ";" + "(L2)Ensure 'Turn off Push To Install service' is set to 'Enabled, value must be 1 " + ";"
+$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\PushToInstall"
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\PushToInstall" |Select-Object DisablePushToInstall
+ $traitement = $traitement.DisablePushToInstall
+}
+else {
+ $traitement = "not configure"
+}
+$chaine += $traitement
+$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
+#Remote Desktop Connection Client
+Write-Host "#########>Begin Remote Desktop Services audit<#########" -ForegroundColor DarkGreen
+
+#Disable Cloud Clipboard integration for server-to-client data transfer
+
+$id = "RDS" + "18.10.57.2.2"
+$chaine = "$id" + ";" + "(L2)Ensure 'Disable Cloud Clipboard integration for server-to-client data transfer' is set to 'Enabled', value must be 1 " + ";"
+$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services"
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" |Select-Object DisableCloudClipboardIntegration
+ $traitement = $traitement.DisableCloudClipboardIntegration
+}
+else {
+ $traitement = "not configure"
+}
+$chaine += $traitement
+$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+#Do not allow passwords to be saved'
+$id = "RDS" + "18.10.57.2.3"
+$chaine = "$id" + ";" + "(L1)Ensure 'Do not allow passwords to be saved' is set to 'Enabled', value must be 1 " + ";"
+$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services"
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" |Select-Object DisablePasswordSaving
+ $traitement = $traitement.DisablePasswordSaving
+}
+else {
+ $traitement = "not configure"
+}
+$chaine += $traitement
+$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+#Allow users to connect remotely by using Remote Desktop Services
+$id = "RDS" + "18.10.57.3.2.1"
+$chaine = "$id" + ";" + "(L2)Ensure 'Allow users to connect remotely by using Remote Desktop Services' is set to 'Disabled', value must be 1 " + ";"
+$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services"
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" |Select-Object fDenyTSConnections
+ $traitement = $traitement.fDenyTSConnections
+}
+else {
+ $traitement = "not configure"
+}
+$chaine += $traitement
+$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+#Allow UI Automation redirection
+$id = "RDS" + "18.10.57.3.3.1"
+$chaine = "$id" + ";" + "(L2)Ensure 'Allow UI Automation redirection' is set to 'Disabled', value must be 0 " + ";"
+$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services"
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" |Select-Object EnableUiaRedirection
+ $traitement = $traitement.EnableUiaRedirection
+}
+else {
+ $traitement = "not configure"
+}
+$chaine += $traitement
+$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
+#Do not allow COM port redirection'
+$id = "RDS" + "18.10.57.3.3.2"
+$chaine = "$id" + ";" + "(L2)Ensure 'Do not allow COM port redirection' is set to 'Enabled', value must be 1 " + ";"
+$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" 
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" |Select-Object fDisableCcm
+ $traitement = $traitement.fDisableCcm
+}
+else {
+ $traitement = "not configure"
+}
+$chaine += $traitement
+$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
+#Do not allow drive redirection'
+$id = "RDS" + "18.10.57.3.3.3"
+$chaine = "$id" + ";" + "(L1)Ensure 'Do not allow drive redirection' is set to 'Enabled', value must be 1 " + ";"
+$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" 
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" |Select-Object fDisableCdm
+ $traitement = $traitement.fDisableCdm
+}
+else {
+ $traitement = "not configure"
+}
+$chaine += $traitement
+$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
+#Do not allow location redirection
+$id = "RDS" + "18.10.57.3.3.4"
+$chaine = "$id" + ";" + "(L1)Ensure 'Do not allow location redirection' is set to 'Enabled', value must be 1 " + ";"
+$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" 
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" |Select-Object fDisableLocationRedir
+ $traitement = $traitement.fDisableLocationRedir
+}
+else {
+ $traitement = "not configure"
+}
+$chaine += $traitement
+$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
+#Do not allow LPT port redirection'
+$id = "RDS" + "18.10.57.3.3.5"
+$chaine = "$id" + ";" + "(L2)Ensure 'Do not allow LPT port redirection' is set to 'Enabled'', value must be 1 " + ";"
+$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services"
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" |Select-Object fDisableLPT
+ $traitement = $traitement.fDisableLPT
+}
+else {
+ $traitement = "not configure"
+}
+$chaine += $traitement
+$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+#Do not allow supported Plug and Play device redirection'
+$id = "RDS" + "18.10.57.3.3.6"
+$chaine = "$id" + ";" + "(L2)Ensure 'Do not allow supported Plug and Play device redirection' is set to 'Enabled'', value must be 1 " + ";"
+$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services"
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" |Select-Object fDisablePNPRedir
+ $traitement = $traitement.fDisablePNPRedir
+}
+else {
+ $traitement = "not configure"
+}
+$chaine += $traitement
+$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
+#Do not allow WebAuthn redirection
+$id = "RDS" + "18.10.57.3.3.7"
+$chaine = "$id" + ";" + "(L2)Ensure 'Do not allow WebAuthn redirection' is set to 'Enabled'', value must be 1 " + ";"
+$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services"
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" |Select-Object fDisableWebAuthn
+ $traitement = $traitement.fDisableWebAuthn
+}
+else {
+ $traitement = "not configure"
+}
+$chaine += $traitement
+$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
+
+#Always prompt for password upon connection'
+$id = "RDS" + "18.10.57.3.9.1"
+$chaine = "$id" + ";" + "(L1)Ensure 'Always prompt for password upon connection' is set to 'Enabled', value must be 1 " + ";"
+$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services"
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" |Select-Object fPromptForPassword
+ $traitement = $traitement.fPromptForPassword
+}
+else {
+ $traitement = "not configure"
+}
+$chaine += $traitement
+$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+#Require secure RPC communication'
+$id = "RDS" + "18.10.57.3.9.2"
+$chaine = "$id" + ";" + "(L1)Ensure 'Require secure RPC communication' is set to 'Enabled', value must be 1 " + ";"
+$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" 
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" |Select-Object fEncryptRPCTraffic
+ $traitement = $traitement.fEncryptRPCTraffic
+}
+else {
+ $traitement = "not configure"
+}
+$chaine += $traitement
+$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+#Require secure RPC communication'
+$id = "RDS" + "18.10.57.3.9.2"
+$chaine = "$id" + ";" + "(L1)Ensure 'Require secure RPC communication' is set to 'Enabled', value must be 1 " + ";"
+$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" 
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" |Select-Object fEncryptRPCTraffic
+ $traitement = $traitement.fEncryptRPCTraffic
+}
+else {
+ $traitement = "not configure"
+}
+$chaine += $traitement
+$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
+#'Require use of specific security layer for remote (RDP) connections
+$id = "RDS" + "18.10.57.3.9.3"
+$chaine = "$id" + ";" + "(L1)Ensure 'Require use of specific security layer for remote (RDP) connections' is set to 'Enabled: SSL', value must be 2 " + ";"
+$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" 
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" |Select-Object SecurityLayer
+ $traitement = $traitement.SecurityLayer
+}
+else {
+ $traitement = "not configure"
+}
+$chaine += $traitement
+$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+#'Require user authentication for remote connections by using Network Level Authentication
+$id = "RDS" + "18.10.57.3.9.4"
+$chaine = "$id" + ";" + "(L1)Ensure 'Require user authentication for remote connections by using Network Level Authentication' is set to 'Enabled'', value must be 1 " + ";"
+$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" 
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" |Select-Object UserAuthentication
+ $traitement = $traitement.UserAuthentication
+}
+else {
+ $traitement = "not configure"
+}
+$chaine += $traitement
+$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+#Set client connection encryption level
+$id = "RDS" + "18.10.57.3.9.5"
+$chaine = "$id" + ";" + "(L1)Ensure 'Set client connection encryption level' is set to 'Enabled: High Level', value must be 3 " + ";"
+$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" 
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" |Select-Object MinEncryptionLevel
+ $traitement = $traitement.MinEncryptionLevel
+}
+else {
+ $traitement = "not configure"
+}
+$chaine += $traitement
+$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+#Set time limit for active but idle Remote Desktop Services sessions'
+$id = "RDS" + "18.10.57.3.10.1"
+$chaine = "$id" + ";" + "(L1)Ensure 'Set time limit for active but idle Remote Desktop Services sessions' is set to 'Enabled: 15 minutes or less', value must be 15 or less " + ";"
+$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services"
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" |Select-Object MaxIdleTime
+ $traitement = $traitement.MaxIdleTime
+}
+else {
+ $traitement = "not configure"
+}
+$chaine += $traitement
+$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+#Set time limit for disconnected sessions'
+$id = "RDS" + "18.10.57.3.10.2"
+$chaine = "$id" + ";" + "(L2)Ensure 'Set time limit for disconnected sessions' is set to 'Enabled: 1 minute', value must 1 " + ";"
+$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services"
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" |Select-Object MaxDisconnectionTime
+ $traitement = $traitement.MaxDisconnectionTime
+}
+else {
+ $traitement = "not configure"
+}
+$chaine += $traitement
+$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+#Do not delete temp folders upon exit'
+$id = "RDS" + "18.10.57.3.11.1"
+$chaine = "$id" + ";" + "(L1)Ensure 'Do not delete temp folders upon exit' is set to 'Disabled', value must 0 " + ";"
+$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services"
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" |Select-Object DeleteTempDirsOnExit
+ $traitement = $traitement.DeleteTempDirsOnExit
+}
+else {
+ $traitement = "not configure"
+}
+$chaine += $traitement
+$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
+#RSS Feeds
+Write-Host "#########>Begin RSS Feeds audit<#########" -ForegroundColor DarkGreen
+
+
+
+#Prevent downloading of enclosures'
+
+$id = "RSS" + "18.10.58.1"
+$chaine = "$id" + ";" + "(L1)Ensure 'Prevent downloading of enclosures' is set to 'Enabled', value must be 1 " + ";"
+$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Internet Explorer\Feeds"
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Internet Explorer\Feeds" |Select-Object DisableEnclosureDownload
+ $traitement = $traitement.DisableEnclosureDownload
+}
+else {
+ $traitement = "not configure"
+}
+$chaine += $traitement
+$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
+#OCR
+Write-Host "#########>Begin OCR audit<#########" -ForegroundColor DarkGreen
+
+
+
+#Allow Cloud Search'
+
+$id = "OCR" + "18.10.59.2"
+$chaine = "$id" + ";" + "(L2)Ensure 'Allow Cloud Search' is set to 'Enabled: Disable Cloud Search', value must be 0 " + ";"
+$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Search"
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Search" |Select-Object AllowCloudSearch
+ $traitement = $traitement.AllowCloudSearch
+}
+else {
+ $traitement = "not configure"
+}
+$chaine += $traitement
+$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+#Allow Cortana'
+$id = "OCR" + "18.10.59.3"
+$chaine = "$id" + ";" + "(L1)Ensure 'Allow Cortana' is set to 'Disabled', value must be 0 " + ";"
+$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Search"
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Search" |Select-Object AllowCortana
+ $traitement = $traitement.AllowCortana
+}
+else {
+ $traitement = "not configure"
+}
+$chaine += $traitement
+$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+#Allow Cortana above lock screen'
+$id = "OCR" + "18.10.59.4"
+$chaine = "$id" + ";" + "(L1)Ensure 'Allow Cortana above lock screen' is set to 'Disabled', value must be 0 " + ";"
+$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Search" 
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Search" |Select-Object AllowCortanaAboveLock
+ $traitement = $traitement.AllowCortanaAboveLock
+}
+else {
+ $traitement = "not configure"
+}
+$chaine += $traitement
+$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+#Allow indexing of encrypted files'
+$id = "OCR" + "18.10.59.5"
+$chaine = "$id" + ";" + "(L1)Ensure 'Allow indexing of encrypted files' is set to 'Disabled', value must be 0 " + ";"
+$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Search"
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Search" |Select-Object AllowIndexingEncryptedStoresOrItems
+ $traitement = $traitement.AllowIndexingEncryptedStoresOrItems
+}
+else {
+ $traitement = "not configure"
+}
+$chaine += $traitement
+$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+#Ensure 'Allow search and Cortana to use location' is set to 'Disabled'
+$id = "OCR" + "18.10.59.6"
+$chaine = "$id" + ";" + "(L1)Ensure 'Allow search and Cortana to use location' is set to 'Disabled', value must be 0 " + ";"
+$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Search"
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Search" |Select-Object AllowSearchToUseLocation
+ $traitement = $traitement.AllowSearchToUseLocation
+}
+else {
+ $traitement = "not configure"
+}
+$chaine += $traitement
+$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
+#Allow search highlights'
+$id = "OCR" + "18.10.59.7"
+$chaine = "$id" + ";" + "(L2)'Ensure 'Allow search highlights' is set to 'Disabled', value must be 0 " + ";"
+$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Search"
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Search" |Select-Object EnableDynamicContentInWSB
+ $traitement = $traitement.EnableDynamicContentInWSB
+}
+else {
+ $traitement = "not configure"
+}
+$chaine += $traitement
+$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
+
+
+
+#Software Protection Platform
+Write-Host "#########>Begin Software Protection Platform audit<#########" -ForegroundColor DarkGreen
+
+
+#Turn off KMS Client Online AVS Validation'
+
+$id = "SPP" + "18.10.63.1"
+$chaine = "$id" + ";" + "(L2)Ensure 'Turn off KMS Client Online AVS Validation' is set to 'Enabled', value must be 1 " + ";"
+$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\CurrentVersion\Software Protection Platform" 
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\CurrentVersion\Software Protection Platform" |Select-Object NoGenTicket
+ $traitement = $traitement.NoGenTicket
+}
+else {
+ $traitement = "not configure"
+}
+$chaine += $traitement
+$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+#Store
+Write-Host "#########>Begin Store audit<#########" -ForegroundColor DarkGreen
+
+
+#Disable all apps from Windows Store'
+
+$id = "STORE" + "18.10.66.1"
+$chaine = "$id" + ";" + "(L2)Ensure 'Disable all apps from Windows Store' is set to 'Enabled', value must be 1 " + ";"
+$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\WindowsStore"
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\WindowsStore" |Select-Object DisableStoreApps
+ $traitement = $traitement.DisableStoreApps
+}
+else {
+ $traitement = "not configure"
+}
+$chaine += $traitement
+$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+#Only display the private store within the Microsoft Store
+$id = "STORE" + "18.10.66.2"
+$chaine = "$id" + ";" + "(L1) Ensure 'Only display the private store within the Microsoft Store' is set to 'Enabled', value must be 1 " + ";"
+$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\WindowsStore"
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\WindowsStore" |Select-Object RequirePrivateStoreOnly
+ $traitement = $traitement.RequirePrivateStoreOnly
+}
+else {
+ $traitement = "not configure"
+}
+$chaine += $traitement
+$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+#Turn off Automatic Download and Install of updates'
+$id = "STORE" + "18.10.66.3"
+$chaine = "$id" + ";" + "(L1) Ensure 'Turn off Automatic Download and Install of updates' is set to 'Disabled', value must be 0 " + ";"
+$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\WindowsStore" 
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\WindowsStore" |Select-Object AutoDownload
+ $traitement = $traitement.AutoDownload
+}
+else {
+ $traitement = "not configure"
+}
+$chaine += $traitement
+$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
+#Turn off the offer to update to the latest version of Windows'
+$id = "STORE" + "18.10.66.4"
+$chaine = "$id" + ";" + " (L1)Ensure 'Turn off the offer to update to the latest version of Windows' is set to 'Enabled, value must be 1 " + ";"
+$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\WindowsStore"
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\WindowsStore" |Select-Object DisableOSUpgrade
+ $traitement = $traitement.DisableOSUpgrade
+}
+else {
+ $traitement = "not configure"
+}
+$chaine += $traitement
+$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+#Turn off the Store application'
+$id = "STORE" + "18.10.66.5"
+$chaine = "$id" + ";" + "(L2)Ensure 'Turn off the Store application' is set to 'Enabled', value must be 1 " + ";"
+$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\WindowsStore"
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\WindowsStore" |Select-Object RemoveWindowsStore
+ $traitement = $traitement.RemoveWindowsStore
+}
+else {
+ $traitement = "not configure"
+}
+$chaine += $traitement
+$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+#Windows
+Write-Host "#########>Begin Widgets audit<#########" -ForegroundColor DarkGreen
+
+#Allow widgets'
+$id = "WID" + "18.10.72.1"
+$chaine = "$id" + ";" + "(L1)Ensure 'Allow widgets' is set to 'Disabled', value must be 0 " + ";"
+$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Dsh"
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Dsh" |Select-Object AllowNewsAndInterests
+ $traitement = $traitement.AllowNewsAndInterests
+}
+else {
+ $traitement = "not configure"
+}
+$chaine += $traitement
+$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
+#Windows Defender SmartScreen 
+Write-Host "#########>Begin Windows Defender SmartScreen audit<#########" -ForegroundColor DarkGreen
+
+#Notify Malicious'
+$id = "WDS" + "18.10.72.1"
+$chaine = "$id" + ";" + "(L1)Ensure 'Notify Malicious' is set to 'Enabled', value must be 1" + ";"
+$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WTDS\Components"
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WTDS\Components" |Select-Object NotifyMalicious
+ $traitement = $traitement.NotifyMalicious
+}
+else {
+ $traitement = "not configure"
+}
+$chaine += $traitement
+$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
+#Notify Password Reuse
+$id = "WDS" + "18.10.72.2"
+$chaine = "$id" + ";" + "(L1)Ensure 'Notify Password Reuse' is set to 'Enabled', value must be 1" + ";"
+$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WTDS\Components"
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WTDS\Components" |Select-Object NotifyPasswordReuse
+ $traitement = $traitement.NotifyPasswordReuse
+}
+else {
+ $traitement = "not configure"
+}
+$chaine += $traitement
+$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+#Notify Unsafe App'
+$id = "WDS" + "18.10.72.3"
+$chaine = "$id" + ";" + "(L1)Ensure 'Notify Unsafe App'' is set to 'Enabled', value must be 1" + ";"
+$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WTDS\Components"
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WTDS\Components" |Select-Object NotifyUnsafeApp
+ $traitement = $traitement.NotifyUnsafeApp
+}
+else {
+ $traitement = "not configure"
+}
+$chaine += $traitement
+$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
+#Service Enabled'
+$id = "WDS" + "18.10.72.3"
+$chaine = "$id" + ";" + "(L1)Ensure 'Service Enabled' is set to 'Enabled', value must be 1" + ";"
+$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WTDS\Components"
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WTDS\Components" |Select-Object ServiceEnabled
+ $traitement = $traitement.ServiceEnabled
+}
+else {
+ $traitement = "not configure"
+}
+$chaine += $traitement
+$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 
 #Configure Windows Defender SmartScreen'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "WDEF" + "$indextest"
+$id = "WDS" + "18.10.76.2.1"
 $chaine = "$id" + ";" + "(L1)Ensure 'Configure Windows Defender SmartScreen' is set to 'Enabled: Warn and prevent bypass, value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System"
 if ( $exist -eq $true) {
@@ -9107,14 +9341,15 @@ else {
 }
 $chaine += $traitementtemp
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
+#Microsoft Edge 
+Write-Host "#########>Begin Microsoft Edge audit<#########" -ForegroundColor DarkGreen
 
-#Configure SmartScreen Filter'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "WDEF" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Ensure 'Configure Windows Defender SmartScreen' is set to 'Enabled', value must be 1 " + ";"
+#Configure Windows Defender SmartScreen 
+$id = "ME" + "18.10.76.3.1"
+$chaine = "$id" + ";" + "(L1)Ensure Configure Windows Defender SmartScreen is set to 'Enabled', value must be 1" + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\MicrosoftEdge\PhishingFilter"
 if ( $exist -eq $true) {
  $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\MicrosoftEdge\PhishingFilter" |Select-Object EnabledV9
@@ -9125,32 +9360,12 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
-
-#Prevent bypassing SmartScreen prompts for files'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "WDEF" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Ensure Prevent bypassing Windows Defender SmartScreen prompts for files' is set to 'Enabled, value must be 1 " + ";"
-$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\MicrosoftEdge\PhishingFilter" 
-if ( $exist -eq $true) {
- $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\MicrosoftEdge\PhishingFilter" |Select-Object PreventOverrideAppRepUnknown
- $traitement = $traitement.PreventOverrideAppRepUnknown
-}
-else {
- $traitement = "not configure"
-}
-$chaine += $traitement
-$chaine>> $nomfichier
-
-
-#Prevent bypassing SmartScreen prompts for sites'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "WDEF" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Ensure 'Prevent bypassing SmartScreen prompts for sites' is set to 'Enabled', value must be 1 " + ";"
+#Prevent bypassing Windows Defender SmartScreen prompts for sites
+$id = "ME" + "18.10.76.3.1"
+$chaine = "$id" + ";" + "(L1)Ensure Prevent bypassing Windows Defender SmartScreen prompts for sites is set to 'Enabled', value must be 1" + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\MicrosoftEdge\PhishingFilter"
 if ( $exist -eq $true) {
  $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\MicrosoftEdge\PhishingFilter" |Select-Object PreventOverride
@@ -9161,17 +9376,16 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
-
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Windows Game Recording and Broadcasting
-Write-Host "#########>Begin Windows Game Recording and Broadcastingaudit<#########" -ForegroundColor DarkGreen
+Write-Host "#########>Begin Windows Game Recording and Broadcasting audit<#########" -ForegroundColor DarkGreen
 
 
 #Enables or disables Windows Game Recording and Broadcasting'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "WGRB" + "$indextest"
+
+$id = "WGRB" + "18.10.78.1"
 $chaine = "$id" + ";" + "(L1)Ensure 'Enables or disables Windows Game Recording and Broadcasting' is set to 'Disabled', value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\GameDVR"
 if ( $exist -eq $true) {
@@ -9183,7 +9397,30 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
+
+#Windows Hello for Business
+Write-Host "#########>Begin Windows Hello for Business audit<#########" -ForegroundColor DarkGreen
+
+
+#Enables or disables Windows Game Recording and Broadcasting'
+
+$id = "WGRB" + "18.10.78.1"
+$chaine = "$id" + ";" + "(L1)Ensure 'Enable ESS with Supported Peripherals' is set to 'Enabled: 1', value must be 1 " + ";"
+$exist = Test-Path "HKLM:\SOFTWARE\Microsoft\Policies\PassportForWork\Biometrics"
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Policies\PassportForWork\Biometrics" |Select-Object EnableESSwithSupportedPeripherals
+ $traitement = $traitement.EnableESSwithSupportedPeripherals
+}
+else {
+ $traitement = "not configure"
+}
+$chaine += $traitement
+$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 
 #Windows Ink Workspace
@@ -9191,10 +9428,8 @@ Write-Host "#########>Begin Windows Ink Workspace audit<#########" -ForegroundCo
 
 
 #Allow suggested apps in Windows Ink Workspace'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "WIW" + "$indextest"
+
+$id = "WIW" + "18.10.80.1"
 $chaine = "$id" + ";" + "(L2)Ensure 'Allow suggested apps in Windows Ink Workspace' is set to 'Disabled, value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\WindowsInkWorkspace"
 if ( $exist -eq $true) {
@@ -9206,13 +9441,12 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 
 #Windows Ink Workspace'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "WGRB" + "$indextest"
+$id = "WIW" + "18.10.80.2"
 $chaine = "$id" + ";" + "(L1) Ensure 'Allow Windows Ink Workspace' is set to 'Enabled: On, but disallow access above lock' OR 'Disabled' but not 'Enabled: On', value must be 0 or 1 but not 2 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\WindowsInkWorkspace"
 if ( $exist -eq $true) {
@@ -9224,7 +9458,8 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
-
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 
 #Windows Installer
@@ -9232,10 +9467,8 @@ $chaine>> $nomfichier
 Write-Host "#########>Begin Windows Installer audit<#########" -ForegroundColor DarkGreen
 
 #Allow user control over installs'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "WI" + "$indextest"
+
+$id = "WI" + "18.10.81.1"
 $chaine = "$id" + ";" + "Ensure 'Allow user control over installs' is set to 'Disabled', value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Installer" 
 if ( $exist -eq $true) {
@@ -9247,13 +9480,12 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 
 #Always install with elevated privileges'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "WI" + "$indextest"
+$id = "WI" + "18.10.81.2"
 $chaine = "$id" + ";" + "(L1)Ensure 'Always install with elevated privileges' is set to 'Disabled', value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Installer" 
 if ( $exist -eq $true) {
@@ -9265,12 +9497,11 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Prevent Internet Explorer security prompt for Windows Installer scripts'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "WI" + "$indextest"
+$id = "WI" + "18.10.81.3"
 $chaine = "$id" + ";" + "(L2)Ensure 'Prevent Internet Explorer security prompt for Windows Installer scripts' is set to 'Disabled', value must be 0 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Installer" 
 if ( $exist -eq $true) {
@@ -9282,16 +9513,36 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Windows Logon Options
 
 Write-Host "#########>Begin Windows Logon Options audit<#########" -ForegroundColor DarkGreen
 
+#Enable MPR notifications for the system
+
+$id = "WLO" + "18.10.82.1"
+$chaine = "$id" + ";" + "(L1)Ensure ''Enable MPR notifications for the system' is set to 'Disabled', value must be 0 " + ";"
+$exist = Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System"
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" |Select-Object EnableMPR
+ $traitement = $traitement.EnableMPR
+}
+else {
+ $traitement = "not configure"
+}
+$chaine += $traitement
+$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
+
+
 #Sign-in last interactive user automatically after a system-initiated restart'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "WLO" + "$indextest"
+
+$id = "WLO" + "18.10.82.2"
 $chaine = "$id" + ";" + "(L1)Ensure 'Sign-in last interactive user automatically after a system-initiated restart' is set to 'Disabled', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System"
 if ( $exist -eq $true) {
@@ -9303,6 +9554,9 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 
 
 #Windows PowerShell
@@ -9310,11 +9564,9 @@ $chaine>> $nomfichier
 Write-Host "#########>Begin Windows PowerShell audit<#########" -ForegroundColor DarkGreen
 
 #Turn on PowerShell Script Block Logging'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "WP" + "$indextest"
-$chaine = "$id" + ";" + "Ensure 'Turn on PowerShell Script Block Logging' is set to 'Disabled', value must be 0 but microsof recommending to 1 " + ";"
+
+$id = "WP" + "18.10.87.1"
+$chaine = "$id" + ";" + "Ensure 'Turn on PowerShell Script Block Logging' is set to 'Enabled', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging"
 if ( $exist -eq $true) {
  $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging" |Select-Object EnableScriptBlockLogging
@@ -9325,13 +9577,11 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
-
+Clean-Value($chaine)
+Clean-Value($traitement)
 #Turn on PowerShell Transcription'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "WP" + "$indextest"
-$chaine = "$id" + ";" + "Ensure 'Turn on PowerShell Transcription' is set to 'Disabled, value must be 0 but microsof recommending to 1 " + ";"
+$id = "WP" + "18.10.87.2"
+$chaine = "$id" + ";" + "Ensure 'urn on PowerShell Transcription' is set to 'Enabled', value must be 1" + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\Transcription"
 if ( $exist -eq $true) {
  $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\Transcription" |Select-Object EnableTranscripting
@@ -9342,16 +9592,17 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
-
+Clean-Value($chaine)
+Clean-Value($traitement)
 #Windows Remote Management
+
+
 
 Write-Host "#########>Begin Windows Remote Management audit<#########" -ForegroundColor DarkGreen
 
 #Allow Basic authentication'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "WRR" + "$indextest"
+
+$id = "WRR" + "18.10.89.1.1"
 $chaine = "$id" + ";" + "(L1)Ensure 'Allow Basic authentication' is set to 'Disabled', value must be 0" + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WinRM\Client"
 if ( $exist -eq $true) {
@@ -9363,12 +9614,11 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Allow unencrypted traffic'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "WRR" + "$indextest"
+$id = "WRR" + "18.10.89.1.2"
 $chaine = "$id" + ";" + "(L1)Ensure 'Allow unencrypted traffic' is set to 'Disabled', value must be 0" + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WinRM\Client"
 if ( $exist -eq $true) {
@@ -9380,12 +9630,11 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Disallow Digest authentication'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "WRR" + "$indextest"
+$id = "WRR" + "18.10.89.1.3"
 $chaine = "$id" + ";" + "(L1)Ensure 'Disallow Digest authentication' is set to 'Enabled', value must be 0" + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WinRM\Client"
 if ( $exist -eq $true) {
@@ -9397,13 +9646,13 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
-
+Write-Host "#########>Begin WinRM Service audit<#########" -ForegroundColor DarkGreen
 #Allow Basic authentication'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "WRR" + "$indextest"
+
+$id = "WRR" + "18.10.89.2.1"
 $chaine = "$id" + ";" + "(L1)Ensure 'Allow Basic authentication' is set to 'Disabled', value must be 0" + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WinRM\Service" 
 if ( $exist -eq $true) {
@@ -9415,13 +9664,12 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
-
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Allow remote server management through WinRM'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "WRR" + "$indextest"
+
+$id = "WRR" + "18.10.89.2.2"
 $chaine = "$id" + ";" + "(L2)Ensure 'Allow remote server management through WinRM' is set to 'Disabled', value must be 0" + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WinRM\Service"
 if ( $exist -eq $true) {
@@ -9433,12 +9681,12 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Allow unencrypted traffic'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "WRR" + "$indextest"
+
+$id = "WRR" + "18.10.89.2.3"
 $chaine = "$id" + ";" + "(L1)Ensure 'Allow unencrypted traffic' is set to 'Disabled', value must be 0" + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WinRM\Service" 
 if ( $exist -eq $true) {
@@ -9450,13 +9698,11 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
-
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Disallow WinRM from storing RunAs credentials'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "WRR" + "$indextest"
+$id = "WRR" + "18.10.89.2.4"
 $chaine = "$id" + ";" + "(L1)Ensure 'Disallow WinRM from storing RunAs credentials' is set to 'Enabled', value must be 1" + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WinRM\Service" 
 if ( $exist -eq $true) {
@@ -9468,16 +9714,16 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Windows Remote Shell
 
 Write-Host "#########>Begin Windows Remote Shell audit<#########" -ForegroundColor DarkGreen
 
 #Allow Remote Shell Access'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "WRS" + "$indextest"
+
+$id = "WRS" + "18.10.90.1"
 $chaine = "$id" + ";" + "(L2)Ensure 'Allow Remote Shell Access' is set to 'Disabled, value must be 0" + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WinRM\Service\WinRS" 
 if ( $exist -eq $true) {
@@ -9489,8 +9735,46 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
+#Windows Sandbox
 
+Write-Host "#########>Begin Windows Sandbox audit<#########" -ForegroundColor DarkGreen
+
+#Allow clipboard sharing with Windows Sandbox
+
+$id = "WS" + "18.10.90.1"
+$chaine = "$id" + ";" + "(L1)Ensure 'Allow clipboard sharing with Windows Sandbox' is set to 'Disabled' value must be 0" + ";"
+$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Sandbox" 
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Sandbox" |Select-Object AllowClipboardRedirection
+ $traitement = $traitement.AllowClipboardRedirection
+}
+else {
+ $traitement = "not configure"
+}
+$chaine += $traitement
+$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+#Allow clipboard sharing with Windows Sandbox
+
+$id = "WS" + "18.10.90.2"
+$chaine = "$id" + ";" + "(L1)Ensure 'Allow networking in Windows Sandbox' is set to 'Disabled', value must be 0" + ";"
+$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Sandbox" 
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Sandbox" |Select-Object AllowNetworking
+ $traitement = $traitement.AllowNetworking
+}
+else {
+ $traitement = "not configure"
+}
+$chaine += $traitement
+$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 
 #App and browser protection
@@ -9499,10 +9783,7 @@ Write-Host "#########>Begin App and browser protection audit<#########" -Foregro
 
 
 #Prevent users from modifying settings
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "WDS" + "$indextest"
+$id = "ABP" + "18.10.92.2.1"
 $chaine = "$id" + ";" + "(L1) Ensure 'Prevent users from modifying settings' is set to 'Enabled', value must be 1 " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender Security Center\App and Browser protection"
 if ( $exist -eq $true) {
@@ -9511,7 +9792,8 @@ if ( $exist -eq $true) {
  }
 $chaine += $traitement
 $chaine>> $nomfichier
-
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 
 #Windows Update
@@ -9519,11 +9801,65 @@ $chaine>> $nomfichier
 Write-Host "#########>Begin Windows Update audit<#########" -ForegroundColor DarkGreen
 
 
+
+#Configure Automatic Updates'
+
+$id = "WU" + "18.10.93.2.1"
+$chaine = "$id" + ";" + "(L1)Ensure 'Configure Automatic Updates' is set to 'Enabled', value must be 0" + ";"
+$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU"
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" |Select-Object NoAutoUpdate
+ $traitement = $traitement.NoAutoUpdate
+}
+else {
+ $traitement = "not configure"
+}
+$chaine += $traitement
+$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
+#Configure Automatic Updates: Scheduled install day'
+
+$id = "WU" + "18.10.93.2.2"
+$chaine = "$id" + ";" + "(L1)Ensure 'Configure Automatic Updates: Scheduled install day' is set to '0 - Every day'', value must be 0" + ";"
+$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU"
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" |Select-Object ScheduledInstallDay
+ $traitement = $traitement.ScheduledInstallDay
+}
+else {
+ $traitement = "not configure"
+}
+$chaine += $traitement
+$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
+
+#Remove access to “Pause updates” feature'
+$id = "WU" + "18.10.93.2.3"
+$chaine = "$id" + ";" + "(L1)Ensure 'Remove access to “Pause updates” feature' is set to 'Enabled', value must be 1" + ";"
+$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate"
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" |Select-Object SetDisablePauseUXAccess
+ $traitement = $traitement.SetDisablePauseUXAccess
+}
+else {
+ $traitement = "not configure"
+}
+$chaine += $traitement
+$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
+
 #Manage preview builds
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "WU" + "$indextest"
+
+$id = "WU" + "18.10.93.4.1"
 $chaine = "$id" + ";" + "(L1)Ensure 'Manage preview builds' is set to 'Enabled: Disable preview builds' value must be 0 foreach key" + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate"
 if ( $exist -eq $true) {
@@ -9539,13 +9875,11 @@ else {
 }
 $chaine += $traitementtemp
 $chaine>> $nomfichier
-
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Select when Feature Updates are received'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "WU" + "$indextest"
+$id = "WU" + "18.10.93.4.2"
 $chaine = "$id" + ";" + "(L2)Ensure 'Select when Feature Updates are received' is set to 'Enabled: Current Branch for Business, 180 days' " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate"
 if ( $exist -eq $true) {
@@ -9564,15 +9898,13 @@ else {
 }
 $chaine += $traitementtemp
 $chaine>> $nomfichier
-
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 
 
 #Select when Quality Updates are received'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "WU" + "$indextest"
+$id = "WU" + "18.10.93.4.3"
 $chaine = "$id" + ";" + "(L1)Ensure 'Select when Quality Updates are received' is set to 'Enabled: 0 days''' " + ";"
 $exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" 
 if ( $exist -eq $true) {
@@ -9588,88 +9920,16 @@ else {
 }
 $chaine += $traitementtemp
 $chaine>> $nomfichier
-
-#Configure Automatic Updates'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "WU" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Ensure 'Configure Automatic Updates' is set to 'Enabled', value must be 0" + ";"
-$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU"
-if ( $exist -eq $true) {
- $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" |Select-Object NoAutoUpdate
- $traitement = $traitement.NoAutoUpdate
-}
-else {
- $traitement = "not configure"
-}
-$chaine += $traitement
-$chaine>> $nomfichier
-
-#Configure Automatic Updates: Scheduled install day'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "WU" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Ensure 'Configure Automatic Updates: Scheduled install day' is set to '0 - Every day'', value must be 0" + ";"
-$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU"
-if ( $exist -eq $true) {
- $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" |Select-Object ScheduledInstallDay
- $traitement = $traitement.ScheduledInstallDay
-}
-else {
- $traitement = "not configure"
-}
-$chaine += $traitement
-$chaine>> $nomfichier
-
-
-#No auto-restart with logged on users for scheduled automatic updates installations
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "WU" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Ensure 'No auto-restart with logged on users for scheduled automatic updates installations' is set to 'Disabled', value must be 0" + ";"
-$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU"
-if ( $exist -eq $true) {
- $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" |Select-Object NoAutoRebootWithLoggedOnUsers
- $traitement = $traitement.NoAutoRebootWithLoggedOnUsers
-}
-else {
- $traitement = "not configure"
-}
-$chaine += $traitement
-$chaine>> $nomfichier
-
-
-
-#Remove access to “Pause updates” feature'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "WU" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Ensure 'Remove access to “Pause updates” feature' is set to 'Enabled', value must be 1" + ";"
-$exist = Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate"
-if ( $exist -eq $true) {
- $traitement = Get-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" |Select-Object SetDisablePauseUXAccess
- $traitement = $traitement.SetDisablePauseUXAccess
-}
-else {
- $traitement = "not configure"
-}
-$chaine += $traitement
-$chaine>> $nomfichier
-
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Personalization
 
 Write-Host "#########>Begin Personalization audit<#########" -ForegroundColor DarkGreen
 
 #Enable screen saver'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "PERSO" + "$indextest"
+
+$id = "PERS" + "19.1.3.1"
 $chaine = "$id" + ";" + "(L1)Ensure 'Enable screen saver' is set to 'Enabled', value must be 1" + ";"
 $exist = Test-Path "HKCU:\SOFTWARE\Policies\Microsoft\Windows\Control Panel\Desktop"
 if ( $exist -eq $true) {
@@ -9681,29 +9941,12 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
-#Force specific screen saver: Screen saver executable name'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "PERSO" + "$indextest"
-$chaine = "$id" + ";" + "(L1)Force specific screen saver: Screen saver executable name' is set to 'Enabled: scrnsave.scr', value must be 0" + ";"
-$exist = Test-Path "HKCU:\SOFTWARE\Policies\Microsoft\Windows\Control Panel\Desktop"
-if ( $exist -eq $true) {
- $traitement = Get-ItemProperty "HKCU:\SOFTWARE\Policies\Microsoft\Windows\Control Panel\Desktop" |Select-Object SCRNSAVE.EXE
- $traitement = $traitement."SCRNSAVE.EXE"
-}
-else {
- $traitement = "not configure"
-}
-$chaine += $traitement
-$chaine>> $nomfichier
 
 #Password protect the screen saver'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "PERSO" + "$indextest"
+$id = "PERS" + "19.1.3.2"
 $chaine = "$id" + ";" + "(L1)Ensure 'Password protect the screen saver' is set to 'Enabled', value must be 1" + ";"
 $exist = Test-Path "HKCU:\SOFTWARE\Policies\Microsoft\Windows\Control Panel\Desktop"
 if ( $exist -eq $true) {
@@ -9715,13 +9958,11 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
-
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Screen saver timeout'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "PERSO" + "$indextest"
+$id = "PERS" + "19.1.3.3"
 $chaine = "$id" + ";" + "(L1)Ensure 'Screen saver timeout' is set to 'Enabled: 900 seconds or fewer, but not 0', value must be 900 or less but not 0" + ";"
 $exist = Test-Path "HKCU:\SOFTWARE\Policies\Microsoft\Windows\Control Panel\Desktop"
 if ( $exist -eq $true) {
@@ -9733,16 +9974,15 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Notifications
 
 Write-Host "#########>Begin Notifications audit<#########" -ForegroundColor DarkGreen
 
 #Turn off toast notifications on the lock screen'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "NOTIF" + "$indextest"
+$id = "NOTIF" + "19.5.1.1"
 $chaine = "$id" + ";" + "(L1)Ensure 'Turn off toast notifications on the lock screen' is set to 'Enabled, value must be 1" + ";"
 $exist = Test-Path "HKCU:\SOFTWARE\Policies\Microsoft\Windows\CurrentVersion\PushNotifications"
 if ( $exist -eq $true) {
@@ -9754,16 +9994,17 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
 
 #Internet Communication Management
 
 Write-Host "#########>Begin Internet Communication Management audit<#########" -ForegroundColor DarkGreen
 
-#Turn off toast notifications on the lock screen'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "ICC" + "$indextest"
+#Turn off Help Experience Improvement Program
+
+$id = "ICC" + "19.6.6.1.1"
 $chaine = "$id" + ";" + "(L2)Ensure 'Turn off Help Experience Improvement Program' is set to 'Enabled', value must be 1" + ";"
 $exist = Test-Path "HKCU:\SOFTWARE\Policies\Microsoft\Assistance\Client\1.0" 
 if ( $exist -eq $true) {
@@ -9775,17 +10016,16 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
-
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Attachment Manager
 
 Write-Host "#########>Begin Attachment Manager audit<#########" -ForegroundColor DarkGreen
 
 #Do not preserve zone information in file attachments'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "ATTM" + "$indextest"
+
+$id = "ATTM" + "19.7.4.1"
 $chaine = "$id" + ";" + "(L1)Ensure 'Do not preserve zone information in file attachments' is set to 'Disabled', value must be 0" + ";"
 $exist = Test-Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Attachments"
 if ( $exist -eq $true) {
@@ -9797,12 +10037,12 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Notify antivirus programs when opening attachments'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "ATTM" + "$indextest"
+
+$id = "ATTM" + "19.7.4.2"
 $chaine = "$id" + ";" + "(L1)Ensure 'Notify antivirus programs when opening attachments' is set to 'Enabled', value must be 1" + ";"
 $exist = Test-Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Attachments" 
 if ( $exist -eq $true) {
@@ -9814,6 +10054,8 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 
 #Cloud Content
@@ -9821,10 +10063,8 @@ $chaine>> $nomfichier
 Write-Host "#########>Begin Cloud Content audit<#########" -ForegroundColor DarkGreen
 
 #Configure Windows spotlight on Lock Screen'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "CLOUDC" + "$indextest"
+
+$id = "CLOUDC" + "19.7.7.1"
 $chaine = "$id" + ";" + "(L1)Ensure 'Configure Windows spotlight on lock screen' is set to Disabled, value must be 0" + ";"
 $exist = Test-Path "HKCU:\Software\Policies\Microsoft\Windows\CloudContent"
 if ( $exist -eq $true) {
@@ -9836,12 +10076,11 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Do not suggest third-party content in Windows spotlight'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "CLOUDC" + "$indextest"
+$id = "CLOUDC" + "19.7.7.2"
 $chaine = "$id" + ";" + "(L1)Ensure 'Do not suggest third-party content in Windows spotlight' is set to 'Enabled', value must be 1" + ";"
 $exist = Test-Path "HKCU:\Software\Policies\Microsoft\Windows\CloudContent"
 if ( $exist -eq $true) {
@@ -9853,14 +10092,12 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
-
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 
 #Do not use diagnostic data for tailored experiences'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "CLOUDC" + "$indextest"
+$id = "CLOUDC" + "19.7.7.3"
 $chaine = "$id" + ";" + "(L2)Ensure 'Do not use diagnostic data for tailored experiences' is set to 'Enabled'', value must be 1" + ";"
 $exist = Test-Path "HKCU:\Software\Policies\Microsoft\Windows\CloudContent"
 if ( $exist -eq $true) {
@@ -9872,13 +10109,11 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
-
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Turn off all Windows spotlight features'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "CLOUDC" + "$indextest"
+$id = "CLOUDC" + "19.7.7.4"
 $chaine = "$id" + ";" + "(L2)Ensure 'Turn off all Windows spotlight features' is set to 'Enabled', value must be 1" + ";"
 $exist = Test-Path "HKCU:\Software\Policies\Microsoft\Windows\CloudContent" 
 if ( $exist -eq $true) {
@@ -9890,6 +10125,27 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+#Turn off Spotlight collection on Desktop
+$id = "CLOUDC" + "19.7.7.5"
+$chaine = "$id" + ";" + "(L1)Ensure 'Turn off Spotlight collection on Desktop' is set to 'Enabled', value must be 1" + ";"
+$exist = Test-Path "HKCU:\Software\Policies\Microsoft\Windows\CloudContent" 
+if ( $exist -eq $true) {
+ $traitement = Get-ItemProperty "HKCU:\Software\Policies\Microsoft\Windows\CloudContent" |Select-Object DisableSpotlightCollectionOnDesktop
+ $traitement = $traitement.DisableSpotlightCollectionOnDesktop
+}
+else {
+ $traitement = "not configure"
+}
+$chaine += $traitement
+$chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
+
+
+
 
 
 #Network Sharing
@@ -9897,10 +10153,8 @@ $chaine>> $nomfichier
 Write-Host "#########>Begin Network Sharing audit<#########" -ForegroundColor DarkGreen
 
 #Prevent users from sharing files within their profile
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "NSHARE" + "$indextest"
+
+$id = "NSHARE" + "19.7.25.1"
 $chaine = "$id" + ";" + "(L1)Ensure 'Prevent users from sharing files within their profile.' is set to 'Enabled', value must be 1" + ";"
 $exist = Test-Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer"
 if ( $exist -eq $true) {
@@ -9912,6 +10166,8 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 
 
@@ -9920,10 +10176,8 @@ $chaine>> $nomfichier
 Write-Host "#########>Begin User Windows Installer audit<#########" -ForegroundColor DarkGreen
 
 #Always install with elevated privileges'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "UWI" + "$indextest"
+
+$id = "UWI" + "19.7.40.1"
 $chaine = "$id" + ";" + "(L1)Ensure 'Always install with elevated privileges' is set to 'Disabled', value must be 0" + ";"
 $exist = Test-Path "HKCU:\SOFTWARE\Policies\Microsoft\Windows\Installer"
 if ( $exist -eq $true) {
@@ -9935,17 +10189,16 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
-
+Clean-Value($chaine)
+Clean-Value($traitement)
 
 #Playback
 
 Write-Host "#########>Begin Playback audit<#########" -ForegroundColor DarkGreen
 
 #Prevent Codec Download'
-$indextest += 1
-$chaine = $null
-$traitement = $null
-$id = "PLB" + "$indextest"
+
+$id = "PLB" + "19.7.42.2.1"
 $chaine = "$id" + ";" + "(L2)Ensure 'Prevent Codec Download' is set to 'Enabled', value must be 1" + ";"
 $exist = Test-Path "HKCU:\SOFTWARE\Policies\Microsoft\WindowsMediaPlayer"
 if ( $exist -eq $true) {
@@ -9958,6 +10211,8 @@ else {
 }
 $chaine += $traitement
 $chaine>> $nomfichier
+Clean-Value($chaine)
+Clean-Value($traitement)
 Write-Host "#########>END Audit<#########" -ForegroundColor DarkGreen
 Set-Location ..
 
